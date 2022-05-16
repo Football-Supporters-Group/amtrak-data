@@ -1,0 +1,4 @@
+amtrak:
+    gtfs-url: https://content.amtrak.com/content/gtfs/GTFS.zip
+    temp-file: ./data/tmp/gtfs.zip
+    data-directory: ./data

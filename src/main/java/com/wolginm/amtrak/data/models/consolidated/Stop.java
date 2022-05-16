@@ -1,5 +1,6 @@
 package com.wolginm.amtrak.data.models.consolidated;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import com.wolginm.amtrak.data.models.gtfs.StopTimes;
@@ -8,7 +9,7 @@ import com.wolginm.amtrak.data.models.gtfs.Stops;
 import lombok.Getter;
 
 @Getter
-public class Stop implements Comparator {
+public class Stop implements Comparable<Stop>, Serializable {
     private Stops stop;
     private StopTimes stopTimes;
     
@@ -18,7 +19,6 @@ public class Stop implements Comparator {
         this.stopTimes = stopTimes;
     }
 
-    @Override
     public int compare(Object arg0, Object arg1) {
         Stop a = (Stop) arg0;
         Stop b = (Stop) arg1;
@@ -27,6 +27,11 @@ public class Stop implements Comparator {
             - b.stopTimes.getStop_sequence();
 
         return result;
+    }
+
+    @Override
+    public int compareTo(Stop o) {
+        return this.compare(this, o);
     }
 }
 

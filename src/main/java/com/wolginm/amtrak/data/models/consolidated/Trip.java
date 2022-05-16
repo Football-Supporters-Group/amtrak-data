@@ -4,14 +4,16 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.wolginm.amtrak.data.models.gtfs.Routes;
+
 public class Trip {
     
-    private RouteDetails routeDetails;
+    private Routes routeDetails;
     private ServiceDetails serviceDetails;
     
     private Set<Stop> stops;
 
-    public Trip(final RouteDetails routeDetails,
+    public Trip(final Routes routeDetails,
         final ServiceDetails serviceDetails) {
             this.routeDetails = routeDetails;
             this.serviceDetails = serviceDetails;
@@ -23,7 +25,7 @@ public class Trip {
         return this.stops.size();
     }
 
-    public RouteDetails getRouteDetails() {
+    public Routes getRouteDetails() {
         return this.routeDetails;
     }
 

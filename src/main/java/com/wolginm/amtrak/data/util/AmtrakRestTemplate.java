@@ -50,6 +50,7 @@ public class AmtrakRestTemplate {
         Path placeToStoreFile = this.fileUtil.resolvePath(this.amtrakProperties.getTempFile());
         this.fileUtil.prepFoldersForFile(placeToStoreFile);
 
+
         DataBufferUtils.write(downloadedMono, 
             placeToStoreFile,
             StandardOpenOption.CREATE).block();

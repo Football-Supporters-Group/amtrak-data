@@ -1,8 +1,13 @@
 package com.wolginm.amtrak.data.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.zip.CRC32;
+import java.util.zip.CheckedInputStream;
+import java.util.zip.Checksum;
 
 import org.springframework.stereotype.Component;
 
@@ -11,7 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class FileUtil {
-    
+
+    private final int BUFFER_SIZE = 4096;
 
     public Path resolvePath(final String path) {
         return FileSystems.getDefault()
@@ -40,5 +46,22 @@ public class FileUtil {
             log.info("Directory created: {}", path.toString());
         }
         return depth;
+    }
+
+    
+    public long calcualteChecksum(File checkedFile) {
+        long checksum = -1;
+        try (CheckedInputStream checkedInputStream 
+            = new CheckedInputStream(new FileInputStream(checkedFile), new CRC32())){
+                
+            byte[] buffer = new byte[this.BUFFER_SIZE];
+            while (checkedInputStream.read(buffer, 0, buffer.length) >= 0) {
+            }
+            checksum = checkedInputStream.getChecksum().getValue();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return checksum;
+        
     }
 }

@@ -1,7 +1,6 @@
 package com.wolginm.amtrak.data.models.consolidated;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 import com.wolginm.amtrak.data.models.gtfs.StopTimes;
 import com.wolginm.amtrak.data.models.gtfs.Stops;

@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -78,15 +79,7 @@ public class ZipUtil {
         boolean status = false;
 
         try {
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(filePath));
-            byte[] bytesIn = new byte[BUFFER_SIZE];
-            int read = 0;
-
-            //Reads in 4096 byte chunks
-            while ((read = zipInputStream.read(bytesIn)) != -1) {
-                bufferedOutputStream.write(bytesIn, 0, read);
-            }
-            bufferedOutputStream.close();
+            this.writeFileToDisk(zipInputStream, filePath);
             log.debug("Extracted file {}", filePath);
             status = true;
         } catch (IOException e) {
@@ -96,5 +89,18 @@ public class ZipUtil {
         }
         
         return status;
+    }
+
+    private int writeFileToDisk(InputStream inputStream, String filePath) throws IOException {
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(filePath));
+        byte[] bytesIn = new byte[BUFFER_SIZE];
+        int read = 0;
+
+        //Reads in 4096 byte chunks
+        while ((read = inputStream.read(bytesIn)) != -1) {
+            bufferedOutputStream.write(bytesIn, 0, read);
+        }
+        bufferedOutputStream.close();
+        return 0;
     }
 }

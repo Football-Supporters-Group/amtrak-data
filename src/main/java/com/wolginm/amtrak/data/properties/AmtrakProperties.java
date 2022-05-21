@@ -18,6 +18,9 @@ public class AmtrakProperties {
     @Value("amtrak.gtfs-url") 
     private String gtfsUrl;
 
+    @Value("amtrak.gtfs-uri") 
+    private String gtfsUri;
+
     @Value("amtrak.temp-file") 
     private String tempFile;
 

@@ -43,7 +43,7 @@ public class AmtrakRestTemplate {
     public void downloadGTFSFile() {
         Flux<DataBuffer> downloadedMono = amtrakRestTemplate
             .get()
-            .uri("")
+            .uri(this.amtrakProperties.getGtfsUri())
             .retrieve()
             .bodyToFlux(DataBuffer.class);
 
@@ -52,7 +52,8 @@ public class AmtrakRestTemplate {
 
         DataBufferUtils.write(downloadedMono, 
             placeToStoreFile,
-            StandardOpenOption.CREATE);
+            StandardOpenOption.CREATE).block();
+        log.info("File {} saved", placeToStoreFile);
     }
     
 }

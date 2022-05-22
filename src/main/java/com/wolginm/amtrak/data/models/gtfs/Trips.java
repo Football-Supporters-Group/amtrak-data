@@ -26,14 +26,15 @@ public class Trips implements ICVMapable {
     @Override
     public ICVMapable mapToObject(List<Object> objectList, List<String> headersList) {
         Trips trips = new Trips();
+        int shapeId = ((String) objectList.get(6)).length() > 0 ? Integer.parseInt((String) objectList.get(6)) : 0;
         trips.setRoute_id(Integer.parseInt((String) objectList.get(0)));
         trips.setService_id((String) objectList.get(1));
         trips.setTrip_id((String) objectList.get(2));
         trips.setTrip_headsign((String) objectList.get(3));
         trips.setTrip_short_name((String) objectList.get(4));
         trips.setDirection_id(Integer.parseInt((String) objectList.get(5)));
-        trips.setShape_id(Integer.parseInt((String) objectList.get(6)));
+        trips.setShape_id(shapeId);
 
-        return null;
+        return trips;
     }
 }

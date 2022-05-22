@@ -22,10 +22,11 @@ public class Transfers implements ICVMapable {
     @Override
     public ICVMapable mapToObject(List<Object> objectList, List<String> headersList) {
         Transfers transfers = new Transfers();
+        int transferTime = ((String) objectList.get(3)).length() > 0 ? Integer.parseInt((String) objectList.get(3)) : 0;
         transfers.setFrom_stop_id((String) objectList.get(0));
         transfers.setTo_stop_id((String) objectList.get(1));
         transfers.setTransfer_type(Integer.parseInt((String) objectList.get(2)));
-        transfers.setMin_transfer_time(Integer.parseInt((String) objectList.get(3)));
+        transfers.setMin_transfer_time(transferTime);
         return transfers;
     }
 }

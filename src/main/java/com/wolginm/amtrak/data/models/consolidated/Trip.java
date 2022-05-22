@@ -1,21 +1,23 @@
 package com.wolginm.amtrak.data.models.consolidated;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import com.wolginm.amtrak.data.models.gtfs.Routes;
+import com.wolginm.amtrak.data.models.gtfs.Stops;
 
 public class Trip {
     
-    private Routes routeDetails;
+    private int routeId;
     private ServiceDetails serviceDetails;
     
     private Set<Stop> stops;
 
-    public Trip(final Routes routeDetails,
+    public Trip(final int routeId,
         final ServiceDetails serviceDetails) {
-            this.routeDetails = routeDetails;
+            this.routeId = routeId;
             this.serviceDetails = serviceDetails;
             this.stops = new TreeSet<>();
     }
@@ -25,8 +27,13 @@ public class Trip {
         return this.stops.size();
     }
 
-    public Routes getRouteDetails() {
-        return this.routeDetails;
+    public int addAllScheduleStop(final List<Stop> stop) {
+        this.stops.addAll(stop);
+        return this.stops.size();
+    }
+
+    public int getRouteId() {
+        return this.routeId;
     }
 
     public ServiceDetails getServiceDetails() {
@@ -36,5 +43,30 @@ public class Trip {
     public Iterator<Stop> getSchedule() {
         return this.stops.iterator();
     }
+
+    @Override
+    public String toString() {
+        Stop first = this.getFirstElement(this.stops);
+        Stop last = this.getLastElement(this.stops);
+        return String.format("%s to %s Dpt: %s -> Arv: %s", 
+            first.getStop().getStop_id(), 
+            last.getStop().getStop_id(), 
+            first.getStopTimes().getDeparture_time(), 
+            last.getStopTimes().getArrival_time());
+    }
+
+    private <T> T getFirstElement(final Iterable<T> elements) {
+        return elements.iterator().next();
+    }
     
+    
+    private <T> T getLastElement(final Iterable<T> elements) {
+        T lastElement = null;
+    
+        for (T element : elements) {
+            lastElement = element;
+        }
+    
+        return lastElement;
+    }
 }

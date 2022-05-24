@@ -12,6 +12,7 @@
 	<artifactId>data</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>data</name>
+	<packaging>jar</packaging>
 	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>
 	<properties>
 		<java.version>11</java.version>

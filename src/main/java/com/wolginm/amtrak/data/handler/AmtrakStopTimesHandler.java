@@ -64,16 +64,19 @@ public class AmtrakStopTimesHandler {
         return stopTimes;
     }
 
-    public Stops findStopTimesByStopId(String stopId) {
+    public Stops findStopsByStopId(String stopId) {
+        Stops stops = null;
         List<Stops> stop = this.stops
             .stream()
             .filter((element) -> element.getStop_id().equals(stopId))
             .collect(Collectors.toList());
-        if (stop.size() > 1) {
+        if (stop.size() < 1) {
             log.error("Unable to find specific stop {}!", stopId);
+        } else {
+            stops = stop.get(0);
         }
 
-        return stop.get(0);
+        return stops;
     }
 
 
@@ -83,8 +86,9 @@ public class AmtrakStopTimesHandler {
         List<Stop> stop_list = new ArrayList<>();
         Stops stops = null;
         for (StopTimes stopTimeEntry : stopTimes) {
-            stops = this.findStopTimesByStopId(stopTimeEntry.getStop_id());
-            stop_list.add(new Stop(stops, stopTimeEntry));
+            stops = this.findStopsByStopId(stopTimeEntry.getStop_id());
+            if (stops != null)
+                stop_list.add(new Stop(stops, stopTimeEntry));
         }
 
         if (stop_list.size() < 1) log.error("Unable to build up Stop for trip ID {}!", tripId);

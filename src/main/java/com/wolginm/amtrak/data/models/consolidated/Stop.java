@@ -29,6 +29,13 @@ public class Stop implements Comparable<Stop>, Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        Stop other = (Stop) o;
+        return this.stop.equals(other.getStop())
+            && this.stopTimes.equals(other.getStopTimes());
+    }
+
+    @Override
     public int compareTo(Stop o) {
         return this.compare(this, o);
     }

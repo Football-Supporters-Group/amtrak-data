@@ -32,4 +32,16 @@ public class StopTimes implements ICVMapable {
         stopTimes.setDrop_off_type(Integer.parseInt((String) objectList.get(6)));
         return stopTimes;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        StopTimes other = (StopTimes) o;
+        return this.trip_id.equals(other.getTrip_id())
+            && this.arrival_time.equals(other.getArrival_time())
+            && this.departure_time.equals(other.getDeparture_time())
+            && this.stop_id.equals(other.getStop_id())
+            && this.stop_sequence == other.getStop_sequence()
+            && this.pickup_time == other.getPickup_time()
+            && this.drop_off_type == other.getDrop_off_type();
+    }
 }

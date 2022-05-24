@@ -1,7 +1,6 @@
 package com.wolginm.amtrak.data.models.gtfs;
 
 import java.util.List;
-import java.util.TimeZone;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +26,16 @@ public class Stops implements ICVMapable {
         stops.setStop_url((String) objectList.get(4));
         stops.setStop_timezone((String) objectList.get(5));
         return stops;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        Stops other = (Stops) o;
+        return this.stop_id.equals(other.getStop_id())
+            && this.stop_name.equals(other.getStop_name())
+            && this.stop_lat == other.getStop_lat()
+            && this.stop_lon == other.getStop_lon()
+            && this.stop_url.equals(other.getStop_url())
+            && this.stop_timezone.equals(other.getStop_timezone());
     }
 }

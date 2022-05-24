@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.wolginm.amtrak.data.models.consolidated.Stop;
-import com.wolginm.amtrak.data.models.gtfs.Calendar;
-import com.wolginm.amtrak.data.models.gtfs.Routes;
 import com.wolginm.amtrak.data.models.gtfs.StopTimes;
 import com.wolginm.amtrak.data.models.gtfs.Stops;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;

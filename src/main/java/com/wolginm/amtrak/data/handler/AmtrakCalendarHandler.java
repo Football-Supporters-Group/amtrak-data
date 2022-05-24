@@ -50,9 +50,10 @@ public class AmtrakCalendarHandler {
             .filter((element) -> element.getService_id().equals(serviceID))
             .collect(Collectors.toList());
         if (acceptableService.size() != 1) {
-            log.error("Unable to find specific service {}!", serviceID);
+            log.error("Unable to find specific calendar entry {}!", serviceID);
         } else {
             calendar = acceptableService.get(0);
+            log.info("Found calendar: {}", calendar);
         }
 
         return calendar;

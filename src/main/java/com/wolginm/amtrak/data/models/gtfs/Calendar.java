@@ -46,4 +46,18 @@ public class Calendar implements ICVMapable{
         return this.getService_id().equals(other.getService_id());
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s [%s %s %s %s %s %s %s] [%s -> %s]", 
+            this.service_id,
+            this.monday == true ? "mon" : "---",
+            this.tuesday == true ? "tue" : "---",
+            this.wednesday == true ? "wed" : "---",
+            this.thursday == true ? "thr" : "---",
+            this.friday == true ? "fri" : "---",
+            this.saturday == true ? "sat" : "---",
+            this.sunday == true ? "sun" : "---",
+            this.startDate,
+            this.endDate);
+    }
 }

@@ -17,6 +17,7 @@ public class AmtrakDataService {
     @Autowired
     public AmtrakDataService(AmtrakDataHandler amtrakDataHandler) {
         this.amtrakDataHandler = amtrakDataHandler;
+        this.prepDataForUse();
     }
 
     public void prepDataForUse() {

@@ -2,8 +2,6 @@ package com.wolginm.amtrak.data.models.consolidated;
 
 import java.util.List;
 
-import javax.crypto.spec.RC2ParameterSpec;
-
 import com.wolginm.amtrak.data.models.gtfs.Routes;
 
 import lombok.Getter;

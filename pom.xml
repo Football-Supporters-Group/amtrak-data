@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.wolginm.amtrak</groupId>
 	<artifactId>data</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>data</name>
 	<packaging>jar</packaging>
 	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>
@@ -59,7 +59,8 @@
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
 			</plugin>
 		</plugins>
 	</build>

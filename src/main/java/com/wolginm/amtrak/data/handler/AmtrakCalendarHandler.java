@@ -53,7 +53,7 @@ public class AmtrakCalendarHandler {
             log.error("Unable to find specific calendar entry {}!", serviceID);
         } else {
             calendar = acceptableService.get(0);
-            log.info("Found calendar: {}", calendar);
+            log.debug("Found calendar: {}", calendar);
         }
 
         return calendar;

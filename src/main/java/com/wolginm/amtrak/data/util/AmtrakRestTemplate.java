@@ -12,7 +12,6 @@ import java.util.Objects;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Service;

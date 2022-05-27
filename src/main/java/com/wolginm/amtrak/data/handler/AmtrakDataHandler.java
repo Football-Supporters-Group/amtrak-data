@@ -13,7 +13,6 @@ import com.wolginm.amtrak.data.models.consolidated.ServiceDetails;
 import com.wolginm.amtrak.data.models.consolidated.Trip;
 import com.wolginm.amtrak.data.models.gtfs.Agency;
 import com.wolginm.amtrak.data.models.gtfs.Routes;
-import com.wolginm.amtrak.data.models.gtfs.StopTimes;
 import com.wolginm.amtrak.data.models.gtfs.Transfers;
 import com.wolginm.amtrak.data.models.gtfs.Trips;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;

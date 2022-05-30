@@ -12,6 +12,7 @@ import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.util.CSVUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties.Embedded;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,7 @@ public class AmtrakCalendarHandler {
         this.calendars = csvUtil.csvToObject(new FileInputStream(new File(
             String.format("%s/%s", this.amtrakProperties.getDataDirectory(), "calendar.txt"))), new Calendar())
             .stream().map((entity) -> {
+                // log.info("{} / {} -> ", ((Calendar) entity).getService_id(), ((Calendar) entity).getStartDate().toString(), ((Calendar) entity).getEndDate().toString());
                 return (Calendar) entity;
             }).collect(Collectors.toList());;
         log.info("Loaded {} calendar", this.calendars.size());

@@ -134,6 +134,7 @@ public class AmtrakDataHandler {
             // trip = new Trip(this.amtrakRoutesHandler.findRouteByRoutesId(selectedTrip.getRoute_id()), 
             //     new ServiceDetails(this.amtrakCalendarHandler.findRouteByServiceId(selectedTrip.getService_id())));
             trip = new Trip(selectedTrip.getRoute_id(), 
+                selectedTrip.getDirection_id(),
                 new ServiceDetails(this.amtrakCalendarHandler.findRouteByServiceId(selectedTrip.getService_id())),
                 selectedTrip.getTrip_id());
             trip.addAllScheduleStop(this.amtrakStopTimesHandler.findAllStopsByTripId(selectedTrip.getTrip_id()));

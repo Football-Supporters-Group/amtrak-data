@@ -50,10 +50,15 @@ public class ServiceDetails {
     }
 
     public boolean isWeekend() {
-        return this.calendar.isMonday()
-            && this.calendar.isTuesday()
-            && this.calendar.isWednesday()
-            && this.calendar.isThursday()
-            && this.calendar.isFriday();
+        return this.calendar.isSaturday()
+            && this.calendar.isSunday();
+    }
+
+    public boolean isSaturday() {
+        return this.calendar.isSaturday();
+    }
+
+    public boolean isSunday() {
+        return this.calendar.isSunday();
     }
 }

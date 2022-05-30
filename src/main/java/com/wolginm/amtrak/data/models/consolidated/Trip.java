@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.wolginm.amtrak.data.models.gtfs.Routes;
-import com.wolginm.amtrak.data.models.gtfs.Stops;
-
 public class Trip {
     
     private int routeId;

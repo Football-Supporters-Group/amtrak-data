@@ -12,13 +12,16 @@ public class Trip {
     
     private int routeId;
     private ServiceDetails serviceDetails;
+    private String tripId;
     
     private Set<Stop> stops;
 
     public Trip(final int routeId,
-        final ServiceDetails serviceDetails) {
+        final ServiceDetails serviceDetails,
+        final String tripId) {
             this.routeId = routeId;
             this.serviceDetails = serviceDetails;
+            this.tripId = tripId;
             this.stops = new TreeSet<>();
     }
 
@@ -34,6 +37,10 @@ public class Trip {
 
     public int getRouteId() {
         return this.routeId;
+    }
+
+    public String getTripId() {
+        return tripId;
     }
 
     public ServiceDetails getServiceDetails() {

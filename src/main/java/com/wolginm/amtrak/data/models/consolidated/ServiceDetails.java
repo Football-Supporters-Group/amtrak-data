@@ -40,4 +40,20 @@ public class ServiceDetails {
     public Date getEndDate() {
         return this.calendar.getEndDate();
     }
+
+    public boolean isWeekday() {
+        return this.calendar.isMonday()
+            && this.calendar.isTuesday()
+            && this.calendar.isWednesday()
+            && this.calendar.isThursday()
+            && this.calendar.isFriday();
+    }
+
+    public boolean isWeekend() {
+        return this.calendar.isMonday()
+            && this.calendar.isTuesday()
+            && this.calendar.isWednesday()
+            && this.calendar.isThursday()
+            && this.calendar.isFriday();
+    }
 }

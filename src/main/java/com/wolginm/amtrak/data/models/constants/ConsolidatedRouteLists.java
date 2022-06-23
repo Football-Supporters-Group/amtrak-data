@@ -9,7 +9,9 @@ public class ConsolidatedRouteLists {
         "RHI", "HUD", "ALB", "SDY", "SAR", "FED", "WHL", "FTC", "POH", "WSP", "PRK", "PLB", "RSP", 
         "SLQ", "MTR"});
 
-    private final List<String> keystoneService = Arrays.asList(new String[]{""});
+    private final List<String> keystoneService = Arrays.asList(new String[]{"HAR", "MID", "ELT", "MJY", 
+        "LNC", "PAR", "COT", "DOW", "EXT", "PAO", "ARD", "PHL", "CWH", "TRE", "PJC", "NBK", "MET", "EWR",
+        "NWK", "NYP"});
     
     public List<String> getStationList(int routeId) {
         List<String> selectedRoute;

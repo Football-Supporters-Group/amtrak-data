@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.wolginm.amtrak.data.models.consolidated.ConsolidatedRoute;
 import com.wolginm.amtrak.data.models.consolidated.ServiceDetails;
+import com.wolginm.amtrak.data.models.consolidated.Stop;
 import com.wolginm.amtrak.data.models.consolidated.Trip;
 import com.wolginm.amtrak.data.models.gtfs.Agency;
 import com.wolginm.amtrak.data.models.gtfs.Routes;
@@ -131,10 +132,14 @@ public class AmtrakDataHandler {
         Trip trip;
 
         for (Trips selectedTrip : this.trips) {
-            // trip = new Trip(this.amtrakRoutesHandler.findRouteByRoutesId(selectedTrip.getRoute_id()), 
-            //     new ServiceDetails(this.amtrakCalendarHandler.findRouteByServiceId(selectedTrip.getService_id())));
+            if (selectedTrip.getRoute_id() == 94) {
+                log.info("Keystone");
+            }
+
             trip = new Trip(selectedTrip.getRoute_id(), 
-                new ServiceDetails(this.amtrakCalendarHandler.findRouteByServiceId(selectedTrip.getService_id())));
+                selectedTrip.getDirection_id(),
+                new ServiceDetails(this.amtrakCalendarHandler.findRouteByServiceId(selectedTrip.getService_id())),
+                selectedTrip.getTrip_id());
             trip.addAllScheduleStop(this.amtrakStopTimesHandler.findAllStopsByTripId(selectedTrip.getTrip_id()));
 
             this.compiledTrip.add(trip);

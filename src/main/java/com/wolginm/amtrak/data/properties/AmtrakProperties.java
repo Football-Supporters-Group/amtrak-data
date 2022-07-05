@@ -26,4 +26,7 @@ public class AmtrakProperties {
 
     @Value("amtrak.data-directory") 
     private String dataDirectory;
+
+    @Value("amtrak.route-metadata")
+    private String routeMetadata;
 }

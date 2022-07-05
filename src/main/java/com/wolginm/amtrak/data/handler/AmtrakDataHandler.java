@@ -132,9 +132,6 @@ public class AmtrakDataHandler {
         Trip trip;
 
         for (Trips selectedTrip : this.trips) {
-            if (selectedTrip.getRoute_id() == 94) {
-                log.info("Keystone");
-            }
 
             trip = new Trip(selectedTrip.getRoute_id(), 
                 selectedTrip.getDirection_id(),

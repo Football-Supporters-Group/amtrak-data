@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.time.LocalTime;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
@@ -25,6 +26,37 @@ public class FileUtil {
             .toAbsolutePath();
     }
 
+    public boolean directoryExists(final Path path) {
+        File current = path.getParent().toFile();
+        return current.exists();
+    } 
+
+    public long getAgeInMili(final Path path) throws IOException {
+        long miliSec = -1;
+
+        if (this.directoryExists(path)) {
+            File current = path.getParent().toFile();
+
+            miliSec = current.getCanonicalFile().lastModified();
+        }
+        return miliSec;
+    }
+
+    /**
+     * Return -1 if less then compared timeout.  
+     * 0 if equal
+     * 1 if greater then
+     * @param time
+     * @param timeout
+     * @return
+     */
+    public int compareAgeToConstantTime(final long time, final long timeout) {
+        LocalTime localTime = LocalTime.now();
+        long comparable = time - (localTime.getNano() / 1000);
+
+        return comparable > 0.0 ? 1 : -1;
+    }
+
     /**
      * Assumes the path is starting as a file
      * @param path
@@ -37,7 +69,7 @@ public class FileUtil {
     private int prepFoldersForFile(final Path path, int depth) {
         File current = path.getParent().toFile();
         if (current.exists()) {
-            
+            log.info("Path exists!");
         } else {
             log.info("At directory: {}", path.toString());
             this.prepFoldersForFile(path.getParent(), depth ++);

@@ -1,13 +1,7 @@
 package com.wolginm.amtrak.data.util;
 
-import java.nio.channels.AsynchronousFileChannel;
-import java.nio.channels.spi.AsynchronousChannelProvider;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Objects;
 
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 

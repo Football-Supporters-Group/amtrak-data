@@ -72,11 +72,14 @@ public class AmtrakDataHandler {
 
         int status = 1;
         try {
-            this.amtrakRestTemplate.downloadGTFSFile();
-            this.zipUtil.unzip(this.amtrakProperties.getTempFile(), 
-                this.amtrakProperties.getDataDirectory());        
-
-            status = 0;
+            if (overrideChecksum) {
+                this.amtrakRestTemplate.downloadGTFSFile();
+                this.zipUtil.unzip(this.amtrakProperties.getTempFile(), 
+                this.amtrakProperties.getDataDirectory());   
+                status = 0;     
+            } else {
+                status = 1;
+            }
         } catch (IOException e) {
             log.error("Failed to download Amtrak Data");
             e.printStackTrace();

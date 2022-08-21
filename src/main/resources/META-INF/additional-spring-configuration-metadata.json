@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "amtrak.data-update-ms",
+  "type": "java.lang.Integer",
+  "description": "A description for 'amtrak.data-update-ms'"
+}]}

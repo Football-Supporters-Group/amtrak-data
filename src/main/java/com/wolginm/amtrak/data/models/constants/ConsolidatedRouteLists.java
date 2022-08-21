@@ -28,7 +28,7 @@ public class ConsolidatedRouteLists {
         try {
             this.routeToOrderedList = csvUtil.csvToRouteOrderMap(
                 new FileInputStream(new File(
-                    String.format("%s/%s", amtrakProperties.getRouteMetadata(), "route_stop_order.txt"))));
+                    String.format("%s", amtrakProperties.getRouteMetadata()))));
         } catch (FileNotFoundException e) {
             log.error("Failed to load route metadata! {}", e.getMessage());
             log.error("Defaulting routesToOrderedList to empty map!");

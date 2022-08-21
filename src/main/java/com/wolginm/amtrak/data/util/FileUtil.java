@@ -39,6 +39,7 @@ public class FileUtil {
 
             miliSec = current.getCanonicalFile().lastModified();
         }
+        log.debug("File {} age: {}", path.getFileName(), miliSec);
         return miliSec;
     }
 

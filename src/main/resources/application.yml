@@ -4,3 +4,7 @@ amtrak:
     temp-file: ./data/tmp/gtfs.zip
     data-directory: ./data
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt
+    data-update-ms: 1000
+logging:
+    level:
+        root: debug

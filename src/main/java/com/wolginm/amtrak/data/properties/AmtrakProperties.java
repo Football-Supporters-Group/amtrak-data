@@ -15,38 +15,31 @@ import com.wolginm.amtrak.data.util.FileUtil;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
 @Configuration
-@EnableConfigurationProperties
-@ConfigurationProperties("amtrak")
+// @EnableConfigurationProperties
+// @ConfigurationProperties()
 public class AmtrakProperties {
     
-    @Value("amtrak.gtfs-url") 
+    @Value("${amtrak.gtfs-url}") 
     private String gtfsUrl;
 
-    @Value("amtrak.gtfs-uri") 
+    @Value("${amtrak.gtfs-uri}") 
     private String gtfsUri;
 
-    @Value("amtrak.temp-file") 
+    @Value("${amtrak.temp-file}") 
     private String tempFile;
 
-    @Value("amtrak.data-directory") 
+    @Value("${amtrak.data-directory}") 
     private String dataDirectory;
 
-    @Value("amtrak.route-metadata")
+    @Value("${amtrak.route-metadata}")
     private String routeMetadata;
 
-    @Value("amtrak.data-update-ms")
-    private Integer dataUpdateMs;
+    @Value(value = "${amtrak.data-update-ms}")
+    private String dataUpdateMs;
 
-    @Bean
-    @Qualifier("NeedToPullData")
-    public boolean needToPullData(FileUtil fileUtil) throws IOException {
-        Path dataDirectory = fileUtil.resolvePath(this.dataDirectory);
-        return fileUtil.directoryExists(dataDirectory)
-            && fileUtil
-                .compareAgeToConstantTime(fileUtil.getAgeInMili(dataDirectory), this.dataUpdateMs) < 0 ;       
-    }
 }

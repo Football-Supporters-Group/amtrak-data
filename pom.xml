@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.wolginm.amtrak</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<name>data</name>
 	<packaging>jar</packaging>
 	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>

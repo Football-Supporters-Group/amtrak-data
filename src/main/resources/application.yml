@@ -7,4 +7,4 @@ amtrak:
     data-update-ms: 1000
 logging:
     level:
-        root: debug
+        root: info

@@ -8,3 +8,5 @@ amtrak:
 logging:
     level:
         root: info
+        com.wolginm.amtrak.data.handler.AmtrakDataHandler: debug
+        com.wolginm.amtrak.data.service: debug

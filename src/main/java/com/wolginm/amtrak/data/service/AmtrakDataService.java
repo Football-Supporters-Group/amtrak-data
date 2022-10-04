@@ -52,10 +52,12 @@ public class AmtrakDataService {
             Integer update = Integer.valueOf(this.amtrakProperties.getDataUpdateMs());
 
 
-            value = directoryExists
-                && fileUtil
-                    .compareAgeToConstantTime(age, update) < 0 ;
-            log.debug("directoryExists: {}\nage: {}\nupdate delta: {}", directoryExists, age, update);
+            // value = directoryExists
+            //     && fileUtil
+            //         .compareAgeToConstantTime(age, update) < 0 ;
+            value = true;
+            log.debug("directoryExists: {}\nage: {}\nupdate delta: {}\nupdate value: {}", 
+                directoryExists, age, update, value);
         } catch (NumberFormatException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

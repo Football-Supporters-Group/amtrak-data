@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import com.wolginm.amtrak.data.models.consolidated.ConsolidatedRoute;
 import com.wolginm.amtrak.data.models.consolidated.ServiceDetails;
-import com.wolginm.amtrak.data.models.consolidated.Stop;
 import com.wolginm.amtrak.data.models.consolidated.Trip;
 import com.wolginm.amtrak.data.models.gtfs.Agency;
 import com.wolginm.amtrak.data.models.gtfs.Routes;

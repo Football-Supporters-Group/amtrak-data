@@ -32,7 +32,7 @@ public class CSVUtil {
         try {
             BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(inputStream, "UTF-8"));
-            ;
+
             CSVParser csvParser = new CSVParser(bufferedReader, 
                 CSVFormat.DEFAULT
                     .builder()
@@ -55,6 +55,9 @@ public class CSVUtil {
             }
             csvParser.close();
         } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+        } catch (NumberFormatException e) {
+            log.error("Value in CSV unable to be parsed to number!");
             log.error(e.getMessage());
         } catch (IOException e) {
             log.error(e.getMessage());

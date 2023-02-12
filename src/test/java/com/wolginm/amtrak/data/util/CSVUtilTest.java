@@ -1,13 +1,12 @@
 package com.wolginm.amtrak.data.util;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.logging.log4j.util.Chars;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -61,6 +60,36 @@ public class CSVUtilTest {
             Assertions.assertEquals(new ArrayList<>(), csvUtil.csvToObject(
                 new ByteArrayInputStream("SUpper: Broken---%2039not.\n csv:\n BRokwnd".getBytes()), new Shapes()));
         }
+    }
+
+    @Nested
+    @DisplayName("CSV to Route Order Map")
+    class CSVToRouteOrderMap {
+
+        private String routeOrderList = "route_id,ordered_list\n" 
+        + "40751,BOS,BBY,RTE,PVD,NHV,STM,NYP,NWK,MET,TRE,PHL,WIL,BAL,BWI,WAS\n" 
+        + "95,NYP,YNY,CRT,POU,RHI,HUD,ALB,SDY,SAR,FED,WHL,FTC,POH,WSP,PRK,PLB,RSP,SLQ,MTR\n"
+        + "94,HAR,MID,ELT,MJY,LNC,PAR,COT,DOW,EXT,PAO,ARD,PHL,CWH,TRE,PJC,NBK,MET,EWR,NWK,NYP\n"
+        + "41042,SPG,WNL,WND,HFD,BER,MND,WFD,STS,NHV"; 
+
+        @Test
+        void csvToRouteOrderMap_Pass() {
+            Map<Integer, List<String>> actual, expected;
+            expected = new HashMap() {{
+                put(40751, Arrays.asList("BOS,BBY,RTE,PVD,NHV,STM,NYP,NWK,MET,TRE,PHL,WIL,BAL,BWI,WAS".split(",")));
+                put(95, Arrays.asList("NYP,YNY,CRT,POU,RHI,HUD,ALB,SDY,SAR,FED,WHL,FTC,POH,WSP,PRK,PLB,RSP,SLQ,MTR".split(",")));
+                put(94, Arrays.asList("HAR,MID,ELT,MJY,LNC,PAR,COT,DOW,EXT,PAO,ARD,PHL,CWH,TRE,PJC,NBK,MET,EWR,NWK,NYP".split(",")));
+                put(41042, Arrays.asList("SPG,WNL,WND,HFD,BER,MND,WFD,STS,NHV".split(",")));
+            }};
+
+            actual = csvUtil.csvToRouteOrderMap(new ByteArrayInputStream(this.routeOrderList.getBytes()));
+            
+            Assertions.assertArrayEquals(expected.get(40751).toArray(), actual.get(40751).toArray());
+            Assertions.assertArrayEquals(expected.get(95).toArray(), actual.get(95).toArray());
+            Assertions.assertArrayEquals(expected.get(94).toArray(), actual.get(94).toArray());
+            Assertions.assertArrayEquals(expected.get(41042).toArray(), actual.get(41042).toArray());
+        }
+
     }
     
 }

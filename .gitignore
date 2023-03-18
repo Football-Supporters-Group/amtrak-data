@@ -34,3 +34,7 @@ data/**/*.zip
 
 ### VS Code ###
 .vscode/
+
+
+### Idea ###
+.idea/

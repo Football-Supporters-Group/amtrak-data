@@ -1,0 +1,11 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.wolginm.amtrak.data.service.AmtrakDataService,\
+com.wolginm.amtrak.data.handler.AmtrakDataHandler,\
+com.wolginm.amtrak.data.client.AmtrakRestTemplate,\
+com.wolginm.amtrak.data.handler.AmtrakCalendarHandler,\
+com.wolginm.amtrak.data.handler.AmtrakRoutesHandler,\
+com.wolginm.amtrak.data.handler.AmtrakStopTimesHandler,\
+com.wolginm.amtrak.data.util.CSVUtil,\
+com.wolginm.amtrak.data.util.FileUtil,\
+com.wolginm.amtrak.data.util.ZipUtil,\
+com.wolginm.amtrak.data.properties.AmtrakProperties

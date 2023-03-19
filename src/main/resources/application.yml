@@ -3,4 +3,6 @@ amtrak:
     gtfs-uri: content/gtfs/GTFS.zip
     temp-file: ./data/tmp/gtfs.zip
     data-directory: ./data
+    work-directory: ./data/work
+    temp-directory: ./data/tmp
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt

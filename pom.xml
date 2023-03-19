@@ -8,11 +8,21 @@
 		<version>2.6.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.wolginm.amtrak</groupId>
+	<groupId>com.markwolgin</groupId>
 	<artifactId>data</artifactId>
 	<version>0.1</version>
 	<name>data</name>
-	<packaging>jar</packaging>
+<!--	<packaging>jar</packaging>-->
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>
 	<properties>
 		<java.version>11</java.version>
@@ -38,11 +48,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
 			<version>[1.8, )</version>
@@ -52,6 +57,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-javadoc-plugin</artifactId>
+			<version>${maven-javadoc-plugin.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-gpg-plugin</artifactId>
+			<version>1.5</version>
 		</dependency>
 	</dependencies>
 
@@ -67,18 +89,59 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 				</configuration>
 				<executions>
+<!--					<execution>-->
+<!--						<id>make-assembly</id>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>single</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>attach-sources</id>-->
+<!--						<goals>-->
+<!--							<goal>jar-no-fork</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+				</configuration>
+				<executions>
 					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
+						<id>attach-javadocs</id>
 						<goals>
-							<goal>single</goal>
+							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<keyname>${gpg.keyname}</keyname>
+							<passphraseServerId>${gpg.keyname}</passphraseServerId>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

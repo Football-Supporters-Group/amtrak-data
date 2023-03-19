@@ -1,4 +1,4 @@
-package com.wolginm.amtrak.data.util;
+package com.wolginm.amtrak.data.client;
 
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.spi.AsynchronousChannelProvider;
@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 
+import com.wolginm.amtrak.data.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -39,17 +40,19 @@ public class AmtrakRestTemplate {
         log.info("Built AmtrakRestTemplate");
     }
 
-    public void downloadGTFSFile() {
+    /**
+     * Downloads the Amtrak GTFS file for use.
+     * Places it in to the folder at amtrak.temp-file
+     */
+    public void downloadGTFSFile(String relativePath) {
         Flux<DataBuffer> downloadedMono = amtrakRestTemplate
             .get()
             .uri(this.amtrakProperties.getGtfsUri())
             .retrieve()
             .bodyToFlux(DataBuffer.class);
 
-        Path placeToStoreFile = this.fileUtil.resolvePath(this.amtrakProperties.getTempFile());
+        Path placeToStoreFile = this.fileUtil.resolvePath(relativePath);
         this.fileUtil.prepFoldersForFile(placeToStoreFile);
-
-
         DataBufferUtils.write(downloadedMono, 
             placeToStoreFile,
             StandardOpenOption.CREATE).block();

@@ -62,7 +62,7 @@ public class FileUtil {
      *          {@code FileTime} represents a time that is after {@code other}
      * @param alpha
      * @param beta
-     * @return
+     * @return The value of the comparison.
      * @throws IOException
      */
     public int compareFileTimes(File alpha, File beta) throws IOException {

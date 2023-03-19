@@ -36,6 +36,12 @@ public class FileUtil {
         return this.prepFoldersForFile(path, 0);
     }
 
+    /**
+     * Prepares a folder to have files if the folder does not exist.
+     * @param path
+     * @param depth
+     * @return
+     */
     private int prepFoldersForFile(final Path path, int depth) {
         File current = path.getParent().toFile();
         if (current.exists()) {

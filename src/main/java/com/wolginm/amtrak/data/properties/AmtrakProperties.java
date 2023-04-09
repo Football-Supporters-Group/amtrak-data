@@ -12,19 +12,19 @@ import lombok.Setter;
 @Setter
 @Configuration
 @EnableConfigurationProperties
-@ConfigurationProperties("amtrak")
+//@ConfigurationProperties(prefix = "amtrak")
 public class AmtrakProperties {
     
-    @Value("amtrak.gtfs-url") 
+    @Value("amtrak.gtfs-url")
     private String gtfsUrl;
 
-    @Value("amtrak.gtfs-uri") 
+    @Value("amtrak.gtfs-uri")
     private String gtfsUri;
 
-    @Value("amtrak.temp-file") 
+    @Value("amtrak.temp-file")
     private String tempFile;
 
-    @Value("amtrak.data-directory") 
+    @Value("amtrak.data-directory")
     private String dataDirectory;
 
     @Value("temp-directory")

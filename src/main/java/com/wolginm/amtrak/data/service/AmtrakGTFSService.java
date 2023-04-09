@@ -54,7 +54,7 @@ public class AmtrakGTFSService {
                     true);
         }
 
-
+        return true;
     }
 
     private boolean _isWorkDirectoryOld() throws IOException {

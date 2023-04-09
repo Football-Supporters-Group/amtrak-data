@@ -37,8 +37,12 @@ pipeline {
 
     stage('Deploy') {
         steps {
-            input message: 'Procede with Deployment to Maven?', submitter: 'wolginm'
-            sh 'mvn deploy'
+            if (env.BRANCH_NAME.equals('main')) {
+                input message: 'Procede with Deployment to Maven?', submitter: 'wolginm'
+                sh 'mvn deploy'
+            } else {
+                echo "Branch is not release-able"
+            }
         }
     }
 

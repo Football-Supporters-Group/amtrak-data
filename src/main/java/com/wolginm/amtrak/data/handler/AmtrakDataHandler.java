@@ -71,7 +71,7 @@ public class AmtrakDataHandler {
 
         int status = 1;
         try {
-            this.amtrakRestTemplate.downloadGTFSFile();
+            this.amtrakRestTemplate.downloadGTFSFile(this.amtrakProperties.getTempDirectory());
             this.zipUtil.unzip(this.amtrakProperties.getTempFile(), 
                 this.amtrakProperties.getDataDirectory());        
 

@@ -15,7 +15,7 @@ pipeline {
       steps {
         sh '''
           java -version
-          which java
+          javadoc --help
         '''
       }
     }

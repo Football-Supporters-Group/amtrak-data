@@ -15,13 +15,12 @@ pipeline {
       steps {
         sh '''
           java -version
-          javadoc --help
         '''
       }
     }
     stage('Build') {
         steps {
-            sh 'mvn -B -DskipTests clean package'
+            sh 'mvn -B -DskipTests -Dmaven.javadoc.skip=true clean package'
         }
     }
     stage('Test') {
@@ -39,7 +38,7 @@ pipeline {
     stage('Deploy') {
         steps {
             input message: 'Procede with Deployment to Maven?', submitter: 'wolginm'
-            sh 'mvn deploy'
+            sh 'mvn -DskipTests -Dmaven.javadoc.skip=true deploy'
         }
         when {
             branch comparator: 'EQUALS', pattern: 'main'

@@ -1,0 +1,87 @@
+route_id,agency_id,route_short_name,route_long_name,route_type,route_url,route_color,route_text_color
+39382,186,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+11317,99,,Amtrak Thruway Connecting Service,2,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42896,1207,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42895,1206,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+40751,51,,Acela,2,http://www.amtrak.com/acela-train,CAE4F1,000000
+95,51,,Adirondack,2,https://www.amtrak.com/adirondack-train,CAE4F1,000000
+60,51,,Amtrak Cascades,2,https://www.amtrak.com/cascades-train,CAE4F1,000000
+41042,51,,Amtrak Hartford Line,2,https://www.amtrak.com/amtrak-hartford-line-train,CAE4F1,000000
+77,51,,Auto Train,2,https://www.amtrak.com/auto-train,CAE4F1,000000
+42948,51,,Berkshire Flyer,2,http://www.amtrak.com,CAE4F1,000000
+71,51,,Blue Water,2,https://www.amtrak.com/michigan-services-train,CAE4F1,000000
+96,51,,California Zephyr,2,https://www.amtrak.com/california-zephyr-train,CAE4F1,000000
+84,51,,Capitol Corridor,2,https://www.amtrak.com/capitol-corridor-train,CAE4F1,000000
+36922,51,,Capitol Limited,2,https://www.amtrak.com/capitol-limited-train,CAE4F1,000000
+58,51,,Cardinal,2,https://www.amtrak.com/cardinal-train,CAE4F1,000000
+72,51,,Carl Sandburg,2,https://www.amtrak.com/illinois-services-train,CAE4F1,000000
+85,51,,Carolinian,2,https://www.amtrak.com/carolinian-piedmont-train,CAE4F1,000000
+62,51,,City Of New Orleans,2,https://www.amtrak.com/city-of-new-orleans-train,CAE4F1,000000
+36924,51,,Coast Starlight,2,https://www.amtrak.com/coast-starlight-train,CAE4F1,000000
+36923,51,,Crescent,2,https://www.amtrak.com/crescent-train,CAE4F1,000000
+61,51,,Downeaster,2,https://www.amtrak.com/downeaster-train,CAE4F1,000000
+75,51,,Empire Builder,2,https://www.amtrak.com/empire-builder-train,CAE4F1,000000
+36921,51,,Empire Service,2,https://www.amtrak.com/empire-service-train,CAE4F1,000000
+36949,51,,Ethan Allen Express,2,https://www.amtrak.com/ethan-allen-express-train,CAE4F1,000000
+86,51,,Heartland Flyer,2,https://www.amtrak.com/heartland-flyer-train,CAE4F1,000000
+54,51,,Hiawatha Service,2,https://www.amtrak.com/hiawatha-train,CAE4F1,000000
+56,51,,Illini,2,https://www.amtrak.com/illinois-services-train,CAE4F1,000000
+93,51,,Illinois Zephyr,2,https://www.amtrak.com/illinois-services-train,CAE4F1,000000
+94,51,,Keystone Service,2,https://www.amtrak.com/keystone-service-train,CAE4F1,000000
+81,51,,Lake Shore Limited,2,https://www.amtrak.com/lake-shore-limited-train,CAE4F1,000000
+36926,51,,Lincoln Service,2,https://www.amtrak.com/illinois-services-train,CAE4F1,000000
+42947,51,,Lincoln Service Missouri River Runner,2,http://www.amtrak.com/lincoln-service-missouri-river-runner-train,CAE4F1,000000
+68,51,,Maple Leaf,2,https://www.amtrak.com/maple-leaf-train,CAE4F1,000000
+36948,51,,Missouri River Runner,2,https://www.amtrak.com/missouri-river-runner-train,CAE4F1,000000
+88,51,,Northeast Regional,2,https://www.amtrak.com/northeast-regional-train,CAE4F1,000000
+78,51,,Pacific Surfliner,2,https://www.amtrak.com/pacific-surfliner-train,CAE4F1,000000
+69,51,,Palmetto,2,https://www.amtrak.com/silver-service-palmetto-train,CAE4F1,000000
+64,51,,Pennsylvanian,2,https://www.amtrak.com/pennsylvanian-train,CAE4F1,000000
+55,51,,Pere Marquette,2,https://www.amtrak.com/michigan-services-train,CAE4F1,000000
+79,51,,Piedmont,2,https://www.amtrak.com/carolinian-piedmont-train,CAE4F1,000000
+63,51,,Saluki,2,https://www.amtrak.com/illinois-services-train,CAE4F1,000000
+26025,51,,San Joaquins,2,https://www.amtrak.com/san-joaquins-train,CAE4F1,000000
+91,51,,Silver Meteor,2,https://www.amtrak.com/silver-service-palmetto-train,CAE4F1,000000
+70,51,,Silver Star,2,https://www.amtrak.com/silver-service-palmetto-train,CAE4F1,000000
+36930,51,,Sunset Limited,2,https://www.amtrak.com/sunset-limited-train,CAE4F1,000000
+87,51,,Texas Eagle,2,https://www.amtrak.com/texas-eagle-train,CAE4F1,000000
+41044,51,,Valley Flyer,2,https://www.amtrak.com/valley-flyer-train,CAE4F1,000000
+90,51,,Vermonter,2,https://www.amtrak.com/vermonter-train,CAE4F1,000000
+80,51,,Wolverine,2,https://www.amtrak.com/michigan-services-train,CAE4F1,000000
+37329,174,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+25180,150,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+43,43,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+29498,155,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42920,1220,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+39297,184,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+6,6,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21152,123,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42915,1215,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42935,1227,,Amtrak Thruway Connecting Service,3,http://www.amtrak.com,CAE4F1,000000
+40050,192,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42917,1217,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+18650,117,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+25976,153,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+39520,188,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21248,125,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+44,44,,Amtrak Thruway Connecting Service,2,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21235,124,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+39850,190,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+23,23,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42949,1231,,Amtrak Thruway Connecting Service,3,http://www.amtrak.com,CAE4F1,000000
+21267,133,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+15159,108,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+39381,185,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21261,131,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+22580,142,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21306,136,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+39384,187,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+23565,147,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42891,1202,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21313,137,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21323,139,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+33820,162,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42933,178,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+21314,138,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42912,1213,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000
+42918,1218,,Amtrak Thruway Connecting Service,3,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,CAE4F1,000000

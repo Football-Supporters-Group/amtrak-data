@@ -1,0 +1,43 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang
+186,Adirondack Trailways,http://www.amtrak.com,America/New_York,en
+99,Altamont Corridor Express,http://www.amtrak.com,America/New_York,en
+1207,Alvand Transportation,http://www.amtrak.com,America/New_York,en
+1206,AmericanStar,http://www.amtrak.com,America/New_York,en
+51,Amtrak,http://www.amtrak.com,America/New_York,en
+174,Amtrak Chartered Motorcoach,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+150,Apple Line,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+43,Arrow Trailways,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+155,Badger Bus,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+1220,BeeLine Express Bus,http://www.amtrak.com,America/New_York,en
+184,Bustang,http://www.amtrak.com,America/New_York,en
+6,C&J,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+123,Cantrail,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+1215,Central Oregon Breeze,http://www.amtrak.com,America/New_York,en
+1227,Coach USA,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+192,Dungeness Line,http://www.amtrak.com,America/New_York,en
+1217,El Dorado Transit,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+117,Executive Transportation,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+153,Express Arrow,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+188,Fullington Trailways,http://www.amtrak.com,America/New_York,en
+125,Gold Line,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+44,Grand Canyon Railway,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+124,Grape Line,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+190,Groome Transportation,http://www.amtrak.com,America/New_York,en
+23,Indian Trails,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+1231,Amtrak Thruway,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+133,Lamers Connect,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+108,Martz Trailways,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+185,New York Trailways,http://www.amtrak.com,America/New_York,en
+131,Northwestern Trailways,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+142,Pacific Crest Bus Lines,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+136,Peoria Charter,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+187,Pine Hill Trailways,http://www.amtrak.com,America/New_York,en
+147,RoadRunneR Shuttle,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+1202,Route 66 Express,http://www.amtrak.com,America/New_York,en
+137,Smart Way Connector,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+139,Southeast Area Transit (SEAT),https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+162,Stagecoach Express,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+178,The Lift,http://www.amtrak.com,America/New_York,en
+138,Van Galder Coach USA,https://www.amtrak.com/thruway-connecting-services-multiply-your-travel-destinations,America/New_York,en
+1213,Vegas Airporter,http://www.amtrak.com,America/New_York,en
+1218,Vermont Translines,http://www.amtrak.com,America/New_York,en

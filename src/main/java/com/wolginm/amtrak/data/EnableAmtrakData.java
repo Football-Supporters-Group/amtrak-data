@@ -11,7 +11,7 @@ import com.wolginm.amtrak.data.handler.AmtrakRoutesHandler;
 import com.wolginm.amtrak.data.handler.AmtrakStopTimesHandler;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.service.AmtrakDataService;
-import com.wolginm.amtrak.data.util.AmtrakRestTemplate;
+import com.wolginm.amtrak.data.client.AmtrakRestTemplate;
 import com.wolginm.amtrak.data.util.CSVUtil;
 import com.wolginm.amtrak.data.util.FileUtil;
 import com.wolginm.amtrak.data.util.ZipUtil;

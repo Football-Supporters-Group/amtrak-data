@@ -71,7 +71,7 @@ public class CSVUtil {
         try {
             BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(inputStream, "UTF-8"));
-            ;
+
             CSVParser csvParser = new CSVParser(bufferedReader, 
                 CSVFormat.DEFAULT
                     .builder()

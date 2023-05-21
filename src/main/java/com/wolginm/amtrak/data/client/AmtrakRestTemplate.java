@@ -1,4 +1,4 @@
-package com.wolginm.amtrak.data.util;
+package com.wolginm.amtrak.data.client;
 
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.spi.AsynchronousChannelProvider;
@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 
+import com.wolginm.amtrak.data.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;

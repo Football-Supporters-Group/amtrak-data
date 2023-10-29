@@ -3,11 +3,16 @@ package com.wolginm.amtrak.data.models.gtfs;
 import java.sql.Time;
 import java.util.List;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+/**
+ * A Trip is an instance of a route, known as a service.  The service is defined by
+ *  a calendar entry.  So a trip can be though of a specific train, like the
+ *  Pennsylvania 42/43, or the Keystone 661.
+ */
+@Data
 public class Trips implements ICVMapable {
     
     private int route_id;

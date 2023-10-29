@@ -1,13 +1,14 @@
 package com.wolginm.amtrak.data.models.gtfs;
 
-import java.sql.Time;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+
+/**
+ * Not currently used.
+ */
+@Data
 public class Transfers implements ICVMapable {
     
     private String from_stop_id;

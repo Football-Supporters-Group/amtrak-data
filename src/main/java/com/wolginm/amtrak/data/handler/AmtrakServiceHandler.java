@@ -23,5 +23,13 @@ public class AmtrakServiceHandler {
     private final AmtrakProperties amtrakProperties;
     private final CSVUtil csvUtil;
 
+
+    private AmtrakServiceHandler() {
+        agencies = null;
+        calendars = null;
+        routes = null;
+        amtrakProperties = null;
+        csvUtil = null;
+    }
     //todo, see ipad data.
 }

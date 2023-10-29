@@ -2,14 +2,20 @@ package com.wolginm.amtrak.data.models.gtfs;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Routes implements ICVMapable {
-    
+
+    /**
+     * The ID of the route.
+     * Pk of Routes, Sk of {@link Trips}
+     */
     private int route_id;
+    /**
+     * Operator of the route.
+     * {@link Routes}
+     */
     private int agency_id;
     private String route_short_name;
     private String route_long_name;

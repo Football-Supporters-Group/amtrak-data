@@ -2,11 +2,12 @@ package com.wolginm.amtrak.data.models.gtfs;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+/**
+ * Not used.`
+ */
+@Data
 @Deprecated
 public class Shapes implements ICVMapable {
     

@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.wolginm.amtrak.data.util.GTFSUtil;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+/**
+ * Not used.
+ */
+@Data
 public class FeedInfo implements ICVMapable {
     
     private String feed_publisher_name;

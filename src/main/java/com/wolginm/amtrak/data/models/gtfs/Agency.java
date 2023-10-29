@@ -2,13 +2,18 @@ package com.wolginm.amtrak.data.models.gtfs;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+/**
+ * Route Operator Information.
+ */
+@Data
 public class Agency implements ICVMapable {
-    
+
+    /**
+     * The ID of the operating Agency.
+     * Pk for Agency, Sk for {@link Routes}
+     */
     private int agency_id;
     private String agency_name;
     private String agency_url;

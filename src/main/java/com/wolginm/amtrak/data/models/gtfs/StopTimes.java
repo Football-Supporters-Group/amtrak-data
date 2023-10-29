@@ -5,11 +5,15 @@ import java.util.List;
 
 import com.wolginm.amtrak.data.util.GTFSUtil;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+/**
+ * A specific stop on a trip.  A trip has a list of these stops.
+ *  Indicates when arrival and departed happen, to make it clear about wait times.
+ */
+@Data
 public class StopTimes implements ICVMapable {
     
     private String trip_id;

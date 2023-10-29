@@ -8,6 +8,7 @@ import com.wolginm.amtrak.data.util.CSVUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -185,7 +186,7 @@ public class AmtrakStopHandler {
      * @return          The selected {@link Stops} if it exists.
      *  If it does not, it will return a null.
      */
-    public List<Stops> getStopFromStopId(final String... stopIds) {
+    public List<Stops> getStopsFromStopId(final String... stopIds) {
         List<Stops> converted = new LinkedList<>();
 
         for (String stopId: stopIds) {
@@ -203,6 +204,17 @@ public class AmtrakStopHandler {
      */
     public List<StopTimes> getStopTimesForTrip(final Integer tripId) {
         return this.tripStopTimeMap.get(tripId);
+    }
+
+    public Stops getStopByName(final String stopName) {
+        Stops sel = null;
+        List<Stops> selected = this.stops.stream().filter(stop -> stop.getStop_name().equals(stopName)).toList();
+        if (selected.size() != 1) {
+            log.error("Unable to find stop [{}]", stopName);
+        } else {
+            sel = selected.get(0);
+        }
+        return sel;
     }
 
 }

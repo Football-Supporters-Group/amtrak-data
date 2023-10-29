@@ -2,11 +2,14 @@ package com.wolginm.amtrak.data.models.gtfs;
 
 import java.util.List;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+/**
+ * Each stop accessible by the Amtrak network.  Example, 30th Street Station.
+ */
+@Data
 public class Stops implements ICVMapable {
     
     private String stop_id;

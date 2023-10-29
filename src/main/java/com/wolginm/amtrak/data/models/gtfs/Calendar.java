@@ -5,13 +5,17 @@ import java.util.List;
 
 import com.wolginm.amtrak.data.util.GTFSUtil;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+/**
+ * An indication of when a Trips Route will be operating.
+ */
+@Data
 public class Calendar implements ICVMapable{
-    
+
+    /**
+     * Service Identifier.
+     */
     private String service_id;
     private boolean monday;
     private boolean tuesday;

@@ -1,0 +1,136 @@
+openapi: '3.1.0'
+info:
+  title: Amtrak Data Objects
+  summary: For generation of models for Amtrak Data and Consolidated Routes
+  description: A set of Amtrak defined GTFS Models, and a set of consolidated objects.  Ment to be used by other services to produce a better Amtrak scheduling service.
+  termsOfService: markwolgin.com/data/tos
+  contact:
+    name: Mark Wolgin
+    url: markwolgin.com
+    email: wolginmark@gmail.com
+  license:
+    name: Apache 2.0
+    identifier: Apache-2.0
+  version: 1.0.0
+servers:
+  - url: "https://ashton.vault.markwolgin.com/data/{enviornment}/v1"
+description: Server to access consolidated data.
+variables:
+  enviornment:
+    default: dev
+    description: The development enviorment.
+    enum:
+      - "dev"
+      - "prod"
+components:
+  schemas:
+    Agency:
+      type: object
+      description: A specific opperator in the Amtrak Network.
+      required:
+        - agency_id
+        - agency_name
+        - agency_url
+        - agency_timezone
+        - agency_lang
+      properties:
+        agency_id:
+          type: integer
+          format: int32
+          description: The unique identidier for the agency.
+        agency_name:
+          type: string
+          description: The common name of the agency.
+        agency_url:
+          type: string
+          format: uri
+          description: The url of the host agency.
+        agency_timezone:
+          type: string
+          description: ISO Timezone.
+        agency_lang:
+          $ref: '#/components/schemas/Language'
+    Calendar:
+      type: object
+      properties:
+        service_id:
+          type: integer
+          format: int32
+          description: A definition for when a service is running.  Each Service has a service_id that will link to a calendar, letting the user know when that services will run.
+        monday:
+          type: boolean
+          description: If the services opperates on Monday.
+        tuesday:
+          type: boolean
+          description: If the services opperates on Tuesday.
+        wednesday:
+          type: boolean
+          description: If the services opperates on Wednesday.
+        thursday:
+          type: boolean
+          description: If the services opperates on Thursday.
+        friday:
+          type: boolean
+          description: If the services opperates on Friday.
+        saturday:
+          type: boolean
+          description: If the services opperates on Saturday.
+        sunday:
+          type: boolean
+          description: If the services opperates on Sunday.
+        start_date:
+          $ref: '#/components/schemas/Date'
+        end_date:
+          $ref: '#/components/schemas/Date'
+      required:
+        - service_id
+        - monday
+        - tuesday
+        - wednesday
+        - thuesday
+        - friday
+        - satruday
+        - sunday
+        - start_date
+        - end_date
+    FeedInfo:
+      type: object
+      description: A description of the data feed, where it gets data, how its published, when it is valid from, and who to contact with questions and concers.
+      properties:
+        feed_publisher_name:
+          type: string
+          description: Name of the publisher of the data feed.
+        feed_publisher_url:
+          type: string
+          format: uri
+          description: The url of the agency that publishes the url.  This is not the url where the feed is actually hosted.
+        feed_lang:
+          $ref: '#/components/schemas/Language'
+        default_lang:
+          $ref: '#/components/schemas/Language'
+        feed_start_date:
+          $ref: '#/components/schemas/Date'
+        feed_end_date:
+          $ref: '#/components/schemas/Date'
+        feed_version:
+          type: string
+          description: The current version of the feed.
+        feed_contact_email:
+          type: string
+          format: email
+          description: A contact email for the feed.
+        feed_contact_url:
+          type: string
+          format: uri
+          description: A contact url for the feed.
+      required:
+        - feed_publisher_name
+        - feed_publisher_url
+        - feed_lang
+        - feed_end_date
+    Language:
+      type: string
+      description: The language the text contained will be writen in.
+    Date:
+      type: string
+      description: A custom date format that follows YYYYMMDD as a string.

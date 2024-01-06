@@ -2,9 +2,7 @@ package com.wolginm.amtrak.data.service;
 
 import java.util.List;
 
-import com.wolginm.amtrak.data.handler.AmtrakDataHandler;
 import com.wolginm.amtrak.data.models.consolidated.ConsolidatedRoute;
-import com.wolginm.amtrak.data.models.consolidated.Trip;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

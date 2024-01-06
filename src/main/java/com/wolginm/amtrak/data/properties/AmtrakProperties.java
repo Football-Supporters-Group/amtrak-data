@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("amtrak")
 public class AmtrakProperties {
     
-    private String gtfsUrl;
-    private String gtfsUri;
-    private String tempFile = "./tmp";
-    private String dataDirectory;
-    private String routeMetadata;
+    private String content_amtrak = "https://content.amtrak.com/";
+    private String gtfs_uri_part = "content/gtfs/GTFS.zip";
+    private String temp_file = "./tmp";
+    private String data_directory = "./data";
+    private String route_metadata = "./src/main/resources/metadata/route_stop_order.txt";
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.11</version>
+		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.wolginm.amtrak</groupId>
@@ -42,6 +42,11 @@
 			<artifactId>commons-csv</artifactId>
 			<version>[1.8, )</version>
 		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.2.20</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,6 +57,26 @@
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-resources-plugin</artifactId>
 			<version>${maven-resources-plugin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -104,6 +129,32 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>7.2.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<id>generate-amtrak-objects</id>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/AmtrakDataObjects.yml</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.wolginmark.amtrak.data.models</apiPackage>
+							<modelPackage>com.wolginmark.amtrak.data.models</modelPackage>
+							<configOptions>
+								<basePackage>com.wolginmark.amtrak.data.models</basePackage>
+								<java11>true</java11>
+								<serializableModel>true</serializableModel>
+								<useSpringBoot3>true</useSpringBoot3>
+								<validateSpec>false</validateSpec>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>

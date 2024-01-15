@@ -4,15 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
-import com.wolginm.amtrak.data.models.gtfs.Calendar;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.util.CSVUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties.Embedded;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;

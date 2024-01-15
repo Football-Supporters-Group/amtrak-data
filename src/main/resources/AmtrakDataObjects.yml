@@ -2,31 +2,31 @@ openapi: '3.1.0'
 info:
   title: Amtrak Data Objects
   summary: For generation of models for Amtrak Data and Consolidated Routes
-  description: A set of Amtrak defined GTFS Models, and a set of consolidated objects.  Ment to be used by other services to produce a better Amtrak scheduling service.
+  description: A set of Amtrak defined GTFS Models, and a set of consolidated objects.  Meant to be used by other services to produce a better Amtrak scheduling service.
   termsOfService: markwolgin.com/data/tos
-  contact:
-    name: Mark Wolgin
-    url: markwolgin.com
-    email: wolginmark@gmail.com
+#  contact:
+#    name: Mark Wolgin
+#    url: markwolgin.com
+#    email: wolginmark@gmail.com
   license:
     name: Apache 2.0
     identifier: Apache-2.0
   version: 1.0.0
 servers:
-  - url: "https://ashton.vault.markwolgin.com/data/{enviornment}/v1"
-description: Server to access consolidated data.
-variables:
-  enviornment:
-    default: dev
-    description: The development enviorment.
-    enum:
-      - "dev"
-      - "prod"
+  - url: "https://ashton.vault.markwolgin.com/data/{environment}/v1"
+    description: Server to access consolidated data.
+    variables:
+      environment:
+        default: dev
+        description: The development environment.
+        enum:
+          - "dev"
+          - "prod"
 components:
   schemas:
     Agency:
       type: object
-      description: A specific opperator in the Amtrak Network.
+      description: A specific operator in the Amtrak Network.
       required:
         - agency_id
         - agency_name
@@ -35,9 +35,7 @@ components:
         - agency_lang
       properties:
         agency_id:
-          type: integer
-          format: int32
-          description: The unique identidier for the agency.
+          $ref: '#/components/schemas/AgencyId'
         agency_name:
           type: string
           description: The common name of the agency.
@@ -46,7 +44,7 @@ components:
           format: uri
           description: The url of the host agency.
         agency_timezone:
-          type: string
+          $ref: '#/components/schemas/Timezone'
           description: ISO Timezone.
         agency_lang:
           $ref: '#/components/schemas/Language'
@@ -54,30 +52,28 @@ components:
       type: object
       properties:
         service_id:
-          type: integer
-          format: int32
-          description: A definition for when a service is running.  Each Service has a service_id that will link to a calendar, letting the user know when that services will run.
+          $ref: '#/components/schemas/ServiceId'
         monday:
           type: boolean
-          description: If the services opperates on Monday.
+          description: If the services operates on Monday.
         tuesday:
           type: boolean
-          description: If the services opperates on Tuesday.
+          description: If the services operates on Tuesday.
         wednesday:
           type: boolean
-          description: If the services opperates on Wednesday.
+          description: If the services operates on Wednesday.
         thursday:
           type: boolean
-          description: If the services opperates on Thursday.
+          description: If the services operates on Thursday.
         friday:
           type: boolean
-          description: If the services opperates on Friday.
+          description: If the services operates on Friday.
         saturday:
           type: boolean
-          description: If the services opperates on Saturday.
+          description: If the services operates on Saturday.
         sunday:
           type: boolean
-          description: If the services opperates on Sunday.
+          description: If the services operates on Sunday.
         start_date:
           $ref: '#/components/schemas/Date'
         end_date:
@@ -95,7 +91,7 @@ components:
         - end_date
     FeedInfo:
       type: object
-      description: A description of the data feed, where it gets data, how its published, when it is valid from, and who to contact with questions and concers.
+      description: A description of the data feed, where it gets data, how its published, when it is valid from, and who to contact with questions and concerts.
       properties:
         feed_publisher_name:
           type: string
@@ -128,9 +124,225 @@ components:
         - feed_publisher_url
         - feed_lang
         - feed_end_date
-    Language:
-      type: string
-      description: The language the text contained will be writen in.
+    Routes:
+      type: object
+      description: A specific route on the Amtrak Network.  Think, Empire Service, or Pacific Starlight.
+      properties:
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        agency_id:
+          $ref: '#/components/schemas/AgencyId'
+        route_short_name:
+          type: string
+          description: The shortname for a route.
+        route_long_name:
+          tyep: string
+          description: The long name for a route.
+        route_type:
+          type: number
+          format: int32
+          description: The type of the route.
+        route_url:
+          type: string
+          format: uri
+          description: The URL to the site with information about the route.
+        route_color:
+          type: string
+          description: A hex representation of the color of the route.
+        route_text_color:
+          type: string
+          description: A hex representation of the color of the route's text.
+      required:
+        - route_id
+        - agency_id
+        - route_short_name
+        - route_long_name
+        - route_type
+        - route_url
+        - route_color
+        - route_text_color
+    Shapes:
+      type: object
+      description: Shapes that can be used to render over a geo map.
+      properties:
+        shape_id:
+          $ref: '#/components/schemas/ShapeId'
+        shape_pt_lat:
+          $ref: '#/components/schemas/GeoLocationElement'
+          description: Latitude of the shape.
+        shape_pt_lon:
+          $ref: '#/components/schemas/GeoLocationElement'
+          description: Longitude of the shape.
+        shape_pt_sequence:
+          type: number
+          format: int32
+          description: Shapes place in a sequence.
+      required:
+        - shape_id
+        - shape_pt_lat
+        - shape_pt_lon
+        - shape_pt_sequence
+    StopTimes:
+      type: object
+      description: An entry on a timetable, indicating a specific stop.
+      properties:
+        trip_id:
+          $ref: '#/components/schemas/TripId'
+        arrival_time:
+          $ref: '#/components/schemas/Time'
+          description: The time when the servicer arrives.
+        departure_time:
+          $ref: '#/components/schemas/Time'
+          description: The time when the servicer departs.
+        stop_id:
+          $ref: '#/components/schemas/StopId'
+        stop_sequence:
+          type: number
+          format: int32
+          description: The place in the Trip where this stop falls.
+        pickup_type:
+          type: number
+          format: int32
+          description: Pickup type.
+        drop_off_type:
+          type: number
+          format: int32
+          description: Drop-off type.
+      required:
+        - trip_id
+        - arrival_time
+        - departure_time
+        - stop_id
+        - stop_sequence
+        - pickup_type
+        - drop_off_type
+    Stops:
+      type: object
+      description: A place on a map.
+      properties:
+        stop_id:
+          $ref: '#/components/schemas/StopId'
+        stop_name:
+          type: string
+          description: The canonical name of the station.
+        stop_lat:
+          description: Stop latitude.
+          $ref: '#/components/schemas/GeoLocationElement'
+        stop_lon:
+          description: Stop longitude.
+          $ref: '#/components/schemas/GeoLocationElement'
+        stop_url:
+          type: string
+          format: uri
+          description: URL for a station.
+        stop_timezone:
+          description: Timezone the stop is located in.
+          $ref: '#/components/schemas/Timezone'
+      required:
+        - stop_id
+        - stop_name
+        - stop_lat
+        - stop_lon
+        - stop_url
+        - stop_timezone
+    Transfers:
+      type: object
+      description: A 'place' where a transfer takes place.
+      properties:
+        from_stop_id:
+          description: The stop from where people are transfering from.
+          $ref: '#/components/schemas/StopId'
+        to_stop_id:
+          description: The stop from where people are transfering to.
+          $ref: '#/components/schemas/StopId'
+        transfer_type:
+          type: number
+          format: int32
+          description: What kind of transefer this action is.
+        min_transfer_time:
+          description: The minimum amount time it takes for a transfer to occur, in minuetes.
+          type: number
+          format: int32
+      required:
+        - from_stop_id
+        - to_stop_id
+        - transfer_type
+        - min_transfer_time
+    Trips:
+      type: object
+      desctiption: A specific trip on a route.
+      properties:
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        service_id:
+          $ref: '#/components/schemas/ServiceId'
+        trip_id:
+          $ref: '#/components/schemas/TripId'
+        trip_headsign:
+          type: string
+          description: The destination of the trip, common to travelers.
+        trip_short_name:
+          type: number
+          format: int64
+          description: Shortname for the trip.
+        direction_id:
+          type: boolean
+          description: Inidcated the direction of travel.
+        shape_id:
+          $ref: '#/components/schemas/ShapeId'
+      required:
+        - route_id
+        - service_id
+        - trip_id
+        - trip_headsign
+        - trip_short_name
+        - direction_id
+      examples:
+        - {"route_id": 39520,
+           "service_id": 2851853,
+           "trip_id": 80332851853,
+           "trip_headsign": "Pittsburgh",
+           "trip_short_name": "8033",
+           "direction_id": false}
+    ## Common Objects
+    AgencyId:
+      type: integer
+      format: int32
+      description: The unique identidier for the agency.
     Date:
       type: string
       description: A custom date format that follows YYYYMMDD as a string.
+    GeoLocationElement:
+      type: number
+      format: double
+      description: GeoLocationElement.
+    Language:
+      type: string
+      description: The language the text contained will be writen in.
+    RouteId:
+      type: number
+      format: int32
+      description: Specific Route Identifier.
+    ShapeId:
+      type: number
+      format: int32
+      description: Specific Shape Identifier.
+    ServiceId:
+      type: integer
+      format: int32
+      description: A definition for when a service is running.  Each Service has a service_id that will link to a calendar, letting the user know when that services will run.
+    StopId:
+      type: string
+      description: Three character code for each station.
+      minLength: 3
+      maxLength: 3
+    Time:
+      type: string
+      description: A time format HH:MM:SS
+    Timezone:
+      type: string
+      description: ISO Timezone.
+    TripId:
+      type: integer
+      format: int64
+      description: Specific Trip Identifier.

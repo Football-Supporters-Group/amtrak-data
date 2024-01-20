@@ -4,13 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.wolginm.amtrak.data.models.gtfs.ICVMapable;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -24,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CSVUtil {
     
-    public List<ICVMapable> csvToObject(InputStream inputStream, ICVMapable inputType) {
-        List<ICVMapable> objects = null;
+    public <T extends Serializable> List<T> csvToObject(InputStream inputStream, Class<T> inputType) {
+        List<T> objects = null;
         List<String> headers = null;
         List<Object> objectList = null;
 
@@ -42,7 +41,7 @@ public class CSVUtil {
                     .setTrim(true)
                     .build());
             
-            objects = new ArrayList<ICVMapable>();
+            objects = new ArrayList<T>();
             headers = csvParser.getHeaderNames();
             objectList = new ArrayList<>();
             Iterable<CSVRecord> cIterable = csvParser.getRecords();
@@ -50,7 +49,7 @@ public class CSVUtil {
                 for (String header : headers) {
                     objectList.add(csvRecord.get(header));
                 }
-                objects.add(inputType.mapToObject(objectList, headers));
+                // objects.add(inputType.mapToObject(objectList, headers));  #TODO
                 objectList.clear();
             }
             csvParser.close();

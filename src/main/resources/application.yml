@@ -1,6 +1,7 @@
 amtrak:
-    gtfs-url: https://content.amtrak.com/
-    gtfs-uri: content/gtfs/GTFS.zip
-    temp-file: ./data/tmp/gtfs.zip
-    data-directory: ./data
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt
+    gtfs:
+        content_amtrak:     https://content.amtrak.com/
+        uri_part:           content/gtfs/GTFS.zip
+        tmp_dit:            ./tmp
+        data_dictionary:    ./data

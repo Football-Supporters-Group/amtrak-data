@@ -144,6 +144,9 @@
 							<generatorName>spring</generatorName>
 							<apiPackage>com.wolginmark.amtrak.data.models</apiPackage>
 							<modelPackage>com.wolginmark.amtrak.data.models</modelPackage>
+							<generateApis>false</generateApis>
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generateApiTests>false</generateApiTests>
 							<configOptions>
 								<basePackage>com.wolginmark.amtrak.data.models</basePackage>
 								<java11>true</java11>

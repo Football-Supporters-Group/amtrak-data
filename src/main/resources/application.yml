@@ -1,7 +1,15 @@
 amtrak:
+    retry-enabled: true
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt
     gtfs:
-        content_amtrak:     https://content.amtrak.com/
-        uri_part:           content/gtfs/GTFS.zip
-        tmp_dit:            ./tmp
-        data_dictionary:    ./data
+        schema:             https
+        host:               https://content.amtrak.com
+        path:               /content/gtfs/GTFS.zip
+        tmp-dir:            ./tmp
+        data-dictionary:    ./data
+        web-client:
+        retry:
+            maxRetryCount: 5
+            delay: 1000
+            maxDelay: 10000
+            multiplier: 1.2

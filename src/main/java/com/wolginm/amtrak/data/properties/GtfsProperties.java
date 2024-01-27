@@ -15,23 +15,27 @@ import lombok.Data;
 @EnableConfigurationProperties
 @ConfigurationProperties("amtrak.gtfs")
 public class GtfsProperties {
-    
+
+    private String schema = "https";
     /**
      * Base url for Amtrak data.
      */
-    private String content_amtrak = "https://content.amtrak.com/";
+    private String host = "//content.amtrak.com";
     /**
      * Context path for the GTFS url.  Incase Amtrak changes paths and I get
      *  lazy...
      */
-    private String uri_part = "content/gtfs/GTFS.zip";
+    private String path = "/content/gtfs/GTFS.zip";
     /**
      * Temp directory to put zip file, so simple deletion.
      */
-    private String temp_file = "./tmp";
+    private String tempFile = "./tmp";
     /**
      * Longterm directory for inflated zipfiles.
      */
-    private String data_directory = "./data";
+    private String dataDirectory = "./data";
+
+    private WebClientCustomProperties webClient;
+    private RetryableProperties retry;
 
 }

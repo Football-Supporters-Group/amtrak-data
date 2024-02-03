@@ -58,7 +58,6 @@ class AmtrakDataClientTest {
         retryableProperties.setMultiplier(2.0);
         retryableProperties.setMaxRetryCount(10);
 
-
         Mockito.when(gtfsProperties.getRetry()).thenReturn(retryableProperties);
     }
 

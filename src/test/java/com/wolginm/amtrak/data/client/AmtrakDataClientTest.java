@@ -1,6 +1,5 @@
 package com.wolginm.amtrak.data.client;
 
-import com.wolginm.amtrak.data.configuration.RetryConfiguration;
 import com.wolginm.amtrak.data.exception.NonRetryableException;
 import com.wolginm.amtrak.data.exception.RetryableException;
 import com.wolginm.amtrak.data.properties.GtfsProperties;
@@ -23,7 +22,6 @@ import reactor.core.publisher.Flux;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;

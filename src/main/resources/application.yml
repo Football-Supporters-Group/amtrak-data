@@ -8,6 +8,10 @@ amtrak:
         tmp-dir:            ./tmp
         data-dictionary:    ./data
         web-client:
+            connectionTimeoutInMilliseconds: 60000
+            responseTimeoutInMilliseconds: 60000
+            readTimeoutInMilliseconds: 60000
+            writeTimeoutInMilliseconds: 60000
         retry:
             maxRetryCount: 5
             delay: 1000

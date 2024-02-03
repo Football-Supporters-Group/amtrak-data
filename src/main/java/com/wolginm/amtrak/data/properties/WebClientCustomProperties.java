@@ -26,5 +26,5 @@ public class WebClientCustomProperties {
     /**
      * A timeout variable for the web client.  Default timeout is 60000 (60 sec).
      */
-    private Integer writeTimeoutInMillisecons = 60000;
+    private Integer writeTimeoutInMilliseconds = 60000;
 }

@@ -31,7 +31,7 @@ public class WebClientConfiguration {
                 gtfsProperties.getWebClient().getResponseTimeoutInMilliseconds());
         log.info("AMTK-3210:    with ReadTimeout[{}ms] WriteTimeout[{}ms]",
                 gtfsProperties.getWebClient().getReadTimeoutInMilliseconds(),
-                gtfsProperties.getWebClient().getWriteTimeoutInMillisecons());
+                gtfsProperties.getWebClient().getWriteTimeoutInMilliseconds());
 
         return WebClient.builder()
                 .baseUrl(path)
@@ -40,7 +40,7 @@ public class WebClientConfiguration {
                         .responseTimeout(Duration.ofMillis(gtfsProperties.getWebClient().getResponseTimeoutInMilliseconds()))
                         .doOnConnected(connection ->
                                 connection.addHandlerLast(new ReadTimeoutHandler(gtfsProperties.getWebClient().getReadTimeoutInMilliseconds(), TimeUnit.MILLISECONDS))
-                                        .addHandlerLast(new WriteTimeoutHandler(gtfsProperties.getWebClient().getWriteTimeoutInMillisecons(), TimeUnit.MILLISECONDS)))))
+                                        .addHandlerLast(new WriteTimeoutHandler(gtfsProperties.getWebClient().getWriteTimeoutInMilliseconds(), TimeUnit.MILLISECONDS)))))
                 .defaultCookie("amtakDataVersion", this.getClass().getPackage().getImplementationVersion())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.ALL_VALUE)
                 .defaultUriVariables(Collections.singletonMap("url", path))

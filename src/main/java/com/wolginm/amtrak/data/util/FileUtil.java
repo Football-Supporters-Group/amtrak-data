@@ -5,12 +5,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
@@ -62,5 +67,13 @@ public class FileUtil {
         }
         return checksum;
         
+    }
+
+    public void dataBufferUtilWrite(final Flux<DataBuffer> flux,
+                                          final Path path) {
+        log.info("AMTK-");
+        DataBufferUtils.write(flux,
+                path,
+                StandardOpenOption.CREATE).block();
     }
 }

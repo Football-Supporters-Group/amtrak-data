@@ -1,33 +1,32 @@
 package com.wolginm.amtrak.data.service;
 
-import com.wolginm.amtrak.data.properties.AmtrakProperties;
-import com.wolginm.amtrak.data.util.CSVUtil;
+import com.wolginm.amtrak.data.util.ObjectsUtil;
 import com.wolginmark.amtrak.data.models.AmtrakObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class InflationService {
 
-    private final CSVUtil csvUtil;
+    private final ObjectsUtil objectsUtil;
+    private final static String EMPTY_STRING = "";
 
     /**
      * Used to inflate the flat objects.
-     * @param csvUtil           CSV Utility to handle the recursive calls.
      */
-    public InflationService(final CSVUtil csvUtil) {
-        this.csvUtil = csvUtil;
-
+    public InflationService(final ObjectsUtil objectsUtil) {
         log.info("AMTK-2100: Starting the Inflation Service");
+        this.objectsUtil = objectsUtil;
     }
 
     /**
@@ -39,12 +38,102 @@ public class InflationService {
      * @param <T>                   The specific implementaion of the object.
      * @throws FileNotFoundException    Could not find the object.
      */
-    public <T extends AmtrakObject> List<T> inflateAmtrakObject(Path inflatedObjectPath, Class<T> tClass)
+    public <T extends AmtrakObject> List<T> inflateAmtrakObject(final Path inflatedObjectPath, final Class<T> tClass)
             throws FileNotFoundException {
         log.info("AMTK-2100: Attempting to parse object [{}] from path [{}]",
                 tClass.getName(), inflatedObjectPath.toAbsolutePath());
 
-        return new ArrayList<>(csvUtil.csvToObject(new FileInputStream(inflatedObjectPath.toFile()), tClass));
+        return this.csvToObject(new FileInputStream(inflatedObjectPath.toFile()), tClass);
+    }
+
+    /**
+     * Takes a csv file and converts it into a list of Objects.
+     * @param inputStream   The contents of the CSV accessable as an input stream.
+     * @param inputType     The type content the mapping will attempt.
+     * @return              The list of objects.
+     * @param <T>           The desired type to convert to.
+     */
+    public <T extends Serializable> List<T> csvToObject(final InputStream inputStream, final Class<T> inputType) {
+        List<T> objects;
+        List<String> headers;
+        Map<String, String> objectElements;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(inputStream, "UTF-8"));
+
+            CSVParser csvParser = new CSVParser(bufferedReader,
+                    CSVFormat.DEFAULT
+                            .builder()
+                            .setHeader()
+                            .setSkipHeaderRecord(true)
+                            .setIgnoreHeaderCase(true)
+                            .setTrim(true)
+                            .build());
+
+            headers = csvParser.getHeaderNames();
+            //Initializing the lists to be correct size off the jump for a perf increase.
+            List<CSVRecord> cIterable = csvParser.getRecords();
+            objectElements = headers
+                    .stream()
+                    .collect(Collectors.toMap(String::toString,
+                        emptyString()));
+            objects = new ArrayList<T>(cIterable.size());
+            for (CSVRecord csvRecord : cIterable) {
+                for (String header : headers) {
+                    objectElements.put(header,csvRecord.get(header));
+                }
+                objects.add(objectsUtil.mapToObject(objectElements, inputType));
+            }
+            csvParser.close();
+        } catch (IOException | IllegalArgumentException e) {
+            log.error(e.getMessage());
+            objects = null;
+        }
+
+        return objects;
+
+    }
+
+    public Map<Integer, List<String>> csvToRouteOrderMap(final InputStream inputStream) {
+        List<String> objects = null;
+        Map<Integer, List<String>> objectMap = null;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(inputStream, "UTF-8"));
+
+            CSVParser csvParser = new CSVParser(bufferedReader,
+                    CSVFormat.DEFAULT
+                            .builder()
+                            .setHeader()
+                            .setSkipHeaderRecord(true)
+                            .setIgnoreHeaderCase(true)
+                            .setTrim(true)
+                            .build());
+
+            objects = new ArrayList<String>();
+            objectMap = new HashMap<>();
+            Iterable<CSVRecord> cIterable = csvParser.getRecords();
+            for (CSVRecord csvRecord : cIterable) {
+                objects = csvRecord.toList();
+                if (objects.size() > 1) {
+                    objectMap.put(Integer.parseInt(objects.get(0)), objects.subList(1, objects.size()));
+                } else {
+                    log.error("CSV Parsing error for Route Map on row: {}, \"{}\"", csvRecord.getRecordNumber(), csvRecord.toString());
+                }
+            }
+            csvParser.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return objectMap;
+
+    }
+
+    private Function<String, String> emptyString() {
+        return t->InflationService.EMPTY_STRING;
     }
 
 }

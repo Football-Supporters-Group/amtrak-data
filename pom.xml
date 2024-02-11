@@ -11,9 +11,90 @@
 	<groupId>com.wolginm.amtrak</groupId>
 	<artifactId>data</artifactId>
 	<version>0.1</version>
-	<name>data</name>
 	<packaging>jar</packaging>
+
+	<name>data</name>
 	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>
+	<url>https://markwolgin.com</url>
+	<inceptionYear>2022</inceptionYear>
+	<organization>
+		<name>Football Supporters Group</name>
+		<url>https://markwolgin.com</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>GNU GENERAL PUBLIC LICENSE v3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+			<distribution>repo</distribution>
+			<comments>Must include attribution to code and author if used.</comments>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>wolginm</id>
+			<name>Mark Wolgin</name>
+			<email>wolginmark@gmail.com</email>
+			<organization>Football Supporters Group</organization>
+			<organizationUrl>https://markwolgin.com</organizationUrl>
+			<roles>
+				<role>contributor</role>
+				<role>admin</role>
+			</roles>
+			<timezone>America/New_York</timezone>
+		</developer>
+	</developers>
+	<mailingLists>
+		<mailingList>
+			<name>Project Email</name>
+			<subscribe>wolginmark@gmail.com</subscribe>
+			<unsubscribe>wolginmark@gmail.com</unsubscribe>
+			<post>wolginmark@gmail.com</post>
+		</mailingList>
+	</mailingLists>
+	<prerequisites>
+		<maven>4.0.0</maven>
+	</prerequisites>
+
+	<scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
+		<connection>scm:git@github.com:Football-Supporters-Group/amtrak-data.git</connection>
+		<developerConnection>scm:git@github.com:Football-Supporters-Group/amtrak-data.git</developerConnection>
+		<url>https://github.com/Football-Supporters-Group/amtrak-data</url>
+	</scm>
+	<issueManagement>
+		<system>Github Issues</system>
+		<url>https://github.com/Football-Supporters-Group/amtrak-data/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://jenkins.ashton.vault.markwolgin.com/job/Football%20Supporters%20Group/job/amtrak-data/</url>
+		<notifiers>
+			<notifier>
+				<type>Git Webhook</type>
+			</notifier>
+		</notifiers>
+	</ciManagement>
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>true</uniqueVersion>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<downloadUrl>https://github.com/Football-Supporters-Group/amtrak-data/releases/</downloadUrl>
+	</distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>data</id>
+			<name>Amtrak Data</name>
+			<url>https://github.com/Football-Supporters-Group/amtrak-data</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -191,6 +272,23 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -206,6 +304,32 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>3.3.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>

@@ -69,7 +69,7 @@ public class ZipUtil {
      * Inflates the zip file
      * @param zipInputStream
      * @param filePath
-     * @returns Status of the extraction
+     * @return Status of the extraction
      */
     private boolean extractFile(ZipInputStream zipInputStream, String filePath) throws IOException{
         boolean status = false;

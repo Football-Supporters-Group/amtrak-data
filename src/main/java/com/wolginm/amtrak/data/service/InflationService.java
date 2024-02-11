@@ -1,5 +1,6 @@
 package com.wolginm.amtrak.data.service;
 
+import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.util.ObjectsUtil;
 import com.wolginmark.amtrak.data.models.AmtrakObject;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,10 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.net.URI;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,13 +24,15 @@ public class InflationService {
 
     private final ObjectsUtil objectsUtil;
     private final static String EMPTY_STRING = "";
+    private final String inflatedObjectPath;
 
     /**
      * Used to inflate the flat objects.
      */
-    public InflationService(final ObjectsUtil objectsUtil) {
+    public InflationService(final ObjectsUtil objectsUtil, final AmtrakProperties amtrakProperties) {
         log.info("AMTK-2100: Starting the Inflation Service");
         this.objectsUtil = objectsUtil;
+        this.inflatedObjectPath = amtrakProperties.getGtfs().getDataDirectory();
     }
 
     /**
@@ -44,6 +50,17 @@ public class InflationService {
                 tClass.getName(), inflatedObjectPath.toAbsolutePath());
 
         return this.csvToObject(new FileInputStream(inflatedObjectPath.toFile()), tClass);
+    }
+
+    public <T extends AmtrakObject> Map<T, List<T>> inflateAllAmtrakObjects() throws NotDirectoryException {
+        File directory = new File(inflatedObjectPath);
+        if (!directory.isDirectory()) {
+            String error = String.format("AMTK-1299: Supplied directory [%s] was not a directory", inflatedObjectPath);
+            log.error(error);
+            throw new NotDirectoryException(error);
+        }
+        Map<T, Path> amtrakObejctToPathMap = Arrays.stream(directory.listFiles()).map(File::toPath).toList();
+        Map<T, List<T>> amtrakObjects =
     }
 
     /**

@@ -1,14 +1,19 @@
 package com.wolginm.amtrak.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wolginm.amtrak.data.properties.AmtrakProperties;
+import com.wolginm.amtrak.data.properties.GtfsProperties;
+import com.wolginm.amtrak.data.util.AmtrakFileNameToObjectUtil;
 import com.wolginm.amtrak.data.util.ObjectsUtil;
 import com.wolginmark.amtrak.data.models.Agency;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.FileNotFoundException;
@@ -23,6 +28,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,11 +45,26 @@ class InflationServiceTest {
             "unzip/transfers.txt",
             "unzip/trips.txt"};
 
+    private final GtfsProperties gtfsProperties = new GtfsProperties();
+
     @Mock
     private ObjectsUtil objectsUtil;
 
-    @InjectMocks
+    @Mock
+    private AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil;
+
+    private AmtrakProperties amtrakProperties;
+
     private InflationService inflationService;
+
+    @BeforeEach
+    void setUp() {
+        this.amtrakProperties = new AmtrakProperties();
+        this.amtrakProperties.setGtfs(this.gtfsProperties);
+        this.gtfsProperties.setDataDirectory("unzip");
+        MockitoAnnotations.openMocks(this);
+        this.inflationService = new InflationService(objectsUtil, amtrakFileNameToObjectUtil, amtrakProperties);
+    }
 
     @Test
     public void inflateAmtrakObject() throws URISyntaxException, FileNotFoundException {

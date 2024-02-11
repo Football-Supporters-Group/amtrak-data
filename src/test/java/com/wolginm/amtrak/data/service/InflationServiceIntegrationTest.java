@@ -1,8 +1,12 @@
 package com.wolginm.amtrak.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wolginm.amtrak.data.properties.AmtrakProperties;
+import com.wolginm.amtrak.data.properties.GtfsProperties;
+import com.wolginm.amtrak.data.util.AmtrakFileNameToObjectUtil;
 import com.wolginm.amtrak.data.util.ObjectsUtil;
 import com.wolginmark.amtrak.data.models.Agency;
+import com.wolginmark.amtrak.data.models.AmtrakObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,13 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
@@ -27,12 +34,17 @@ class InflationServiceIntegrationTest {
 
     private final ClassLoader classLoader = getClass().getClassLoader();
     private final String[] fileNames = {"unzip/agency.txt"};
-    private ObjectsUtil objectsUtil = new ObjectsUtil(new ObjectMapper());
+    private final ObjectsUtil objectsUtil = new ObjectsUtil(new ObjectMapper());
 
+    private final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil = new AmtrakFileNameToObjectUtil();
+    private final AmtrakProperties amtrakProperties = new AmtrakProperties();
     private InflationService inflationService;
 
     public InflationServiceIntegrationTest() {
-        this.inflationService = new InflationService(this.objectsUtil);
+        this.amtrakProperties.setGtfs(new GtfsProperties());
+        this.amtrakProperties.getGtfs().setDataDirectory(classLoader.getResource("unzip").getPath());
+        this.inflationService = new InflationService(this.objectsUtil, this.amtrakFileNameToObjectUtil, this.amtrakProperties);
+
     }
 
     @Test
@@ -52,6 +64,19 @@ class InflationServiceIntegrationTest {
         Assertions.assertEquals("http://www.amtrak.com", actual.get(0).getAgencyUrl().toString());
         Assertions.assertEquals("America/New_York", actual.get(0).getAgencyTimezone());
         Assertions.assertEquals("en", actual.get(0).getAgencyLang());
+    }
+
+    @Test
+    public <T extends AmtrakObject> void inflateAllAmtrakObjects() throws NotDirectoryException {
+        Map<Class<T>, List<T>> actual;
+        actual = this.inflationService.inflateAllAmtrakObjects();
+        Assertions.assertEquals(8, actual.size());
+    }
+
+    @Test
+    public <T extends AmtrakObject> void inflateAllAmtrakObjects_NotADirectory() {
+        ReflectionTestUtils.setField(this.inflationService, "inflatedObjectPath", "unzip");
+        Assertions.assertThrows(NotDirectoryException.class, () -> this.inflationService.inflateAllAmtrakObjects());
     }
 
 }

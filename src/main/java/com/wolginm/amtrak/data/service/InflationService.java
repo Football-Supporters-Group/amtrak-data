@@ -1,6 +1,7 @@
 package com.wolginm.amtrak.data.service;
 
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
+import com.wolginm.amtrak.data.util.AmtrakFileNameToObjectUtil;
 import com.wolginm.amtrak.data.util.ObjectsUtil;
 import com.wolginmark.amtrak.data.models.AmtrakObject;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +11,8 @@ import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.net.URI;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -23,16 +22,18 @@ import java.util.stream.Collectors;
 public class InflationService {
 
     private final ObjectsUtil objectsUtil;
+    private final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil;
     private final static String EMPTY_STRING = "";
     private final String inflatedObjectPath;
 
     /**
      * Used to inflate the flat objects.
      */
-    public InflationService(final ObjectsUtil objectsUtil, final AmtrakProperties amtrakProperties) {
+    public InflationService(final ObjectsUtil objectsUtil, final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil, final AmtrakProperties amtrakProperties) {
         log.info("AMTK-2100: Starting the Inflation Service");
         this.objectsUtil = objectsUtil;
         this.inflatedObjectPath = amtrakProperties.getGtfs().getDataDirectory();
+        this.amtrakFileNameToObjectUtil = amtrakFileNameToObjectUtil;
     }
 
     /**
@@ -48,19 +49,35 @@ public class InflationService {
             throws FileNotFoundException {
         log.info("AMTK-2100: Attempting to parse object [{}] from path [{}]",
                 tClass.getName(), inflatedObjectPath.toAbsolutePath());
-
-        return this.csvToObject(new FileInputStream(inflatedObjectPath.toFile()), tClass);
+        List<T> objectList = this.csvToObject(new FileInputStream(inflatedObjectPath.toFile()), tClass);
+        if (objectList != null) log.info("AMTK-2110: Loaded in [{}] records of type [{}] from path [{}]",
+                objectList.size(), tClass.getName(), inflatedObjectPath.toAbsolutePath());
+        else log.error("AMTK-2199: Failed to load in records of type [{}] from path [{}]",
+                tClass.getName(), inflatedObjectPath.toAbsolutePath());
+        return objectList;
     }
 
-    public <T extends AmtrakObject> Map<T, List<T>> inflateAllAmtrakObjects() throws NotDirectoryException {
+    public <T extends AmtrakObject> Map<Class<T>, List<T>> inflateAllAmtrakObjects() throws NotDirectoryException {
         File directory = new File(inflatedObjectPath);
         if (!directory.isDirectory()) {
-            String error = String.format("AMTK-1299: Supplied directory [%s] was not a directory", inflatedObjectPath);
+            String error = String.format("AMTK-2199: Supplied directory [%s] was not a directory", inflatedObjectPath);
             log.error(error);
             throw new NotDirectoryException(error);
         }
-        Map<T, Path> amtrakObejctToPathMap = Arrays.stream(directory.listFiles()).map(File::toPath).toList();
-        Map<T, List<T>> amtrakObjects =
+        Map<Class<T>, Path> amtrakObejctToPathMap = Arrays
+                .stream(directory.listFiles())
+                .parallel()
+                .map(File::toPath)
+                .collect(Collectors.toMap((path) -> this.amtrakFileNameToObjectUtil.getAmtrakObject(path),
+                        (path) -> path));
+        Map<Class<T>, List<T>> amtrakObjects = amtrakObejctToPathMap.entrySet().parallelStream().map(elem -> {
+            try {
+                return Map.entry(elem.getKey(), this.inflateAmtrakObject(elem.getValue(), elem.getKey()));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        return amtrakObjects;
     }
 
     /**

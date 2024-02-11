@@ -55,25 +55,32 @@ components:
         service_id:
           $ref: '#/components/schemas/ServiceId'
         monday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Monday.
         tuesday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Tuesday.
         wednesday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Wednesday.
         thursday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Thursday.
         friday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Friday.
         saturday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Saturday.
         sunday:
-          type: boolean
+          type: integer
+          format: int32
           description: If the services operates on Sunday.
         start_date:
           $ref: '#/components/schemas/Date'
@@ -287,7 +294,8 @@ components:
           format: int64
           description: Shortname for the trip.
         direction_id:
-          type: boolean
+          type: integer
+          format: int32
           description: Inidcated the direction of travel.
         shape_id:
           $ref: '#/components/schemas/ShapeId'
@@ -369,7 +377,8 @@ components:
           format: int64
           description: Shortname for the trip.
         direction_id:
-          type: boolean
+          type: integer
+          format: int32
           description: Inidcated the direction of travel.
         shape_id:
           $ref: '#/components/schemas/ShapeId'

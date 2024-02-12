@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class InflationService {
     private final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil;
     private final static String EMPTY_STRING = "";
     private final String inflatedObjectPath;
+    private final String routeMetadata;
 
     /**
      * Used to inflate the flat objects.
@@ -33,6 +35,7 @@ public class InflationService {
         log.info("AMTK-2100: Starting the Inflation Service");
         this.objectsUtil = objectsUtil;
         this.inflatedObjectPath = amtrakProperties.getGtfs().getDataDirectory();
+        this.routeMetadata = amtrakProperties.getRoute_metadata();
         this.amtrakFileNameToObjectUtil = amtrakFileNameToObjectUtil;
     }
 
@@ -78,6 +81,10 @@ public class InflationService {
             }
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return amtrakObjects;
+    }
+
+    public Map<Integer, LinkedHashSet<String>> inflateRouteOrderMetadata() throws FileNotFoundException {
+        return this.csvToRouteOrderMap(new FileInputStream(Paths.get(this.routeMetadata).toFile()));
     }
 
     /**
@@ -129,9 +136,9 @@ public class InflationService {
 
     }
 
-    public Map<Integer, List<String>> csvToRouteOrderMap(final InputStream inputStream) {
+    public Map<Integer, LinkedHashSet<String>> csvToRouteOrderMap(final InputStream inputStream) {
         List<String> objects = null;
-        Map<Integer, List<String>> objectMap = null;
+        Map<Integer, LinkedHashSet<String>> objectMap = null;
 
         try {
             BufferedReader bufferedReader = new BufferedReader(
@@ -152,7 +159,7 @@ public class InflationService {
             for (CSVRecord csvRecord : cIterable) {
                 objects = csvRecord.toList();
                 if (objects.size() > 1) {
-                    objectMap.put(Integer.parseInt(objects.get(0)), objects.subList(1, objects.size()));
+                    objectMap.put(Integer.parseInt(objects.get(0)), new LinkedHashSet<>(objects.subList(1, objects.size())));
                 } else {
                     log.error("CSV Parsing error for Route Map on row: {}, \"{}\"", csvRecord.getRecordNumber(), csvRecord.toString());
                 }

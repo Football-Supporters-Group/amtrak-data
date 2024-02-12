@@ -144,7 +144,7 @@ components:
           type: string
           description: The shortname for a route.
         route_long_name:
-          tyep: string
+          type: string
           description: The long name for a route.
         route_type:
           type: integer
@@ -350,6 +350,12 @@ components:
           type: object
           additionalProperties:
             $ref: "#/components/schemas/Stops"
+        stop_order:
+          description: An ordered list of a routes, ordered descending from direction 0.
+          type: array
+          items:
+            stop_id:
+              $ref: '#/components/schemas/StopId'
       required:
         - route_id
         - route_short_name
@@ -360,6 +366,7 @@ components:
         - route_text_color
         - trip_list
         - all_stops
+        - stop_order
     
     ConsolidatedTrip:
       type: object

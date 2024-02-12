@@ -84,7 +84,7 @@ public class DataMappingUtil {
                     .routeTextColor(route.getRouteTextColor())
                     .routeType(route.getRouteType())
                     .routeUrl(route.getRouteUrl())
-                    .routeLongName((String) route.getRouteLongName().orElse("Long Name Not Found"))
+                    .routeLongName(route.getRouteLongName())
                     .routeShortName(route.getRouteShortName())
                     /*
                      * Will take the routeId to ConsolidatedTrip List

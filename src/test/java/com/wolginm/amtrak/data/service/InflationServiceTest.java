@@ -22,8 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -60,6 +59,7 @@ class InflationServiceTest {
     @BeforeEach
     void setUp() {
         this.amtrakProperties = new AmtrakProperties();
+        this.amtrakProperties.setRoute_metadata(classLoader.getResource("mock_metadata/route_stop_order.txt").getPath());
         this.amtrakProperties.setGtfs(this.gtfsProperties);
         this.gtfsProperties.setDataDirectory("unzip");
         MockitoAnnotations.openMocks(this);
@@ -101,6 +101,60 @@ class InflationServiceTest {
 
         Assertions.assertNull(actual);
         Mockito.verify(this.objectsUtil, times(1)).mapToObject(anyMap(), eq(Agency.class));
+    }
+
+    @Test
+    public void inflateRouteOrderMetadata() throws FileNotFoundException {
+        Map<Integer, LinkedHashSet<String>> actual, expected;
+        expected = new HashMap<>(){{
+           put(1, new LinkedHashSet<>());
+           put(2, new LinkedHashSet<>());
+        }};
+        expected.get(1).add("NYP");
+        expected.get(1).add("PHL");
+        expected.get(1).add("PAO");
+        expected.get(1).add("HAR");
+        expected.get(2).add("NYP");
+        expected.get(2).add("CHI");
+        expected.get(2).add("SEA");
+        expected.get(2).add("PDX");
+
+        actual = this.inflationService.inflateRouteOrderMetadata();
+
+        Iterator<String> expectItr = expected.get(1).iterator();
+        Iterator<String> actualItr = actual.get(1).iterator();
+        while (expectItr.hasNext()) {
+            Assertions.assertEquals(expectItr.next(), actualItr.next());
+        }
+    }
+
+    @Test
+    public void inflateRouteOrderMetadata_IncorrectOrder() throws FileNotFoundException {
+        Map<Integer, LinkedHashSet<String>> actual, expected;
+        expected = new HashMap<>(){{
+            put(1, new LinkedHashSet<>());
+            put(2, new LinkedHashSet<>());
+        }};
+        expected.get(1).add("NYP");
+        expected.get(1).add("PHL");
+        expected.get(1).add("PAO");
+        expected.get(1).add("HAR");
+        expected.get(2).add("NYP");
+        expected.get(2).add("CHI");
+        expected.get(2).add("PDX");
+        expected.get(2).add("SEA");
+
+        actual = this.inflationService.inflateRouteOrderMetadata();
+
+        Iterator<String> expectItr = expected.get(2).iterator();
+        Iterator<String> actualItr = actual.get(2).iterator();
+        int count = 0;
+        while (expectItr.hasNext() && count < 2) {
+            count ++;
+            Assertions.assertEquals(expectItr.next(), actualItr.next());
+        }
+        Assertions.assertNotEquals(expectItr.next(), actualItr.next());
+        Assertions.assertNotEquals(expectItr.next(), actualItr.next());
     }
 
 

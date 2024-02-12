@@ -369,6 +369,8 @@ components:
           $ref: '#/components/schemas/ServiceId'
         trip_id:
           $ref: '#/components/schemas/TripId'
+        route_id:
+          $ref: '#/components/schemas/RouteId'
         trip_headsign:
           type: string
           description: The destination of the trip, common to travelers.

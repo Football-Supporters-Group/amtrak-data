@@ -4,16 +4,16 @@ info:
   summary: For generation of models for Amtrak Data and Consolidated Routes
   description: A set of Amtrak defined GTFS Models, and a set of consolidated objects.  Meant to be used by other services to produce a better Amtrak scheduling service.
   termsOfService: markwolgin.com/data/tos
-#  contact:
-#    name: Mark Wolgin
-#    url: markwolgin.com
-#    email: wolginmark@gmail.com
+  #  contact:
+  #    name: Mark Wolgin
+  #    url: markwolgin.com
+  #    email: wolginmark@gmail.com
   license:
     name: Apache 2.0
     identifier: Apache-2.0
   version: 1.0.0
 servers:
-  - url: "https://ashton.vault.markwolgin.com/data/{environment}/v1"
+  - url: "https://ashton.vault.markwolgin.com/data/{environment}/{version}"
     description: Server to access consolidated data.
     variables:
       environment:
@@ -22,7 +22,109 @@ servers:
         enum:
           - "dev"
           - "prod"
+      version:
+        default: v1
+        description: The API version.
+        enum:
+          - "v1"
+  - url: "http://localhost:8080/data/dev/v1"
+    description: Server to access consolidated data (LOCAL TESTING).
+paths:
+  /routes:
+    get:
+      description: Returns all Amtrak routes a map of ConsolidatedRoutes, and other related models.
+      tags:
+        - ConsolidatedRoutes
+      operationId: amtrak-data-get-all-routes
+      responses:
+        '200':
+          description: All Amtrak routes a map of ConsolidatedRoutes, and other related models.
+          $ref: '#/components/responses/ConsolidatedResponseObject'
+        '400':
+          description: Bad request sent.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '401':
+          description: Unauthorized; API Key not found.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '403':
+          description: Forbidden; User may not request resource.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '429':
+          description: Too May Requests; User is to active, please wait and try again later.
+          $ref: '#/components/responses/NonSuccessResponse'
+    post:
+      description: Returns all Amtrak routes a map of ConsolidatedRoutes, and other related models.
+      tags:
+        - ConsolidatedRoutes
+      operationId: amtrak-data-get-select-routes
+      requestBody:
+        $ref: '#/components/requestBodies/RoutesRequest'
+      responses:
+        '202':
+          description: All Amtrak routes a map of ConsolidatedRoutes, and other related models.
+          $ref: '#/components/responses/ConsolidatedResponseObject'
+        '400':
+          description: Bad request sent.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '401':
+          description: Unauthorized; API Key not found.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '403':
+          description: Forbidden; User may not request resource.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '429':
+          description: Too May Requests; User is to active, please wait and try again later.
+          $ref: '#/components/responses/NonSuccessResponse'
 components:
+  requestBodies:
+    RoutesRequest:
+      description: An object that request a specific list of routes.
+      content:
+        application/json:
+          schema:
+            type: array
+            description: Requested routes
+            items:
+              type: string
+  responses:
+    ConsolidatedResponseObject:
+      description: A response container for ConsolidatedRoute and ConsolidatedTrip Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConsolidatedResponseObject'
+      headers:
+        X-Rate-Limit-Limit:
+          description: The number of allowed requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Remaining:
+          description: The number of remaining requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Reset:
+          description: The number of seconds left in the current period
+          schema:
+            type: integer
+    NonSuccessResponse:
+      description: A response container for a non-sucessful event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NonSuccessResponse'
+      headers:
+        X-Rate-Limit-Limit:
+          description: The number of allowed requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Remaining:
+          description: The number of remaining requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Reset:
+          description: The number of seconds left in the current period
+          schema:
+            type: integer
   schemas:
     ## Amtrak Data Objects
     Agency:
@@ -306,13 +408,13 @@ components:
         - trip_headsign
         - trip_short_name
         - direction_id
-      examples:
-        - {"route_id": 39520,
-           "service_id": 2851853,
-           "trip_id": 80332851853,
-           "trip_headsign": "Pittsburgh",
-           "trip_short_name": "8033",
-           "direction_id": false}
+#      examples:
+#        - {"route_id": 39520,
+#           "service_id": 2851853,
+#           "trip_id": 80332851853,
+#           "trip_headsign": "Pittsburgh",
+#           "trip_short_name": "8033",
+#           "direction_id": false}
     ## Custom Data Objects
     ConsolidatedRoute:
       type: object
@@ -323,7 +425,7 @@ components:
         route_short_name:
           type: string
           description: The short name of the route.
-        route_long_name: 
+        route_long_name:
           type: string
           description: The long name of the route.
         route_type:
@@ -395,8 +497,8 @@ components:
           type: array
           description: Stop times as a list.
           items:
-            $ref: '#/components/schemas/StopTimes' 
-          
+            $ref: '#/components/schemas/StopTimes'
+
 
 
     ## Common Objects
@@ -467,3 +569,44 @@ components:
       oneOf:
         - $ref: "#/components/schemas/ConsolidatedRoute"
         - $ref: "#/components/schemas/ConsolidatedTrip"
+
+## All api reliant objects.
+    ConsolidatedResponseObject:
+      type: object
+      description: Container for ConsolidatedRoute and ConsolidatedTrip Requests
+      properties:
+        requested_route_ids:
+          type: array
+          description: All requested routes as a list of strings.
+          items:
+            type: string
+        requested_consolidated_routes:
+          description: All requested consolidated rotues in a map of route id -> consoldiated route.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ConsolidatedTrip'
+        timestamp:
+          $ref: '#/components/schemas/Time'
+      required:
+        - requested_route_ids
+        - requested_consolidated_routes
+        - timestamp
+    NonSuccessResponse:
+      type: object
+      description: Container for a non-sucessful event.
+      properties:
+        additional_context:
+          description: Any additional context for the non-sucess.
+          type: array
+          items:
+            type: string
+        status_code:
+          description: Http Status Code
+          type: integer
+          format: int32
+        timestamp:
+          $ref: '#/components/schemas/Time'
+      required:
+        - additional_context
+        - status_code
+        - timestamp

@@ -88,7 +88,7 @@ class AmtrakDataClientTest {
             Mockito.when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
             Mockito.when(responseSpec.bodyToFlux(eq(DataBuffer.class))).thenReturn(dataBufferFlux);
 
-            Mockito.when(fileUtil.resolvePath(eq(tempPath))).thenReturn(expected);
+            Mockito.when(fileUtil.prepFoldersForFile(tempPath)).thenReturn(expected);
             Mockito.doNothing().when(fileUtil).dataBufferUtilWrite(any(Flux.class), any(Path.class));
 
             actual = amtrakDataClient.retrieveGtfsPayload();

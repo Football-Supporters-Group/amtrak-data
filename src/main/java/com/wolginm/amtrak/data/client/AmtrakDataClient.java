@@ -66,8 +66,7 @@ public class AmtrakDataClient extends ClientBase {
                     this.gtfsProperties.getHost(),
                     this.gtfsProperties.getPath());
 
-            placeToStoreFile = this.fileUtil.resolvePath(this.gtfsProperties.getTempFile());
-            this.fileUtil.prepFoldersForFile(placeToStoreFile);
+            placeToStoreFile = this.fileUtil.prepFoldersForFile(this.gtfsProperties.getTempFile());
 
             this.fileUtil.dataBufferUtilWrite(downloadedMono, placeToStoreFile);
             log.info("AMTK-3100: [{}/{}] Amtrak GTFS data file has been saved to [{}]",

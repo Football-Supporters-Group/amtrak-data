@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.zip.CRC32;
@@ -32,24 +33,17 @@ public class FileUtil {
 
     /**
      * Assumes the path is starting as a file
-     * @param path
-     * @return
+     * @param pathSuffix    The path to save the tmp files to.
+     * @return              Files Path.
      */
-    public int prepFoldersForFile(final Path path) {
-        return this.prepFoldersForFile(path, 0);
-    }
-
-    private int prepFoldersForFile(final Path path, int depth) {
-        File current = path.getParent().toFile();
-        if (current.exists()) {
-            
-        } else {
-            log.info("At directory: {}", path.toString());
-            this.prepFoldersForFile(path.getParent(), depth ++);
-            current.mkdir();
-            log.info("Directory created: {}", path.toString());
+    public Path prepFoldersForFile(final String pathSuffix) {
+        Path saveLocation;
+        try {
+            saveLocation = Files.createTempDirectory(pathSuffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return depth;
+        return saveLocation;
     }
 
     
@@ -71,7 +65,7 @@ public class FileUtil {
 
     public void dataBufferUtilWrite(final Flux<DataBuffer> flux,
                                           final Path path) {
-        log.info("AMTK-");
+        log.info("AMTK-6200: Attempting to save DataBuffer to Path [{}]", path.toAbsolutePath());
         DataBufferUtils.write(flux,
                 path,
                 StandardOpenOption.CREATE).block();

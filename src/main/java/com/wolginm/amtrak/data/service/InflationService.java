@@ -77,7 +77,9 @@ public class InflationService {
             try {
                 return Map.entry(elem.getKey(), this.inflateAmtrakObject(elem.getValue(), elem.getKey()));
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                String err = "AMTK-2100: Got a bad file path from the OS [%s]".formatted(elem.getValue().toAbsolutePath());
+                log.error(err);
+                throw new RuntimeException(err, e);
             }
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return amtrakObjects;

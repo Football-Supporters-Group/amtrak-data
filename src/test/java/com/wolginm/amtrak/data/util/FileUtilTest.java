@@ -7,9 +7,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,8 +56,10 @@ class FileUtilTest {
             Path actual = fileUtil.prepFoldersForFile(innerPath);
 
             Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
             Assertions.assertTrue(actual.toFile().exists());
             this.pathToTmpDir = fileUtil.getTempDirectory();
+            actual.toFile().deleteOnExit();
         }
 
         @Test
@@ -65,8 +67,10 @@ class FileUtilTest {
             Path actual = fileUtil.prepFoldersForFile(innerPath.concat("/%s".formatted("ABC")));
 
             Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
             Assertions.assertTrue(actual.toFile().exists());
             this.pathToTmpDir = fileUtil.getTempDirectory();
+            actual.toFile().deleteOnExit();
         }
 
         @Test
@@ -74,31 +78,57 @@ class FileUtilTest {
             Path actual = fileUtil.prepFoldersForFile(innerPath);
 
             Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
             Assertions.assertTrue(actual.toFile().exists());
 
             fileUtil.tearDownRecursive(actual.toFile());
 
             Assertions.assertFalse(actual.toFile().exists());
+            this.pathToTmpDir = fileUtil.getTempDirectory();
+            actual.toFile().deleteOnExit();
         }
 
         @Test
         void prepFoldersForFile_Complex_WithDelete() throws IOException {
-            Path actual = fileUtil.prepFoldersForFile(innerPath);
+            Path actual = fileUtil.prepFoldersForFile(innerPath.concat("/%s".formatted("ABC")));
 
             Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
             Assertions.assertTrue(actual.toFile().exists());
 
             fileUtil.tearDownRecursive(actual.toFile());
 
             Assertions.assertFalse(actual.toFile().exists());
+            this.pathToTmpDir = fileUtil.getTempDirectory();
+            actual.toFile().deleteOnExit();
         }
 
+
+        @Test
+        void prepFoldersForFile_RuntimeException() {
+            Assertions.assertThrows(RuntimeException.class, () -> fileUtil.prepFoldersForFile("*".repeat(10000)));
+            this.pathToTmpDir = fileUtil.getTempDirectory();
+        }
+
+        @Test
+        void prepFoldersForFile_IllegalArgFail() {
+            try {
+                fileUtil.prepFoldersForFile("*".repeat(10000));
+            } catch (RuntimeException e) {
+                Assertions.assertInstanceOf(FileSystemException.class, e.getCause());
+            }
+            this.pathToTmpDir = fileUtil.getTempDirectory();
+        }
 
     }
 
     @Test
     void resolvePath() {
+        Path actual, expected;
+        expected = fileUtil.getTempDirectory();
 
+        actual = fileUtil.resolvePath(fileUtil.getTempDirectory().toString());
+        Assertions.assertEquals(expected, actual);
     }
 
 

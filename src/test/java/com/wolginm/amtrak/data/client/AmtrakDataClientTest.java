@@ -43,7 +43,7 @@ class AmtrakDataClientTest {
     private final String pathPart = "/path-part";
     private final String hostPart = "markwolgin.com/api/amtrak/data";
     private final String schemaPart = "https";
-    private final String tempPath = "./target";
+    private final String tempPath = "zip";
 
     @BeforeEach
     public void setUp() {

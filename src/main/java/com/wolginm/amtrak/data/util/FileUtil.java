@@ -94,9 +94,9 @@ public class FileUtil {
 
     /**
      * Recursion entry point to delete recursively.
-     * @param current
-     * @return
-     * @throws IOException
+     * @param current   The current file.  Will be deleted.
+     * @return          True
+     * @throws IOException  An error occurred.
      */
     public boolean tearDownRecursive(File current) throws IOException {
         for (String nextSuffix: current.list()) {
@@ -108,10 +108,10 @@ public class FileUtil {
 
     /**
      * Recursion delete.
-     * @param previous
-     * @param name
-     * @return
-     * @throws IOException
+     * @param previous  The parent file.
+     * @param name      The next path suffix.
+     * @return          True
+     * @throws IOException  An error occurred.
      */
     private boolean tearDownRecursive(File previous, String name) throws IOException {
         File current = new File(previous, name);

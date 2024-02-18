@@ -10,6 +10,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
+import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,25 @@ import reactor.core.publisher.Mono;
 public class FileUtil {
 
     private final int BUFFER_SIZE = 4096;
+    public final static String TMP_FILE_PREFIX = "amtk_data";
+    private final Path tmpDir;
+    private final File tmpDirDeleteRecord;
+    FileUtil() {
+        try {
+            tmpDir = Files.createTempDirectory(TMP_FILE_PREFIX);
+            tmpDirDeleteRecord = tmpDir.toFile();
+            tmpDirDeleteRecord.deleteOnExit();
+            log.debug("AMTK-2101: Marked tmp file for deletion on JVM close [{}]", tmpDir.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Path getTempDirectory() {
+        return this.tmpDir;
+    }
+
+
 
     public Path resolvePath(final String path) {
         return FileSystems.getDefault()
@@ -39,7 +59,8 @@ public class FileUtil {
     public Path prepFoldersForFile(final String pathSuffix) {
         Path saveLocation;
         try {
-            saveLocation = Files.createTempDirectory(pathSuffix);
+            saveLocation
+                    = Files.createDirectories(Path.of(this.tmpDir.toString(), pathSuffix));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,5 +90,37 @@ public class FileUtil {
         DataBufferUtils.write(flux,
                 path,
                 StandardOpenOption.CREATE).block();
+    }
+
+    /**
+     * Recursion entry point to delete recursively.
+     * @param current
+     * @return
+     * @throws IOException
+     */
+    public boolean tearDownRecursive(File current) throws IOException {
+        for (String nextSuffix: current.list()) {
+            this.tearDownRecursive(current, nextSuffix);
+        }
+        Files.delete(current.toPath());
+        return true;
+    }
+
+    /**
+     * Recursion delete.
+     * @param previous
+     * @param name
+     * @return
+     * @throws IOException
+     */
+    private boolean tearDownRecursive(File previous, String name) throws IOException {
+        File current = new File(previous, name);
+        if (current.isDirectory()) {
+            for (String next: current.list()) {
+                this.tearDownRecursive(current, next);
+            }
+        }
+        Files.delete(current.toPath());
+        return true;
     }
 }

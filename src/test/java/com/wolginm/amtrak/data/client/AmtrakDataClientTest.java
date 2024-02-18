@@ -68,7 +68,6 @@ class AmtrakDataClientTest {
             Mockito.when(gtfsProperties.getPath()).thenReturn(pathPart);
             Mockito.when(gtfsProperties.getSchema()).thenReturn(schemaPart);
             Mockito.when(gtfsProperties.getHost()).thenReturn(hostPart);
-            Mockito.lenient().when(gtfsProperties.getTempFile()).thenReturn(tempPath);
         }
 
         @Test

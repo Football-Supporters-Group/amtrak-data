@@ -27,10 +27,6 @@ public class GtfsProperties {
      */
     private String path = "/content/gtfs/GTFS.zip";
     /**
-     * Temp directory to put zip file, so simple deletion.
-     */
-    private String tempFile = "./tmp";
-    /**
      * Longterm directory for inflated zipfiles.
      */
     private String dataDirectory = "./data";

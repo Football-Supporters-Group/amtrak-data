@@ -35,7 +35,7 @@ public class ZipUtil {
     }
 
     public void unzip(final String sourceUrl, final String destinationUrl) throws IOException {
-        log.info("AMTK-I-6400: Attempting to unzip file [{}] to [{}]", sourceUrl, destinationUrl);
+        log.info("AMTK-6400: Attempting to unzip file [{}] to [{}]", sourceUrl, destinationUrl);
         File destinationDir = new File(destinationUrl);
         if (!destinationDir.exists()) {
             destinationDir.mkdir();
@@ -46,7 +46,7 @@ public class ZipUtil {
         ZipEntry zipEntry = zipInputStream.getNextEntry();
         
         this.unzipLoop(zipInputStream, zipEntry, destinationDir);
-        log.info("AMTK-I-6401: Unzip file to [{}]", destinationUrl);
+        log.info("AMTK-6401: Unzip file to [{}]", destinationUrl);
     }
 
     private void unzipLoop(ZipInputStream zipInputStream, ZipEntry zipEntry, File destinationDir) throws IOException {
@@ -79,10 +79,10 @@ public class ZipUtil {
 
         try {
             this.writeFileToDisk(zipInputStream, filePath);
-            log.debug("AMTK-I-6400: Extracted file [{}]", filePath);
+            log.debug("AMTK-6400: Extracted file [{}]", filePath);
             status = true;
         } catch (IOException e) {
-            log.error("AMTK-I-6499: Unable to extract file [{}]", filePath);
+            log.error("AMTK-6499: Unable to extract file [{}]", filePath);
             log.error(e.getMessage());
             throw e;
         }

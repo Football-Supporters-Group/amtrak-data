@@ -1,6 +1,7 @@
 package com.wolginm.amtrak.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wolginm.amtrak.data.configuration.TemporaryDirectoryConfiguration;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.properties.GtfsProperties;
 import com.wolginm.amtrak.data.util.AmtrakFileNameToObjectUtil;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -40,11 +42,11 @@ class InflationServiceIntegrationTest {
     private final AmtrakProperties amtrakProperties = new AmtrakProperties();
     private InflationService inflationService;
 
-    public InflationServiceIntegrationTest() {
+    public InflationServiceIntegrationTest() throws IOException {
         this.amtrakProperties.setGtfs(new GtfsProperties());
         this.amtrakProperties.getGtfs().setDataDirectory(classLoader.getResource("unzip").getPath());
-        this.inflationService = new InflationService(this.objectsUtil, this.amtrakFileNameToObjectUtil, this.amtrakProperties);
-
+        this.inflationService = new InflationService(this.objectsUtil, this.amtrakFileNameToObjectUtil, this.amtrakProperties, new TemporaryDirectoryConfiguration().getTemporaryDirectory());
+        ReflectionTestUtils.setField(inflationService, "tmpDataDir", Path.of(this.amtrakProperties.getGtfs().getDataDirectory()));
     }
 
     @Test
@@ -75,7 +77,7 @@ class InflationServiceIntegrationTest {
 
     @Test
     public <T extends AmtrakObject> void inflateAllAmtrakObjects_NotADirectory() {
-        ReflectionTestUtils.setField(this.inflationService, "inflatedObjectPath", "unzip");
+        ReflectionTestUtils.setField(this.inflationService, "tmpDataDir", Path.of("unzip"));
         Assertions.assertThrows(NotDirectoryException.class, () -> this.inflationService.inflateAllAmtrakObjects());
     }
 

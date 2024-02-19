@@ -541,6 +541,10 @@ components:
       description: A time format HH:MM:SS
       example: 23:56:21
       pattern: "[0-9]{2}[:][0-9]{2}:[0-9]{2}"
+    ExtendedTime:
+      type: string
+      description: A more specific time format.
+      format: time
     Timezone:
       type: string
       description: ISO Timezone.
@@ -575,6 +579,8 @@ components:
       type: object
       description: Container for ConsolidatedRoute and ConsolidatedTrip Requests
       properties:
+        last_time_data_was_refreshed:
+          $ref: '#/components/schemas/ExtendedTime'
         requested_route_ids:
           type: array
           description: All requested routes as a list of strings.
@@ -586,7 +592,7 @@ components:
           additionalProperties:
             $ref: '#/components/schemas/ConsolidatedTrip'
         timestamp:
-          $ref: '#/components/schemas/Time'
+          $ref: '#/components/schemas/ExtendedTime'
       required:
         - requested_route_ids
         - requested_consolidated_routes

@@ -1,6 +1,7 @@
 package com.wolginm.amtrak.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wolginm.amtrak.data.configuration.TemporaryDirectoryConfiguration;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.properties.GtfsProperties;
 import com.wolginm.amtrak.data.util.AmtrakFileNameToObjectUtil;
@@ -57,13 +58,13 @@ class InflationServiceTest {
     private InflationService inflationService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         this.amtrakProperties = new AmtrakProperties();
         this.amtrakProperties.setRoute_metadata(classLoader.getResource("mock_metadata/route_stop_order.txt").getPath());
         this.amtrakProperties.setGtfs(this.gtfsProperties);
         this.gtfsProperties.setDataDirectory("unzip");
         MockitoAnnotations.openMocks(this);
-        this.inflationService = new InflationService(objectsUtil, amtrakFileNameToObjectUtil, amtrakProperties);
+        this.inflationService = new InflationService(objectsUtil, amtrakFileNameToObjectUtil, amtrakProperties, new TemporaryDirectoryConfiguration().getTemporaryDirectory());
     }
 
     @Test

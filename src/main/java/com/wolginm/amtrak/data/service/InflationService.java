@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -22,20 +23,24 @@ import java.util.stream.Collectors;
 @Service
 public class InflationService {
 
-    private final ObjectsUtil objectsUtil;
     private final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil;
     private final static String EMPTY_STRING = "";
-    private final String inflatedObjectPath;
+    private final ObjectsUtil objectsUtil;
     private final String routeMetadata;
+    private final Path tmpDir;
+    private final Path tmpDataDir;
 
     /**
      * Used to inflate the flat objects.
      */
-    public InflationService(final ObjectsUtil objectsUtil, final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil, final AmtrakProperties amtrakProperties) {
+    public InflationService(final ObjectsUtil objectsUtil, final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil,
+                            final AmtrakProperties amtrakProperties,
+                            @Qualifier("temporaryDirectoryPath") final Path tempDir) {
         log.info("AMTK-2100: Starting the Inflation Service");
         this.objectsUtil = objectsUtil;
-        this.inflatedObjectPath = amtrakProperties.getGtfs().getDataDirectory();
         this.routeMetadata = amtrakProperties.getRoute_metadata();
+        this.tmpDir = tempDir;
+        this.tmpDataDir = Path.of(tmpDir.toString(), amtrakProperties.getGtfs().getDataDirectory());
         this.amtrakFileNameToObjectUtil = amtrakFileNameToObjectUtil;
     }
 
@@ -61,9 +66,9 @@ public class InflationService {
     }
 
     public <T extends AmtrakObject> Map<Class<T>, List<T>> inflateAllAmtrakObjects() throws NotDirectoryException {
-        File directory = new File(inflatedObjectPath);
+        File directory = tmpDataDir.toFile();
         if (!directory.isDirectory()) {
-            String error = String.format("AMTK-2199: Supplied directory [%s] was not a directory", inflatedObjectPath);
+            String error = String.format("AMTK-2199: Supplied directory [%s] was not a directory", tmpDataDir.toString());
             log.error(error);
             throw new NotDirectoryException(error);
         }

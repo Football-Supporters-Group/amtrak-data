@@ -29,7 +29,7 @@ public class GtfsProperties {
     /**
      * Longterm directory for inflated zipfiles.
      */
-    private String dataDirectory = "./data";
+    private String dataDirectory = "data";
 
     private WebClientCustomProperties webClient;
     private RetryableProperties retry;

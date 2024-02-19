@@ -1,5 +1,6 @@
 package com.wolginm.amtrak.data.util;
 
+import com.wolginm.amtrak.data.configuration.TemporaryDirectoryConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,9 +23,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class FileUtilTest {
 
-    private final FileUtil fileUtil = new FileUtil();
+    private final FileUtil fileUtil = new FileUtil(new TemporaryDirectoryConfiguration().getTemporaryDirectory());
 
     private final String tmpDirsLocation = System.getProperty("java.io.tmpdir");
+
+    FileUtilTest() throws IOException {
+    }
 
     @Nested
     @DisplayName("Pathing Tests")
@@ -152,7 +156,7 @@ class FileUtilTest {
 
     @Test
     void testCalcualteChecksum_Pass() throws IOException {
-        File file = File.createTempFile(FileUtil.TMP_FILE_PREFIX, ".tmp", fileUtil.getTempDirectory().toFile());
+        File file = File.createTempFile(TemporaryDirectoryConfiguration.TMP_FILE_PREFIX, ".tmp", fileUtil.getTempDirectory().toFile());
         file.deleteOnExit();
         Long actual = fileUtil.calcualteChecksum(file);
 
@@ -191,7 +195,7 @@ class FileUtilTest {
             this.tearDownRecursive(current, nextSuffix);
         }
         Files.delete(current.toPath());
-        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
+        log.info("AMTK-0000: Deleting [{}]", current.toPath());
         return true;
     }
 
@@ -210,7 +214,7 @@ class FileUtilTest {
             }
         }
         Files.delete(current.toPath());
-        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
+        log.info("AMTK-0000: Deleting [{}]", current.toPath());
         return true;
     }
 }

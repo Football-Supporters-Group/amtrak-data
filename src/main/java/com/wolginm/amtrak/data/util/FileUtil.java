@@ -10,7 +10,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
-import com.wolginm.amtrak.data.properties.AmtrakProperties;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Component;
@@ -24,20 +24,18 @@ import reactor.core.publisher.Mono;
 public class FileUtil {
 
     private final int BUFFER_SIZE = 4096;
-    public final static String TMP_FILE_PREFIX = "amtk_data";
     private final Path tmpDir;
-    private final File tmpDirDeleteRecord;
-    FileUtil() {
-        try {
-            tmpDir = Files.createTempDirectory(TMP_FILE_PREFIX);
-            tmpDirDeleteRecord = tmpDir.toFile();
-            tmpDirDeleteRecord.deleteOnExit();
-            log.debug("AMTK-2101: Marked tmp file for deletion on JVM close [{}]", tmpDir.toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+    public FileUtil(@Qualifier("temporaryDirectoryPath") final Path tempDir) {
+        this.tmpDir = tempDir;
     }
 
+    /**
+     * Gets the temporary directory path.
+     * @return  Temp directory path.
+     * @deprecated Use {@code @Qualifier('temporaryDirectoryPath') final Path temporaryDirectory}
+     */
+    @Deprecated
     public Path getTempDirectory() {
         return this.tmpDir;
     }
@@ -104,7 +102,7 @@ public class FileUtil {
         for (String nextSuffix: current.list()) {
             this.tearDownRecursive(current, nextSuffix);
         }
-        log.debug("AMTK-D-6230: Deleting [{}]", current.toPath());
+        log.debug("AMTK-6230: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }
@@ -123,7 +121,7 @@ public class FileUtil {
                 this.tearDownRecursive(current, next);
             }
         }
-        log.debug("AMTK-D-6230: Deleting [{}]", current.toPath());
+        log.debug("AMTK-6230: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }

@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +21,7 @@ class DataMappingUtilTest {
     private List<Routes> routes;
     private List<Shapes> shapes;
     private List<StopTimes> stopTimes;
+    private Map<Integer, LinkedHashSet<String>> routeMetaData;
     private DataMappingUtil dataMappingUtil;
 
     @BeforeEach
@@ -62,6 +61,23 @@ class DataMappingUtilTest {
             add(new Routes().routeType(-1).routeId(888).routeShortName("Coast Starlight").routeLongName("Coast Starlight").agencyId(1).routeColor("GREEN").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
         }};
 
+        routeMetaData = new HashMap<>(){{
+            put(999, new LinkedHashSet<String>(){{
+                add("NYP");
+                add("PHL");
+                add("PAO");
+                add("HAR");
+            }});
+            put(888, new LinkedHashSet<String>(){{
+                add("PHL");
+                add("HAR");
+                add("SEA");
+                add("PDX");
+                add("ABC");
+            }});
+
+        }};
+
         dataMappingUtil = new DataMappingUtil();
     }
 
@@ -81,7 +97,7 @@ class DataMappingUtilTest {
     @Order(2)
     void buildConsolidatedRouteMap() {
         Map<Integer, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, null, trips, null);
-        Map<Integer, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, null, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)));
+        Map<Integer, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, null, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());

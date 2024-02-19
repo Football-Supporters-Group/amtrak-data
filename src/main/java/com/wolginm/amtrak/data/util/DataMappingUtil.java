@@ -69,7 +69,8 @@ public class DataMappingUtil {
                                                                      final Map<Integer, ConsolidatedTrip> consolidatedTripMap,
                                                                      final List<Routes> routes,
                                                                      final List<Calendar> calendars,
-                                                                     final Map<String, Stops> stops) {
+                                                                     final Map<String, Stops> stops,
+                                                                     final Map<Integer, LinkedHashSet<String>> routeOrderMetaData) {
         log.info("AMTK-6600: Attempting to construct map of [{}] Consolidated Routes", routes.size());
 
         Map<Integer, ConsolidatedRoute> consolidatedRouteMap = new HashMap<>(routes.size());
@@ -121,6 +122,7 @@ public class DataMappingUtil {
                             .flatMap(List::stream)
                             .distinct()
                             .collect(Collectors.toMap(t->t, stops::get)))
+                    .stopOrder(routeOrderMetaData.get(route.getRouteId()).stream().collect(Collectors.toUnmodifiableList()))
             );
         });
         log.info("AMTK-6610: Constructed map of [{}] Consolidated Routes", routes.size());
@@ -146,6 +148,17 @@ public class DataMappingUtil {
             consolidatedTripList.add(consolidatedTrip);
         }
         return routeIdToConsolidatedTripList;
+    }
+
+    /**
+     * Will turn a list of stops into a map of stop name -> Stops.class.
+     * @param stops List of stops.
+     * @return      Map of stop name -> Stops.class.
+     */
+    public Map<String, Stops> stopsMap(final List<Stops> stops) {
+        return stops
+                .stream()
+                .collect(Collectors.toMap(Stops::getStopId, t->t));
     }
 
 }

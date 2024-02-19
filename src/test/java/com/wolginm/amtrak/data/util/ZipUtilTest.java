@@ -1,5 +1,6 @@
 package com.wolginm.amtrak.data.util;
 
+import com.wolginm.amtrak.data.configuration.TemporaryDirectoryConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +14,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.wolginm.amtrak.data.util.FileUtil.TMP_FILE_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -29,7 +29,7 @@ class ZipUtilTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        destinationPath = Files.createTempDirectory(TMP_FILE_PREFIX);
+        destinationPath = Files.createTempDirectory(TemporaryDirectoryConfiguration.TMP_FILE_PREFIX);
         destinationPath.toFile().deleteOnExit();
     }
 
@@ -57,7 +57,7 @@ class ZipUtilTest {
         for (String nextSuffix: current.list()) {
             this.tearDownRecursive(current, nextSuffix);
         }
-        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
+        log.info("AMTK-0000: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }
@@ -76,7 +76,7 @@ class ZipUtilTest {
                 this.tearDownRecursive(current, next);
             }
         }
-        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
+        log.info("AMTK-0000: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }

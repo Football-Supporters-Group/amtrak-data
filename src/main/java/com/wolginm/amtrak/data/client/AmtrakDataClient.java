@@ -109,7 +109,7 @@ public class AmtrakDataClient extends ClientBase {
         log.info("AMTK-3199: [{}/{}] All retries have failed to get the GTFS Payload.  Source [{}, {}]",
                 retry,
                 this.gtfsProperties.getRetry().getMaxRetryCount(),
-                retryableException.reason, retryableException.httpStatusCode);
+                retryableException.getReason(), retryableException.getHttpStatusCode());
         return null;
     }
 }

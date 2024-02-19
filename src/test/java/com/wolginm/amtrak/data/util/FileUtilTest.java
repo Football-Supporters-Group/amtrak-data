@@ -4,12 +4,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystemException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,7 +100,22 @@ class FileUtilTest {
             Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
             Assertions.assertTrue(actual.toFile().exists());
 
-            fileUtil.tearDownRecursive(actual.toFile());
+            fileUtil.tearDownRecursive(Path.of(fileUtil.getTempDirectory().toString(), innerPath).toFile());
+
+            Assertions.assertFalse(actual.toFile().exists());
+            this.pathToTmpDir = fileUtil.getTempDirectory();
+            actual.toFile().deleteOnExit();
+        }
+
+        @Test
+        void prepFoldersForFile_SuperComplex_WithDelete() throws IOException {
+            Path actual = fileUtil.prepFoldersForFile(innerPath.concat("/%s/%s".formatted("ABC", "DEF")));
+
+            Assertions.assertNotNull(actual);
+            Assertions.assertTrue(actual.startsWith(fileUtil.getTempDirectory()));
+            Assertions.assertTrue(actual.toFile().exists());
+
+            fileUtil.tearDownRecursive(Path.of(fileUtil.getTempDirectory().toString(), innerPath).toFile());
 
             Assertions.assertFalse(actual.toFile().exists());
             this.pathToTmpDir = fileUtil.getTempDirectory();
@@ -131,14 +150,34 @@ class FileUtilTest {
         Assertions.assertEquals(expected, actual);
     }
 
-
-
     @Test
-    void calcualteChecksum() {
+    void testCalcualteChecksum_Pass() throws IOException {
+        File file = File.createTempFile(FileUtil.TMP_FILE_PREFIX, ".tmp", fileUtil.getTempDirectory().toFile());
+        file.deleteOnExit();
+        Long actual = fileUtil.calcualteChecksum(file);
+
+        Assertions.assertNotNull(actual);
     }
 
     @Test
-    void dataBufferUtilWrite() {
+    void testCalcualteChecksum_Failure() {
+        Long actual = fileUtil.calcualteChecksum(fileUtil.getTempDirectory().toFile());
+
+        Assertions.assertNotNull(actual);
+        Assertions.assertEquals(-1L, actual);
+    }
+
+    @Test
+    void dataBufferUtilWrite() throws URISyntaxException {
+        Path dataBufferSource = Path.of(this.getClass().getClassLoader().getResource("route_stop_order.txt").toURI());
+        DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+        Flux<DataBuffer> flux = DataBufferUtils.read(dataBufferSource, dataBufferFactory, 409600);
+
+        Path destination = Path.of(this.fileUtil.getTempDirectory().toString(), "dataBufferTest");
+        destination.toFile().deleteOnExit();
+
+        Assertions.assertDoesNotThrow(() -> this.fileUtil.dataBufferUtilWrite(flux, destination));
+        Assertions.assertTrue(destination.toFile().exists());
     }
 
     /**
@@ -152,6 +191,7 @@ class FileUtilTest {
             this.tearDownRecursive(current, nextSuffix);
         }
         Files.delete(current.toPath());
+        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
         return true;
     }
 
@@ -170,6 +210,7 @@ class FileUtilTest {
             }
         }
         Files.delete(current.toPath());
+        log.info("AMTK-I-0000: Deleting [{}]", current.toPath());
         return true;
     }
 }

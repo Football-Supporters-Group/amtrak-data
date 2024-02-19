@@ -78,6 +78,8 @@ public class FileUtil {
             }
             checksum = checkedInputStream.getChecksum().getValue();
         } catch (IOException e) {
+            var err = "AMTK-6299: Failure to calculate a checksum for file [%s]".formatted(checkedFile.toPath().toString());
+            log.error(err);
             log.error(e.getMessage());
         }
         return checksum;
@@ -102,6 +104,7 @@ public class FileUtil {
         for (String nextSuffix: current.list()) {
             this.tearDownRecursive(current, nextSuffix);
         }
+        log.debug("AMTK-D-6230: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }
@@ -120,6 +123,7 @@ public class FileUtil {
                 this.tearDownRecursive(current, next);
             }
         }
+        log.debug("AMTK-D-6230: Deleting [{}]", current.toPath());
         Files.delete(current.toPath());
         return true;
     }

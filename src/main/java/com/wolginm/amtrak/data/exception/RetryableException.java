@@ -1,12 +1,14 @@
 package com.wolginm.amtrak.data.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
+@Getter
 public class RetryableException extends RuntimeException {
 
-    public final String reason;
-    public final HttpStatusCode httpStatusCode;
+    private final String reason;
+    private final HttpStatusCode httpStatusCode;
 
     public RetryableException(final String reason, final HttpStatusCode httpStatusCode) {
         super();
@@ -22,7 +24,7 @@ public class RetryableException extends RuntimeException {
     }
 
     public RetryableException(final String reason, final HttpStatusCode httpStatusCode,
-                              final Throwable throwable, final String message) {
+                              final String message, final Throwable throwable) {
         super(message, throwable);
         this.reason = reason;
         this.httpStatusCode = httpStatusCode;

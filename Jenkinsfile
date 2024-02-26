@@ -22,8 +22,9 @@ pipeline {
       steps {
         sh '''
           ## chown -R $USER:$USER ~/.gnupg
-          sudo gpg --batch --import $GPG_SECRET
-          sudo gpg --import-ownertrust $GPG_OWNERTRUST
+          gpg --list-keys
+          gpg --batch --import $GPG_SECRET
+          gpg --import-ownertrust $GPG_OWNERTRUST
         '''
       }
     }

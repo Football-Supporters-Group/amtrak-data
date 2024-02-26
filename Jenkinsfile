@@ -7,7 +7,10 @@ pipeline {
   }
 
   environment {
-    GPG_PASSPHRASE = credentials('gpgKey')
+    GPG_SECRET = credentials('gpg-secret')
+    GPG_SECRET_NAME = credentials('gpg-secret-name')
+    GPG_OWNERTRUST = credentials('gpg-ownertrust')
+    GPG_PASSPHRASE = credentials('gpg-passphrase')
   }
 
   options {
@@ -15,6 +18,14 @@ pipeline {
   }
 
   stages {
+    stage('Load GPG Key for Signing') {
+      steps {
+        sh '''
+          gpg --batch --import $GPG_SECRET
+          gpg --import-ownertrust $GPG_OWNERTRUST
+        '''
+      }
+    }
     stage('Pre-Build') {
       steps {
         sh '''

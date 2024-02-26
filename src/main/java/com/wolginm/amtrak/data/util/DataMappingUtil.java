@@ -5,6 +5,7 @@ import com.wolginmark.amtrak.data.models.Calendar;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,13 +31,17 @@ public class DataMappingUtil {
         log.info("AMTK-6600: Attempting to construct map of [{}] Consolidated Trips", trips.size());
         Trips trip;
         ConsolidatedTrip consolidatedTrip;
+        String startDate, endDate;
         Map<Integer, ConsolidatedTrip> consolidatedTripMap = new HashMap<>(trips.size());
+        Map<Integer, Calendar> calendarServiceMap = calendars.parallelStream().collect(Collectors.toMap(elem -> elem.getServiceId(), elem -> elem));
         Map<Long, Trips> tripsMap = trips.parallelStream().collect(Collectors.toMap(Trips::getTripId, t->t));
         for (StopTimes stoptime: stopTimes) {
             consolidatedTrip = consolidatedTripMap.get(stoptime.getTripId().intValue());
             if (consolidatedTrip == null) {
                 log.debug("AMTK-6611: Trip not in map, creating and setting trip [{}]", stoptime.getTripId());
                 trip = tripsMap.get(stoptime.getTripId());
+                startDate = calendarServiceMap.getOrDefault(trip.getServiceId(), new Calendar(trip.getServiceId(), 0, 0, 0, 0, 0, 0, 0, "19700101", "29991231")).getStartDate();
+                endDate = calendarServiceMap.getOrDefault(trip.getServiceId(), new Calendar(trip.getServiceId(), 0, 0, 0, 0, 0, 0, 0, "19700101", "29991231")).getEndDate();
                 consolidatedTrip = new ConsolidatedTrip()
                         .tripId(trip.getTripId())
                         .tripHeadsign(trip.getTripHeadsign())
@@ -44,7 +49,15 @@ public class DataMappingUtil {
                         .directionId(trip.getDirectionId())
                         .routeId(trip.getRouteId())
                         .serviceId(trip.getServiceId())
-                        .shapeId(trip.getShapeId());
+                        .shapeId(trip.getShapeId())
+                        .tripEffectiveOnDate(LocalDate.of(
+                                Integer.parseInt(startDate.substring(0, 4)),
+                                Integer.parseInt(startDate.substring(4, 6)),
+                                Integer.parseInt(startDate.substring(6))))
+                        .tripNoLongerEffectiveOnDate(LocalDate.of(
+                                Integer.parseInt(endDate.substring(0, 4)),
+                                Integer.parseInt(endDate.substring(4, 6)),
+                                Integer.parseInt(endDate.substring(6))));
                 consolidatedTripMap.put(consolidatedTrip.getTripId().intValue(), consolidatedTrip);
             }
             consolidatedTrip.addTripStopsItem(stoptime);
@@ -122,7 +135,7 @@ public class DataMappingUtil {
                             .flatMap(List::stream)
                             .distinct()
                             .collect(Collectors.toMap(t->t, stops::get)))
-                    .stopOrder(routeOrderMetaData.get(route.getRouteId()).stream().collect(Collectors.toUnmodifiableList()))
+                    .stopOrder(routeOrderMetaData.getOrDefault(route.getRouteId(), new LinkedHashSet<String>()).stream().collect(Collectors.toUnmodifiableList()))
             );
         });
         log.info("AMTK-6610: Constructed map of [{}] Consolidated Routes", routes.size());

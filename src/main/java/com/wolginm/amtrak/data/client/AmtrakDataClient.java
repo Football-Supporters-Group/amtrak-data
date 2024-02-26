@@ -49,6 +49,7 @@ public class AmtrakDataClient extends ClientBase {
     public Path retrieveGtfsPayload() {
         RetryContext retryContext = RetrySynchronizationManager.getContext();
         int retry = retryContext.getRetryCount() + 1;
+        Path directoryToStoreFile;
         Path placeToStoreFile;
         log.info("AMTK-3100: [{}/{}] In AmtrakDataClient.retrieveGtfsPayload",
                 retry, gtfsProperties.getRetry().getMaxRetryCount());
@@ -66,7 +67,8 @@ public class AmtrakDataClient extends ClientBase {
                     this.gtfsProperties.getHost(),
                     this.gtfsProperties.getPath());
 
-            placeToStoreFile = this.fileUtil.prepFoldersForFile("zip");
+            directoryToStoreFile = this.fileUtil.prepFoldersForFile("zip");
+            placeToStoreFile = Path.of(directoryToStoreFile.toString(), "data.zip");
 
             this.fileUtil.dataBufferUtilWrite(downloadedMono, placeToStoreFile);
             log.info("AMTK-3100: [{}/{}] Amtrak GTFS data file has been saved to [{}]",

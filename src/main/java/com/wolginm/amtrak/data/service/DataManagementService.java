@@ -3,9 +3,11 @@ package com.wolginm.amtrak.data.service;
 import com.wolginm.amtrak.data.client.AmtrakDataClient;
 import com.wolginm.amtrak.data.properties.AmtrakProperties;
 import com.wolginm.amtrak.data.util.DataMappingUtil;
+import com.wolginm.amtrak.data.util.FileUtil;
 import com.wolginm.amtrak.data.util.ZipUtil;
 import com.wolginmark.amtrak.data.models.*;
 import lombok.extern.slf4j.Slf4j;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +31,7 @@ public class DataManagementService {
     private final AmtrakProperties amtrakProperties;
     private final DataMappingUtil dataMappingUtil;
     private final Path temporaryDirectory;
+    private final FileUtil fileUtil;
     private final ZipUtil zipUtil;
 
     private Map<Integer, ConsolidatedRoute> mapOfRoutes;
@@ -36,6 +40,7 @@ public class DataManagementService {
 
     public DataManagementService(final InflationService inflationService,
                                  final AmtrakDataClient amtrakDataClient,
+                                 final FileUtil fileUtil,
                                  final ZipUtil zipUtil,
                                  final DataMappingUtil dataMappingUtil,
                                  final AmtrakProperties amtrakProperties,
@@ -45,7 +50,9 @@ public class DataManagementService {
         this.amtrakProperties = amtrakProperties;
         this.dataMappingUtil = dataMappingUtil;
         this.temporaryDirectory = tempDir;
+        this.fileUtil = fileUtil;
         this.zipUtil = zipUtil;
+        this.lastRefresh = Instant.MIN;
     }
 
     public ConsolidatedResponseObject buildConsolidatedResponseObject(String... routesToLoad) {
@@ -58,10 +65,25 @@ public class DataManagementService {
                 this.mapOfRoutes = Map.of();
             }
         }
+        log.debug("*------------------------------CHECKING LIST---------------------------------*");
         ConsolidatedResponseObject responseObject = new ConsolidatedResponseObject();
         responseObject.setLastTimeDataWasRefreshed(lastRefresh.toString());
         responseObject.setTimestamp(Instant.now().toString());
         responseObject.setRequestedRouteIds(this.generateListOfRequestedRouteIds(routesToLoad));
+        responseObject.setRequestedConsolidatedRoutes(JsonNullable.of(this.mapOfRoutes
+                .entrySet()
+                .stream()
+                .filter(elem -> {
+                    log.debug("Checking if route will be included [{}:{}]", String.format("%06d", elem.getKey()), responseObject
+                            .getRequestedRouteIds()
+                            .contains(elem.getKey().toString()));
+                    return responseObject
+                            .getRequestedRouteIds()
+                            .contains(elem.getKey().toString());
+                })
+                .collect(Collectors.toMap((Map.Entry<Integer, ConsolidatedRoute> elem) -> elem.getKey().toString(),
+                        (Map.Entry<Integer, ConsolidatedRoute> elem) -> elem.getValue()))));
+        log.debug("*---------------------------------CHECKED------------------------------------*");
 
 
 
@@ -138,8 +160,8 @@ public class DataManagementService {
             return this.mapOfRoutes
                     .keySet()
                     .parallelStream()
-                    .filter(listifyForComparison::contains)
                     .map(elem -> elem.toString())
+                    .filter(string -> listifyForComparison.contains(string))
                     .toList();
         }
     }
@@ -152,7 +174,7 @@ public class DataManagementService {
      */
     public boolean refreshAmtrakData() throws IOException {
         Path zipLocation = this.amtrakDataClient.retrieveGtfsPayload();
-        Path dataLocation = Path.of(this.temporaryDirectory.toString(), amtrakProperties.getGtfs().getDataDirectory());
+        Path dataLocation = this.fileUtil.prepFoldersForFile(amtrakProperties.getGtfs().getDataDirectory());
 
         this.zipUtil.unzip(zipLocation.toString(), dataLocation.toString());
 

@@ -91,7 +91,7 @@ class AmtrakDataClientTest {
             Mockito.doNothing().when(fileUtil).dataBufferUtilWrite(any(Flux.class), any(Path.class));
 
             actual = amtrakDataClient.retrieveGtfsPayload();
-            Assertions.assertEquals(expected, actual);
+            Assertions.assertEquals(expected.toString().concat("/data.zip"), actual.toString());
         }
 
         @Test

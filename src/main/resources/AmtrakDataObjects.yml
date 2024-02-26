@@ -193,9 +193,9 @@ components:
         - monday
         - tuesday
         - wednesday
-        - thuesday
+        - thursday
         - friday
-        - satruday
+        - saturday
         - sunday
         - start_date
         - end_date
@@ -408,13 +408,13 @@ components:
         - trip_headsign
         - trip_short_name
         - direction_id
-#      examples:
-#        - {"route_id": 39520,
-#           "service_id": 2851853,
-#           "trip_id": 80332851853,
-#           "trip_headsign": "Pittsburgh",
-#           "trip_short_name": "8033",
-#           "direction_id": false}
+    #      examples:
+    #        - {"route_id": 39520,
+    #           "service_id": 2851853,
+    #           "trip_id": 80332851853,
+    #           "trip_headsign": "Pittsburgh",
+    #           "trip_short_name": "8033",
+    #           "direction_id": false}
     ## Custom Data Objects
     ConsolidatedRoute:
       type: object
@@ -498,7 +498,14 @@ components:
           description: Stop times as a list.
           items:
             $ref: '#/components/schemas/StopTimes'
-
+        trip_effective_on_date:
+          type: string
+          format: date
+          description: The date when the trip becomes active.
+        trip_no_longer_effective_on_date:
+          type: string
+          format: date
+          description: The date when the trip becomes inactive.
 
 
     ## Common Objects
@@ -574,7 +581,7 @@ components:
         - $ref: "#/components/schemas/ConsolidatedRoute"
         - $ref: "#/components/schemas/ConsolidatedTrip"
 
-## All api reliant objects.
+    ## All api reliant objects.
     ConsolidatedResponseObject:
       type: object
       description: Container for ConsolidatedRoute and ConsolidatedTrip Requests
@@ -590,10 +597,11 @@ components:
           description: All requested consolidated rotues in a map of route id -> consoldiated route.
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/ConsolidatedTrip'
+            $ref: '#/components/schemas/ConsolidatedRoute'
         timestamp:
           $ref: '#/components/schemas/ExtendedTime'
       required:
+        - last_time_data_was_refreshed
         - requested_route_ids
         - requested_consolidated_routes
         - timestamp

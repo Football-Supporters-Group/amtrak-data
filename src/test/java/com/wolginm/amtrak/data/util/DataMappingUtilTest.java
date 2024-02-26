@@ -1,6 +1,7 @@
 package com.wolginm.amtrak.data.util;
 
 import com.wolginmark.amtrak.data.models.*;
+import com.wolginmark.amtrak.data.models.Calendar;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -20,6 +21,7 @@ class DataMappingUtilTest {
     private List<Trips> trips;
     private List<Routes> routes;
     private List<Shapes> shapes;
+    private List<Calendar> calendars;
     private List<StopTimes> stopTimes;
     private Map<Integer, LinkedHashSet<String>> routeMetaData;
     private DataMappingUtil dataMappingUtil;
@@ -59,6 +61,10 @@ class DataMappingUtilTest {
         routes = new LinkedList<>(){{
             add(new Routes().routeType(-1).routeId(999).routeShortName("Keystone").routeLongName("Keystone Lmt'd").agencyId(1).routeColor("BLUE").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
             add(new Routes().routeType(-1).routeId(888).routeShortName("Coast Starlight").routeLongName("Coast Starlight").agencyId(1).routeColor("GREEN").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
+        }};
+
+        calendars = new LinkedList<>() {{
+           add(new Calendar().serviceId(-1).monday(1).tuesday(1).wednesday(1).thursday(1).friday(1).saturday(1).sunday(1).startDate("20200301").endDate("20690420"));
         }};
 
         routeMetaData = new HashMap<>(){{

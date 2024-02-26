@@ -21,9 +21,9 @@ pipeline {
     stage('Load GPG Key for Signing') {
       steps {
         sh '''
-          chown -R $USER:$USER ~/.gnupg
-          gpg --batch --import $GPG_SECRET
-          gpg --import-ownertrust $GPG_OWNERTRUST
+          ## chown -R $USER:$USER ~/.gnupg
+          sudo gpg --batch --import $GPG_SECRET
+          sudo gpg --import-ownertrust $GPG_OWNERTRUST
         '''
       }
     }

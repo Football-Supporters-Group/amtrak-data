@@ -107,7 +107,7 @@ components:
           schema:
             type: integer
     NonSuccessResponse:
-      description: A response container for a non-sucessful event.
+      description: A response container for a non-successful event.
       content:
         application/json:
           schema:
@@ -300,10 +300,10 @@ components:
           $ref: '#/components/schemas/TripId'
         arrival_time:
           $ref: '#/components/schemas/Time'
-          description: The time when the servicer arrives.
+          description: The time when the service arrives.
         departure_time:
           $ref: '#/components/schemas/Time'
-          description: The time when the servicer departs.
+          description: The time when the service departs.
         stop_id:
           $ref: '#/components/schemas/StopId'
         stop_sequence:
@@ -360,17 +360,17 @@ components:
       description: A 'place' where a transfer takes place.
       properties:
         from_stop_id:
-          description: The stop from where people are transfering from.
+          description: The stop from where people are transferring from.
           $ref: '#/components/schemas/StopId'
         to_stop_id:
-          description: The stop from where people are transfering to.
+          description: The stop from where people are transferring to.
           $ref: '#/components/schemas/StopId'
         transfer_type:
           type: integer
           format: int32
-          description: What kind of transefer this action is.
+          description: What kind of transfer this action is.
         min_transfer_time:
-          description: The minimum amount time it takes for a transfer to occur, in minuetes.
+          description: The minimum amount time it takes for a transfer to occur, in minutes.
           type: integer
           format: int32
       required:
@@ -380,7 +380,7 @@ components:
         - min_transfer_time
     Trips:
       type: object
-      desctiption: A specific trip on a route.
+      description: A specific trip on a route.
       properties:
         route_id:
           $ref: '#/components/schemas/RouteId'
@@ -398,7 +398,7 @@ components:
         direction_id:
           type: integer
           format: int32
-          description: Inidcated the direction of travel.
+          description: Indicated the direction of travel.
         shape_id:
           $ref: '#/components/schemas/ShapeId'
       required:
@@ -490,7 +490,7 @@ components:
         direction_id:
           type: integer
           format: int32
-          description: Inidcated the direction of travel.
+          description: Indicated the direction of travel.
         shape_id:
           $ref: '#/components/schemas/ShapeId'
         trip_stops:
@@ -512,7 +512,7 @@ components:
     AgencyId:
       type: integer
       format: int32
-      description: The unique identidier for the agency.
+      description: The unique identifier for the agency.
     Date:
       type: string
       description: A custom date format that follows YYYYMMDD as a string.
@@ -522,7 +522,7 @@ components:
       description: GeoLocationElement.
     Language:
       type: string
-      description: The language the text contained will be writen in.
+      description: The language the text contained will be written in.
     RouteId:
       type: integer
       format: int32
@@ -588,13 +588,15 @@ components:
       properties:
         last_time_data_was_refreshed:
           $ref: '#/components/schemas/ExtendedTime'
+          description: The last time the source Amtrak data was downloaded, inflated, and successfully parsed into active memory.  \
+            Effectively, this indicated when the data served was sourced.
         requested_route_ids:
           type: array
           description: All requested routes as a list of strings.
           items:
             type: string
         requested_consolidated_routes:
-          description: All requested consolidated rotues in a map of route id -> consoldiated route.
+          description: All requested consolidated routes in a map of route id -> consolidated route.
           type: object
           additionalProperties:
             $ref: '#/components/schemas/ConsolidatedRoute'
@@ -607,10 +609,10 @@ components:
         - timestamp
     NonSuccessResponse:
       type: object
-      description: Container for a non-sucessful event.
+      description: Container for a non-successful event.
       properties:
         additional_context:
-          description: Any additional context for the non-sucess.
+          description: Any additional context for the non-success.
           type: array
           items:
             type: string

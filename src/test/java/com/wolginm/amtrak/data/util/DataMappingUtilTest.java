@@ -90,7 +90,7 @@ class DataMappingUtilTest {
     @Test
     @Order(1)
     void buildConsolidatedTripMap() {
-        Map<Integer, ConsolidatedTrip> actual = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, null, trips, null);
+        Map<Integer, ConsolidatedTrip> actual = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(3, actual.size());
@@ -102,8 +102,8 @@ class DataMappingUtilTest {
     @Test
     @Order(2)
     void buildConsolidatedRouteMap() {
-        Map<Integer, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, null, trips, null);
-        Map<Integer, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, null, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
+        Map<Integer, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
+        Map<Integer, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());

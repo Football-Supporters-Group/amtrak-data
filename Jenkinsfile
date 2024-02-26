@@ -6,6 +6,9 @@ pipeline {
       jdk 'jdk17'
   }
 
+  environment {
+    GPG_PASSPHRASE = credentials('gpgKey')
+  }
 
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')

@@ -6,12 +6,19 @@ pipeline {
       jdk 'jdk17'
   }
 
+  def getGitCommit() {
+    commit = sh(returnStdout: true, script: 'git log -1 --oneline').trim()
+    return commit.substring( commit.indexOf(' ') ).trim()
+  }
+
   environment {
     GPG_SECRET = credentials('gpg-secret')
     GPG_SECRET_NAME = credentials('gpg-secret-name')
     GPG_OWNERTRUST = credentials('gpg-ownertrust')
     GPG_PASSPHRASE = credentials('gpg-passphrase')
+    GIT_COMMIT = getGitCommit()
   }
+
 
   options {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
@@ -21,10 +28,11 @@ pipeline {
     stage('Load GPG Key for Signing') {
       steps {
         sh '''
-          ## chown -R $USER:$USER ~/.gnupg
-          gpg --list-keys
-          gpg --batch --import $GPG_SECRET
-          gpg --import-ownertrust $GPG_OWNERTRUST
+          echo ${GIT_COMMIT}
+          ##gpg --no-default-keyring --keyring=~/.gpg/
+          ##gpg --list-keys
+          ##gpg --batch --import $GPG_SECRET
+          ##gpg --import-ownertrust $GPG_OWNERTRUST
         '''
       }
     }

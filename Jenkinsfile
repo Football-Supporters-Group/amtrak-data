@@ -25,14 +25,9 @@ pipeline {
       steps {
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
-          cat /etc/passwd
-          chown -hR nobody ~/.gnupg/trustdb.gpg
-          gpg --lock-never --list-keys --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg
+          gpg --lock-never --list-keys --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg -v
           gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --batch --import $GPG_SECRET
           gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --import-ownertrust $GPG_OWNERTRUST
-          ##gpg --list-keys
-          ##gpg --batch --import $GPG_SECRET
-          ##gpg --import-ownertrust $GPG_OWNERTRUST
         '''
       }
     }

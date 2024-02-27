@@ -357,9 +357,7 @@
 						<configuration>
 							<keyname>${env.GPG_SECRET_NAME}</keyname>
 							<passphraseServerId>${env.GPG_PASSPHRASE}</passphraseServerId>
-							<gpgArguments>
-								<arg>--homedir /tmp </arg>
-							</gpgArguments>
+							<homedir>/tmp</homedir>
 							<skip>${maven.remote.skip}</skip>
 						</configuration>
 					</execution>

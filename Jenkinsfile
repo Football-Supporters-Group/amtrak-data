@@ -26,7 +26,7 @@ pipeline {
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --homedir /tmp --batch --import $GPG_SECRET
-          gpg ---homedir /tmp --import-ownertrust $GPG_OWNERTRUST
+          gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
           gpg --homedir /tmp --list-keys
         '''
       }

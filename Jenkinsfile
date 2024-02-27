@@ -45,7 +45,7 @@ pipeline {
     }
     stage('Test') {
         steps {
-            sh 'mvn test verify'
+            sh 'mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true'
         }
         post {
             always {

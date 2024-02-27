@@ -97,6 +97,8 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<maven.local.skip>false</maven.local.skip>
+		<maven.remote.skip>true</maven.remote.skip>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -336,17 +338,32 @@
 				<version>3.1.0</version>
 				<executions>
 					<execution>
-						<id>sign-artifacts</id>
+						<id>sign-artifacts-local</id>
 						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
+						<configuration>
+							<skip>${maven.local.skip}</skip>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>sign-artifacts-jenkins</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+						<configuration>
+							<keyname>${env.GPG_SECRET_NAME}</keyname>
+							<passphraseServerId>${env.GPG_PASSPHRASE}</passphraseServerId>
+							<gpgArguments>
+								<arg>--homedir /tmp </arg>
+							</gpgArguments>
+							<skip>${maven.remote.skip}</skip>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<keyname>${env.GPG_SECRET_NAME}</keyname>
-					<passphraseServerId>${env.GPG_PASSPHRASE}</passphraseServerId>
-				</configuration>
 			</plugin>
 		</plugins>
 		<resources>

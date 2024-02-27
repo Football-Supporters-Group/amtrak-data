@@ -25,6 +25,7 @@ pipeline {
       steps {
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
+          gpg --version
           gpg --homedir /tmp --batch --import $GPG_SECRET
           gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
           gpg --homedir /tmp --list-keys
@@ -45,7 +46,7 @@ pipeline {
     }
     stage('Test') {
         steps {
-            sh 'export $TTY'
+            sh 'export GPG_TTY=$(tty)'
             sh 'mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true'
         }
         post {

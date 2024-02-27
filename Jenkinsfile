@@ -24,7 +24,7 @@ pipeline {
     stage('Load GPG Key for Signing') {
       steps {
         sh '''
-          su jenkins -s /bin/bash
+          su pipeline
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --lock-never --list-keys --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg -v
           gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --batch --import $GPG_SECRET
@@ -59,12 +59,8 @@ pipeline {
     stage('Clean Up GPG Key for Signing') {
       steps {
         sh '''
-          su jenkins -s /bin/bash
-          GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
-          gpg --lock-never --list-keys --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg -v
-          gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --batch --import $GPG_SECRET
-          gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --import-ownertrust $GPG_OWNERTRUST
-        '''
+          echo test
+          '''
       }
     }
 

@@ -47,7 +47,7 @@ pipeline {
     stage('Test') {
         steps {
             sh '''
-                mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true -X
+                mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true -X -Dgpg.passphrase=$GPG_PASSPHRASE
             '''
         }
         post {

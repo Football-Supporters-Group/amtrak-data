@@ -358,9 +358,6 @@
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>
-								<arg>--output</arg>
-								<arg>gpg.log</arg>
-								<arg>--no-tty</arg>
 							</gpgArguments>
 							<homedir>/tmp</homedir>
 							<keyname>${env.GPG_SECRET_NAME}</keyname>

@@ -25,7 +25,7 @@ pipeline {
       steps {
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
-          echo $GIT_COMMIT
+          cat /etc/passwd
           chown -hR $USER ~/.gnupg/trustdb.gpg
           gpg --lock-never --list-keys --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg
           gpg --lock-never --no-default-keyring --keyring=/tmp/$GIT_COMMIT.gpg --batch --import $GPG_SECRET

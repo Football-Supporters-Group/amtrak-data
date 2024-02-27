@@ -47,8 +47,6 @@ pipeline {
     stage('Test') {
         steps {
             sh '''
-                GPG_TTY=$(tty)
-                export GPG_TTY
                 mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true
             '''
         }

@@ -63,20 +63,26 @@ class AmtrakDataClientTest {
     @DisplayName("Main Body Tests")
     class RetrieveGTFS {
 
+        Path expected;
+
         @BeforeEach
         void setUp() {
             Mockito.when(gtfsProperties.getPath()).thenReturn(pathPart);
             Mockito.when(gtfsProperties.getSchema()).thenReturn(schemaPart);
             Mockito.when(gtfsProperties.getHost()).thenReturn(hostPart);
-        }
 
-        @Test
-        void retrieveGtfsPayload_pass() {
-            Path actual, expected;
             expected = FileSystems.getDefault()
                     .getPath(tempPath)
                     .normalize()
                     .toAbsolutePath();
+            expected.toFile().deleteOnExit();
+            Mockito.when(fileUtil.prepFoldersForFile(tempPath)).thenReturn(expected);
+
+        }
+
+        @Test
+        void retrieveGtfsPayload_pass() {
+            Path actual;
 
             WebClient.RequestHeadersUriSpec requestHeadersUriSpec = mock(WebClient.RequestHeadersUriSpec.class);
             WebClient.RequestHeadersSpec requestHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
@@ -87,7 +93,6 @@ class AmtrakDataClientTest {
             Mockito.when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
             Mockito.when(responseSpec.bodyToFlux(eq(DataBuffer.class))).thenReturn(dataBufferFlux);
 
-            Mockito.when(fileUtil.prepFoldersForFile(tempPath)).thenReturn(expected);
             Mockito.doNothing().when(fileUtil).dataBufferUtilWrite(any(Flux.class), any(Path.class));
 
             actual = amtrakDataClient.retrieveGtfsPayload();

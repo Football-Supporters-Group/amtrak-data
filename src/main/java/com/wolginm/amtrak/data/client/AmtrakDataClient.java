@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
+import java.io.FileOutputStream;
 import java.nio.file.Path;
 
 @Slf4j
@@ -55,6 +57,9 @@ public class AmtrakDataClient extends ClientBase {
                 retry, gtfsProperties.getRetry().getMaxRetryCount());
 
         try {
+            directoryToStoreFile = this.fileUtil.prepFoldersForFile("zip");
+            placeToStoreFile = Path.of(directoryToStoreFile.toString(), "data.zip");
+
             Flux<DataBuffer> downloadedMono = webClient
                     .get()
                     .uri(this.gtfsProperties.getPath())
@@ -67,8 +72,6 @@ public class AmtrakDataClient extends ClientBase {
                     this.gtfsProperties.getHost(),
                     this.gtfsProperties.getPath());
 
-            directoryToStoreFile = this.fileUtil.prepFoldersForFile("zip");
-            placeToStoreFile = Path.of(directoryToStoreFile.toString(), "data.zip");
 
             this.fileUtil.dataBufferUtilWrite(downloadedMono, placeToStoreFile);
             log.info("AMTK-3100: [{}/{}] Amtrak GTFS data file has been saved to [{}]",
@@ -105,7 +108,7 @@ public class AmtrakDataClient extends ClientBase {
         return placeToStoreFile;
     }
 
-    @Recover()
+    @Recover
     public Path retrieveGtfsPayload(final RetryableException retryableException) {
         int retry = RetrySynchronizationManager.getContext().getRetryCount();
         log.info("AMTK-3199: [{}/{}] All retries have failed to get the GTFS Payload.  Source [{}, {}]",

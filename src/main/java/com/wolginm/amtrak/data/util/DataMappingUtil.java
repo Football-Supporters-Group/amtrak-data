@@ -24,7 +24,7 @@ public class DataMappingUtil {
      * @param shapes    List of {@link Shapes}.
      * @return          The map of TripId -> {@link ConsolidatedTrip}.
      */
-    public Map<Integer, ConsolidatedTrip> buildConsolidatedTripMap(final List<StopTimes> stopTimes,
+    public Map<String, ConsolidatedTrip> buildConsolidatedTripMap(final List<StopTimes> stopTimes,
                                                                    final List<Calendar> calendars,
                                                                    final List<Trips> trips,
                                                                    final List<Shapes> shapes) {
@@ -32,11 +32,11 @@ public class DataMappingUtil {
         Trips trip;
         ConsolidatedTrip consolidatedTrip;
         String startDate, endDate;
-        Map<Integer, ConsolidatedTrip> consolidatedTripMap = new HashMap<>(trips.size());
-        Map<Integer, Calendar> calendarServiceMap = calendars.parallelStream().collect(Collectors.toMap(elem -> elem.getServiceId(), elem -> elem));
-        Map<Long, Trips> tripsMap = trips.parallelStream().collect(Collectors.toMap(Trips::getTripId, t->t));
+        Map<String, ConsolidatedTrip> consolidatedTripMap = new HashMap<>(trips.size());
+        Map<String, Calendar> calendarServiceMap = calendars.parallelStream().collect(Collectors.toMap(elem -> elem.getServiceId(), elem -> elem));
+        Map<String, Trips> tripsMap = trips.parallelStream().collect(Collectors.toMap(Trips::getTripId, t->t));
         for (StopTimes stoptime: stopTimes) {
-            consolidatedTrip = consolidatedTripMap.get(stoptime.getTripId().intValue());
+            consolidatedTrip = consolidatedTripMap.get(stoptime.getTripId());
             if (consolidatedTrip == null) {
                 log.debug("AMTK-6611: Trip not in map, creating and setting trip [{}]", stoptime.getTripId());
                 trip = tripsMap.get(stoptime.getTripId());
@@ -58,7 +58,7 @@ public class DataMappingUtil {
                                 Integer.parseInt(endDate.substring(0, 4)),
                                 Integer.parseInt(endDate.substring(4, 6)),
                                 Integer.parseInt(endDate.substring(6))));
-                consolidatedTripMap.put(consolidatedTrip.getTripId().intValue(), consolidatedTrip);
+                consolidatedTripMap.put(consolidatedTrip.getTripId(), consolidatedTrip);
             }
             consolidatedTrip.addTripStopsItem(stoptime);
         }
@@ -78,15 +78,15 @@ public class DataMappingUtil {
      * @param stops                 Map StopIds -> {@link Stops}
      * @return                      The Mapping on RouteIds -> {@link ConsolidatedRoute}
      */
-    public Map<Integer, ConsolidatedRoute> buildConsolidatedRouteMap(final List<Trips> trips,
-                                                                     final Map<Integer, ConsolidatedTrip> consolidatedTripMap,
+    public Map<String, ConsolidatedRoute> buildConsolidatedRouteMap(final List<Trips> trips,
+                                                                     final Map<String, ConsolidatedTrip> consolidatedTripMap,
                                                                      final List<Routes> routes,
                                                                      final List<Calendar> calendars,
                                                                      final Map<String, Stops> stops,
-                                                                     final Map<Integer, LinkedHashSet<String>> routeOrderMetaData) {
+                                                                     final Map<String, LinkedHashSet<String>> routeOrderMetaData) {
         log.info("AMTK-6600: Attempting to construct map of [{}] Consolidated Routes", routes.size());
 
-        Map<Integer, ConsolidatedRoute> consolidatedRouteMap = new HashMap<>(routes.size());
+        Map<String, ConsolidatedRoute> consolidatedRouteMap = new HashMap<>(routes.size());
         Map<String, List<ConsolidatedTrip>> routeIdToConsolidatedTripList = this.buildRouteIdToConsolidatedTripList(consolidatedTripMap, routes.size());
 
         routes
@@ -108,9 +108,9 @@ public class DataMappingUtil {
                      *
                      * Note:  tripList is a *bit* of a misnamed variable.
                      */
-                    .tripList(routeIdToConsolidatedTripList.get(route.getRouteId().toString())
+                    .tripList(routeIdToConsolidatedTripList.get(route.getRouteId())
                             .parallelStream()
-                            .collect(Collectors.toMap(t->t.getTripId().toString(), t->t)))
+                            .collect(Collectors.toMap(t->t.getTripId(), t->t)))
                     /*
                      * Okay this one needs to me explanation.
                      * We start with the routeId to ConsolidatedTripList and need to get a map of all possible route stops.
@@ -123,7 +123,7 @@ public class DataMappingUtil {
                      *      Finally, we collect all distinct stops into a new map, a bijection of stopId <-> Stop.
                      */
                     .allStops(routeIdToConsolidatedTripList
-                            .get(route.getRouteId().toString())
+                            .get(route.getRouteId())
                             .parallelStream()
                             .map(consolidatedTrip -> {
                                 return consolidatedTrip.getTripStops()
@@ -148,11 +148,11 @@ public class DataMappingUtil {
      * @param size                  Max number of routes, to reduce array copies.
      * @return                      The expected map.
      */
-    private Map<String, List<ConsolidatedTrip>> buildRouteIdToConsolidatedTripList(Map<Integer, ConsolidatedTrip> consolidatedTripMap, int size) {
+    private Map<String, List<ConsolidatedTrip>> buildRouteIdToConsolidatedTripList(Map<String, ConsolidatedTrip> consolidatedTripMap, int size) {
         Map<String, List<ConsolidatedTrip>> routeIdToConsolidatedTripList = new HashMap<>(size);
         String routeId;
         for (ConsolidatedTrip consolidatedTrip: consolidatedTripMap.values()) {
-            routeId = consolidatedTrip.getRouteId().toString();
+            routeId = consolidatedTrip.getRouteId();
             List<ConsolidatedTrip> consolidatedTripList = routeIdToConsolidatedTripList.get(routeId);
             if (consolidatedTripList == null) {
                 consolidatedTripList = new LinkedList<>();

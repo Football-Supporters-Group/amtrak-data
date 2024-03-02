@@ -106,19 +106,19 @@ class InflationServiceTest {
 
     @Test
     public void inflateRouteOrderMetadata() throws FileNotFoundException {
-        Map<Integer, LinkedHashSet<String>> actual, expected;
+        Map<String, LinkedHashSet<String>> actual, expected;
         expected = new HashMap<>(){{
-           put(1, new LinkedHashSet<>());
-           put(2, new LinkedHashSet<>());
+           put("1", new LinkedHashSet<>());
+           put("2", new LinkedHashSet<>());
         }};
-        expected.get(1).add("NYP");
-        expected.get(1).add("PHL");
-        expected.get(1).add("PAO");
-        expected.get(1).add("HAR");
-        expected.get(2).add("NYP");
-        expected.get(2).add("CHI");
-        expected.get(2).add("SEA");
-        expected.get(2).add("PDX");
+        expected.get("1").add("NYP");
+        expected.get("1").add("PHL");
+        expected.get("1").add("PAO");
+        expected.get("").add("HAR");
+        expected.get("2").add("NYP");
+        expected.get("2").add("CHI");
+        expected.get("2").add("SEA");
+        expected.get("2").add("PDX");
 
         actual = this.inflationService.inflateRouteOrderMetadata();
 
@@ -131,19 +131,19 @@ class InflationServiceTest {
 
     @Test
     public void inflateRouteOrderMetadata_IncorrectOrder() throws FileNotFoundException {
-        Map<Integer, LinkedHashSet<String>> actual, expected;
+        Map<String, LinkedHashSet<String>> actual, expected;
         expected = new HashMap<>(){{
-            put(1, new LinkedHashSet<>());
-            put(2, new LinkedHashSet<>());
+            put("1", new LinkedHashSet<>());
+            put("2", new LinkedHashSet<>());
         }};
-        expected.get(1).add("NYP");
-        expected.get(1).add("PHL");
-        expected.get(1).add("PAO");
-        expected.get(1).add("HAR");
-        expected.get(2).add("NYP");
-        expected.get(2).add("CHI");
-        expected.get(2).add("PDX");
-        expected.get(2).add("SEA");
+        expected.get("1").add("NYP");
+        expected.get("1").add("PHL");
+        expected.get("1").add("PAO");
+        expected.get("1").add("HAR");
+        expected.get("2").add("NYP");
+        expected.get("2").add("CHI");
+        expected.get("2").add("PDX");
+        expected.get("2").add("SEA");
 
         actual = this.inflationService.inflateRouteOrderMetadata();
 

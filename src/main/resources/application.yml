@@ -3,10 +3,9 @@ amtrak:
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt
     gtfs:
         schema:             https
-        host:               https://content.amtrak.com
+        host:               //content.amtrak.com
         path:               /content/gtfs/GTFS.zip
-        tmp-dir:            ./tmp
-        data-dictionary:    ./data
+        data-dictionary:    data
         web-client:
             connectionTimeoutInMilliseconds: 60000
             responseTimeoutInMilliseconds: 60000

@@ -90,7 +90,7 @@ public class InflationService {
         return amtrakObjects;
     }
 
-    public Map<Integer, LinkedHashSet<String>> inflateRouteOrderMetadata() throws FileNotFoundException {
+    public Map<String, LinkedHashSet<String>> inflateRouteOrderMetadata() throws FileNotFoundException {
         return this.csvToRouteOrderMap(new FileInputStream(Paths.get(this.routeMetadata).toFile()));
     }
 
@@ -143,9 +143,9 @@ public class InflationService {
 
     }
 
-    public Map<Integer, LinkedHashSet<String>> csvToRouteOrderMap(final InputStream inputStream) {
+    public Map<String, LinkedHashSet<String>> csvToRouteOrderMap(final InputStream inputStream) {
         List<String> objects = null;
-        Map<Integer, LinkedHashSet<String>> objectMap = null;
+        Map<String, LinkedHashSet<String>> objectMap = null;
 
         try {
             BufferedReader bufferedReader = new BufferedReader(
@@ -166,7 +166,7 @@ public class InflationService {
             for (CSVRecord csvRecord : cIterable) {
                 objects = csvRecord.toList();
                 if (objects.size() > 1) {
-                    objectMap.put(Integer.parseInt(objects.get(0)), new LinkedHashSet<>(objects.subList(1, objects.size())));
+                    objectMap.put(objects.get(0), new LinkedHashSet<>(objects.subList(1, objects.size())));
                 } else {
                     log.error("CSV Parsing error for Route Map on row: {}, \"{}\"", csvRecord.getRecordNumber(), csvRecord.toString());
                 }

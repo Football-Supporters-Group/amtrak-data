@@ -23,7 +23,7 @@ class DataMappingUtilTest {
     private List<Shapes> shapes;
     private List<Calendar> calendars;
     private List<StopTimes> stopTimes;
-    private Map<Integer, LinkedHashSet<String>> routeMetaData;
+    private Map<String, LinkedHashSet<String>> routeMetaData;
     private DataMappingUtil dataMappingUtil;
 
     @BeforeEach
@@ -39,42 +39,42 @@ class DataMappingUtilTest {
             add(new Stops().stopId("SEA"));
         }};
         stopTimes = new LinkedList<>(){{
-            add(new StopTimes().stopId("HAR").tripId(1000L));
-            add(new StopTimes().stopId("PHL").tripId(1000L));
-            add(new StopTimes().stopId("NYP").tripId(1000L));
-            add(new StopTimes().stopId("HAR").tripId(1001L));
-            add(new StopTimes().stopId("PAO").tripId(1001L));
-            add(new StopTimes().stopId("PHL").tripId(1001L));
-            add(new StopTimes().stopId("NYP").tripId(1001L));
-            add(new StopTimes().stopId("ABC").tripId(2000L));
-            add(new StopTimes().stopId("PDX").tripId(2000L));
-            add(new StopTimes().stopId("SEA").tripId(2000L));
-            add(new StopTimes().stopId("HAR").tripId(2000L));
-            add(new StopTimes().stopId("PHL").tripId(2000L));
+            add(new StopTimes().stopId("HAR").tripId("1000"));
+            add(new StopTimes().stopId("PHL").tripId("1000"));
+            add(new StopTimes().stopId("NYP").tripId("1000"));
+            add(new StopTimes().stopId("HAR").tripId("1001"));
+            add(new StopTimes().stopId("PAO").tripId("1001"));
+            add(new StopTimes().stopId("PHL").tripId("1001"));
+            add(new StopTimes().stopId("NYP").tripId("1001"));
+            add(new StopTimes().stopId("ABC").tripId("2000"));
+            add(new StopTimes().stopId("PDX").tripId("2000"));
+            add(new StopTimes().stopId("SEA").tripId("2000"));
+            add(new StopTimes().stopId("HAR").tripId("2000"));
+            add(new StopTimes().stopId("PHL").tripId("2000"));
         }};
         trips = new LinkedList<>(){{
-           add(new Trips().tripShortName(1010L).tripId(1000L).directionId(1).routeId(999).serviceId(-1).shapeId(-1).tripHeadsign("Keystone Limt'd"));
-           add(new Trips().tripShortName(1011L).tripId(1001L).directionId(1).routeId(999).serviceId(-1).shapeId(-1).tripHeadsign("Keystone Limt'd"));
-           add(new Trips().tripShortName(2001L).tripId(2000L).directionId(1).routeId(888).serviceId(-1).shapeId(-1).tripHeadsign("Coast Starlight"));
+           add(new Trips().tripShortName(1010L).tripId("1000").directionId(1).routeId("999").serviceId("-1").shapeId("-1").tripHeadsign("Keystone Limt'd"));
+           add(new Trips().tripShortName(1011L).tripId("1001").directionId(1).routeId("999").serviceId("-1").shapeId("-1").tripHeadsign("Keystone Limt'd"));
+           add(new Trips().tripShortName(2001L).tripId("2000").directionId(1).routeId("888").serviceId("-1").shapeId("-1").tripHeadsign("Coast Starlight"));
         }};
 
         routes = new LinkedList<>(){{
-            add(new Routes().routeType(-1).routeId(999).routeShortName("Keystone").routeLongName("Keystone Lmt'd").agencyId(1).routeColor("BLUE").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
-            add(new Routes().routeType(-1).routeId(888).routeShortName("Coast Starlight").routeLongName("Coast Starlight").agencyId(1).routeColor("GREEN").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
+            add(new Routes().routeType(-1).routeId("999").routeShortName("Keystone").routeLongName("Keystone Lmt'd").agencyId(1).routeColor("BLUE").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
+            add(new Routes().routeType(-1).routeId("888").routeShortName("Coast Starlight").routeLongName("Coast Starlight").agencyId(1).routeColor("GREEN").routeTextColor("GRAY").routeUrl(URI.create("https://amtrak.com")));
         }};
 
         calendars = new LinkedList<>() {{
-           add(new Calendar().serviceId(-1).monday(1).tuesday(1).wednesday(1).thursday(1).friday(1).saturday(1).sunday(1).startDate("20200301").endDate("20690420"));
+           add(new Calendar().serviceId("-1").monday(1).tuesday(1).wednesday(1).thursday(1).friday(1).saturday(1).sunday(1).startDate("20200301").endDate("20690420"));
         }};
 
         routeMetaData = new HashMap<>(){{
-            put(999, new LinkedHashSet<String>(){{
+            put("999", new LinkedHashSet<String>(){{
                 add("NYP");
                 add("PHL");
                 add("PAO");
                 add("HAR");
             }});
-            put(888, new LinkedHashSet<String>(){{
+            put("888", new LinkedHashSet<String>(){{
                 add("PHL");
                 add("HAR");
                 add("SEA");
@@ -90,7 +90,7 @@ class DataMappingUtilTest {
     @Test
     @Order(1)
     void buildConsolidatedTripMap() {
-        Map<Integer, ConsolidatedTrip> actual = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
+        Map<String, ConsolidatedTrip> actual = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(3, actual.size());
@@ -102,8 +102,8 @@ class DataMappingUtilTest {
     @Test
     @Order(2)
     void buildConsolidatedRouteMap() {
-        Map<Integer, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
-        Map<Integer, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
+        Map<String, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
+        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());

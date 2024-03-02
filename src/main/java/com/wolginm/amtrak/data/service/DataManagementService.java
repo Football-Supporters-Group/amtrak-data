@@ -34,7 +34,7 @@ public class DataManagementService {
     private final FileUtil fileUtil;
     private final ZipUtil zipUtil;
 
-    private Map<Integer, ConsolidatedRoute> mapOfRoutes;
+    private Map<String, ConsolidatedRoute> mapOfRoutes;
 
     private Instant lastRefresh;
 
@@ -74,15 +74,15 @@ public class DataManagementService {
                 .entrySet()
                 .stream()
                 .filter(elem -> {
-                    log.debug("Checking if route will be included [{}:{}]", String.format("%06d", elem.getKey()), responseObject
+                    log.debug("Checking if route will be included [{}:{}]", String.format("%06d", Integer.parseInt(elem.getKey())), responseObject
                             .getRequestedRouteIds()
                             .contains(elem.getKey().toString()));
                     return responseObject
                             .getRequestedRouteIds()
                             .contains(elem.getKey().toString());
                 })
-                .collect(Collectors.toMap((Map.Entry<Integer, ConsolidatedRoute> elem) -> elem.getKey().toString(),
-                        (Map.Entry<Integer, ConsolidatedRoute> elem) -> elem.getValue()))));
+                .collect(Collectors.toMap((Map.Entry<String, ConsolidatedRoute> elem) -> elem.getKey().toString(),
+                        (Map.Entry<String, ConsolidatedRoute> elem) -> elem.getValue()))));
         log.debug("*---------------------------------CHECKED------------------------------------*");
 
 
@@ -107,16 +107,16 @@ public class DataManagementService {
         return difference;
     }
 
-    private <T extends AmtrakObject> Map<Integer, ConsolidatedRoute> loadAmtrakDataIntoLocal() {
-        Map<Integer, ConsolidatedRoute> newRoutes = null;
+    private <T extends AmtrakObject> Map<String, ConsolidatedRoute> loadAmtrakDataIntoLocal() {
+        Map<String, ConsolidatedRoute> newRoutes = null;
         try {
             this.refreshAmtrakData();
 
             Map<Class<T>, List<T>> allAmtrakObjects = this.inflationService.inflateAllAmtrakObjects();
-            Map<Integer, LinkedHashSet<String>> routeMetaData = this.inflationService.inflateRouteOrderMetadata();
+            Map<String, LinkedHashSet<String>> routeMetaData = this.inflationService.inflateRouteOrderMetadata();
 
             //StopTimes, Calendars(Nullable), Trips, Shapes(Nullable)
-            Map<Integer, ConsolidatedTrip> consolidatedTripIntermediate
+            Map<String, ConsolidatedTrip> consolidatedTripIntermediate
                     = this.dataMappingUtil.buildConsolidatedTripMap((List<StopTimes>) allAmtrakObjects.get(StopTimes.class),
                     (List<Calendar>) allAmtrakObjects.get(Calendar.class),
                     (List<Trips>) allAmtrakObjects.get(Trips.class),

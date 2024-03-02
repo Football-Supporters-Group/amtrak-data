@@ -524,16 +524,13 @@ components:
       type: string
       description: The language the text contained will be written in.
     RouteId:
-      type: integer
-      format: int32
+      type: string
       description: Specific Route Identifier.
     ShapeId:
-      type: integer
-      format: int32
+      type: string
       description: Specific Shape Identifier.
     ServiceId:
-      type: integer
-      format: int32
+      type: string
       description: A definition for when a service is running.  Each Service has a service_id that will link to a calendar, letting the user know when that services will run.
     StopId:
       type: string
@@ -556,8 +553,7 @@ components:
       type: string
       description: ISO Timezone.
     TripId:
-      type: integer
-      format: int64
+      type: string
       description: Specific Trip Identifier.
 
     AmtrakObject:

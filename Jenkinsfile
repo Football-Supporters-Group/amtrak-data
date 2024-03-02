@@ -69,7 +69,7 @@ pipeline {
     stage('Deploy') {
         steps {
             input message: 'Procede with Deployment to Maven?', submitter: 'wolginm'
-            sh 'mvn -DskipTests -Dmaven.javadoc.skip=true deploy'
+            sh 'mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false deploy'
         }
         when {
             branch comparator: 'EQUALS', pattern: 'main'

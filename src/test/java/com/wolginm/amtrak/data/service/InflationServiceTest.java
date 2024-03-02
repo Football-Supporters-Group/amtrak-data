@@ -114,7 +114,7 @@ class InflationServiceTest {
         expected.get("1").add("NYP");
         expected.get("1").add("PHL");
         expected.get("1").add("PAO");
-        expected.get("").add("HAR");
+        expected.get("1").add("HAR");
         expected.get("2").add("NYP");
         expected.get("2").add("CHI");
         expected.get("2").add("SEA");
@@ -122,8 +122,8 @@ class InflationServiceTest {
 
         actual = this.inflationService.inflateRouteOrderMetadata();
 
-        Iterator<String> expectItr = expected.get(1).iterator();
-        Iterator<String> actualItr = actual.get(1).iterator();
+        Iterator<String> expectItr = expected.get("1").iterator();
+        Iterator<String> actualItr = actual.get("1").iterator();
         while (expectItr.hasNext()) {
             Assertions.assertEquals(expectItr.next(), actualItr.next());
         }
@@ -147,8 +147,8 @@ class InflationServiceTest {
 
         actual = this.inflationService.inflateRouteOrderMetadata();
 
-        Iterator<String> expectItr = expected.get(2).iterator();
-        Iterator<String> actualItr = actual.get(2).iterator();
+        Iterator<String> expectItr = expected.get("2").iterator();
+        Iterator<String> actualItr = actual.get("2").iterator();
         int count = 0;
         while (expectItr.hasNext() && count < 2) {
             count ++;

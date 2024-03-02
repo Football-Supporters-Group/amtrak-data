@@ -94,7 +94,7 @@ class DataMappingUtilTest {
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(3, actual.size());
-        ConsolidatedTrip keystoneTrip = actual.get(1000);
+        ConsolidatedTrip keystoneTrip = actual.get("1000");
         Assertions.assertNotNull(keystoneTrip);
         Assertions.assertEquals(3, keystoneTrip.getTripStops().size());
     }
@@ -107,7 +107,7 @@ class DataMappingUtilTest {
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());
-        Assertions.assertEquals(consolidatedTripMap.get(1000), actual.get(999).getTripList().get().get("1000"));
-        Assertions.assertEquals(4, actual.get(999).getTripList().get().get("1001").getTripStops().size());
+        Assertions.assertEquals(consolidatedTripMap.get("1000"), actual.get("999").getTripList().get().get("1000"));
+        Assertions.assertEquals(4, actual.get("999").getTripList().get().get("1001").getTripStops().size());
     }
 }

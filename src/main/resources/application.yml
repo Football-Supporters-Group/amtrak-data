@@ -1,6 +1,18 @@
 amtrak:
-    gtfs-url: https://content.amtrak.com/
-    gtfs-uri: content/gtfs/GTFS.zip
-    temp-file: ./data/tmp/gtfs.zip
-    data-directory: ./data
+    retry-enabled: true
     route-metadata: ./src/main/resources/metadata/route_stop_order.txt
+    gtfs:
+        schema:             https
+        host:               //content.amtrak.com
+        path:               /content/gtfs/GTFS.zip
+        data-dictionary:    data
+        web-client:
+            connectionTimeoutInMilliseconds: 60000
+            responseTimeoutInMilliseconds: 60000
+            readTimeoutInMilliseconds: 60000
+            writeTimeoutInMilliseconds: 60000
+        retry:
+            maxRetryCount: 5
+            delay: 1000
+            maxDelay: 10000
+            multiplier: 1.2

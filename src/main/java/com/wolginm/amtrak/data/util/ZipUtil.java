@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileSystemException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -34,6 +35,7 @@ public class ZipUtil {
     }
 
     public void unzip(final String sourceUrl, final String destinationUrl) throws IOException {
+        log.info("AMTK-6400: Attempting to unzip file [{}] to [{}]", sourceUrl, destinationUrl);
         File destinationDir = new File(destinationUrl);
         if (!destinationDir.exists()) {
             destinationDir.mkdir();
@@ -44,6 +46,7 @@ public class ZipUtil {
         ZipEntry zipEntry = zipInputStream.getNextEntry();
         
         this.unzipLoop(zipInputStream, zipEntry, destinationDir);
+        log.info("AMTK-6401: Unzip file to [{}]", destinationUrl);
     }
 
     private void unzipLoop(ZipInputStream zipInputStream, ZipEntry zipEntry, File destinationDir) throws IOException {
@@ -58,7 +61,7 @@ public class ZipUtil {
                     filePath);
             } else {
                 directory = new File(filePath);
-                directory.mkdir();
+                if (!directory.mkdir()) throw new FileSystemException("Unable to create directory [%s]".formatted(filePath));
             }
             zipInputStream.closeEntry();
             zipEntry = zipInputStream.getNextEntry();
@@ -69,17 +72,17 @@ public class ZipUtil {
      * Inflates the zip file
      * @param zipInputStream
      * @param filePath
-     * @returns Status of the extraction
+     * @return Status of the extraction
      */
     private boolean extractFile(ZipInputStream zipInputStream, String filePath) throws IOException{
         boolean status = false;
 
         try {
             this.writeFileToDisk(zipInputStream, filePath);
-            log.debug("Extracted file {}", filePath);
+            log.debug("AMTK-6400: Extracted file [{}]", filePath);
             status = true;
         } catch (IOException e) {
-            log.error("Unable to extract file {}", filePath);
+            log.error("AMTK-6499: Unable to extract file [{}]", filePath);
             log.error(e.getMessage());
             throw e;
         }

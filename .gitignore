@@ -38,3 +38,5 @@ data/**/*.zip
 
 ### Idea ###
 .idea/
+
+*.patch

@@ -1,32 +1,28 @@
 package com.wolginm.amtrak.data.properties;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+/**
+ * Amtrak Data Properties.
+ */
+@Data
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties("amtrak")
 public class AmtrakProperties {
     
-    @Value("amtrak.gtfs-url") 
-    private String gtfsUrl;
+    /**
+     * Metadata the contains a master list of route ordering.  Its very important,
+     *  so our ordered lists are correct.
+     */
+    private String route_metadata = "./src/main/resources/metadata/route_stop_order.txt";
 
-    @Value("amtrak.gtfs-uri") 
-    private String gtfsUri;
-
-    @Value("amtrak.temp-file") 
-    private String tempFile;
-
-    @Value("amtrak.data-directory") 
-    private String dataDirectory;
-
-    @Value("amtrak.route-metadata")
-    private String routeMetadata;
+    /**
+     * Amtrak Gtfs Properties, for indicating where to get and put the 
+     *  Gtfs files.
+     */
+    private GtfsProperties gtfs;
 }

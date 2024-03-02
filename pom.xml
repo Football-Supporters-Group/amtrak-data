@@ -7,9 +7,9 @@
 		<version>3.2.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.wolginm.amtrak</groupId>
+	<groupId>com.markwolgin</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>data</name>
@@ -272,13 +272,13 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/AmtrakDataObjects.yml</inputSpec>
 							<generatorName>spring</generatorName>
-							<apiPackage>com.wolginmark.amtrak.data.models</apiPackage>
-							<modelPackage>com.wolginmark.amtrak.data.models</modelPackage>
+							<apiPackage>com.markwolgin.amtrak.data.models</apiPackage>
+							<modelPackage>com.markwolgin.amtrak.data.models</modelPackage>
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<generateApiTests>false</generateApiTests>
 							<configOptions>
-								<basePackage>com.wolginmark.amtrak.data.models</basePackage>
+								<basePackage>com.markwolgin.amtrak.data.models</basePackage>
 								<java11>true</java11>
 								<serializableModel>true</serializableModel>
 								<useSpringBoot3>true</useSpringBoot3>

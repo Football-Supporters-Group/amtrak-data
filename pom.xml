@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.wolginm.amtrak</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>data</name>
-	<description>Provides an interface to Amtrak&apos;s Station and Train data.</description>
+	<description>Provides an interface to Amtrak's Station and Train data.</description>
 	<url>https://markwolgin.com</url>
 	<inceptionYear>2022</inceptionYear>
 	<organization>
@@ -59,7 +58,8 @@
 		<connection>scm:git:ssh//git@github.com:Football-Supporters-Group/amtrak-data.git</connection>
 		<developerConnection>scm:git:ssh//git@github.com:Football-Supporters-Group/amtrak-data.git</developerConnection>
 		<url>https://github.com/Football-Supporters-Group/amtrak-data</url>
-	</scm>
+	  <tag>0.1-SNAPSHOT</tag>
+  </scm>
 	<issueManagement>
 		<system>Github Issues</system>
 		<url>https://github.com/Football-Supporters-Group/amtrak-data/issues</url>

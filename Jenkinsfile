@@ -65,7 +65,7 @@ pipeline {
         steps {
             sh '''
                 git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
-                mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release
+                mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
 //         when {

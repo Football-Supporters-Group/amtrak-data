@@ -330,69 +330,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<tagNameFormat>${project.version}</tagNameFormat>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<useReleaseProfile>false</useReleaseProfile>
-					<releaseProfiles>release</releaseProfiles>
-					<goals>deploy</goals>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.1.0</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts-local</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-						<configuration>
-							<skip>${maven.local.skip}</skip>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>sign-artifacts-jenkins</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-						<configuration>
-							<gpgArguments>
-								<arg>--pinentry-mode</arg>
-								<arg>loopback</arg>
-							</gpgArguments>
-							<homedir>/tmp</homedir>
-							<keyname>${env.GPG_SECRET_NAME}</keyname>
-							<passphraseServerId>${env.GPG_SECRET_NAME}</passphraseServerId>
-							<skip>${maven.remote.skip}</skip>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
-				<extensions>true</extensions>
-				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
-					<tags>
-						<localUsername>${env.USER}</localUsername>
-						<javaVersion>${java.version}</javaVersion>
-					</tags>
-				</configuration>
-			</plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -435,5 +372,77 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>3.0.1</version>
+						<configuration>
+							<tagNameFormat>@{project.version}</tagNameFormat>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<useReleaseProfile>false</useReleaseProfile>
+							<releaseProfiles>release</releaseProfiles>
+							<goals>deploy</goals>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts-local</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<skip>${maven.local.skip}</skip>
+								</configuration>
+							</execution>
+
+							<execution>
+								<id>sign-artifacts-jenkins</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+									<homedir>/tmp</homedir>
+									<keyname>${env.GPG_SECRET_NAME}</keyname>
+									<passphraseServerId>${env.GPG_SECRET_NAME}</passphraseServerId>
+									<skip>${maven.remote.skip}</skip>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+							<tags>
+								<localUsername>${env.USER}</localUsername>
+								<javaVersion>${java.version}</javaVersion>
+							</tags>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

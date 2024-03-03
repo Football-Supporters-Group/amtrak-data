@@ -64,13 +64,13 @@ pipeline {
     stage('Deploy Snapshot') {
         steps {
             sh '''
-                GIT_SSH_COMMAND = "ssh -i $ID_RSA_KEY
+                git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release
             '''
         }
-        when {
-            branch comparator: 'EQUALS', pattern: 'main'
-        }
+//         when {
+//             branch comparator: 'EQUALS', pattern: 'main'
+//         }
     }
 
     stage('Deploy Release') {

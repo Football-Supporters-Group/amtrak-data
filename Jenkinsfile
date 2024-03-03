@@ -13,6 +13,8 @@ pipeline {
     GPG_SECRET_NAME = credentials('gpg-secret-name')
     GPG_OWNERTRUST = credentials('gpg-ownertrust')
     GPG_PASSPHRASE = credentials('gpg-passphrase')
+    NEXUS_USER = credentials('nexus-user')
+    NEXUS_PASSWORD = credentials('nexus-password')
   }
 
 
@@ -58,24 +60,28 @@ pipeline {
         }
     }
 
-    stage('Clean Up GPG Key for Signing') {
-      steps {
-        sh '''
-          echo test
-          '''
-      }
-    }
-
-    stage('Deploy') {
+    stage('Deploy Snapshot') {
         steps {
             input message: 'Procede with Deployment to Maven?', submitter: 'wolginm'
-            sh 'mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false deploy'
+            sh 'mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false deploy -P release'
         }
         when {
             branch comparator: 'EQUALS', pattern: 'main'
             beforeOptions true
         }
     }
+
+    stage('Deploy Release') {
+            steps {
+                sh '''
+                    mvn release:clean release:prepare -s jenkins-settings.xml
+                    mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
+                '''
+            }
+            when {
+                branch comparator: 'CONTAINS', pattern: 'release'
+            }
+        }
 
   }
 }

@@ -3,6 +3,9 @@ target/
 data/**/*.txt
 data/**/*.zip
 .mvn/
+
+pom.xml.releaseBackup
+release.properties
 # !.mvn/wrapper/maven-wrapper.jar
 # !**/src/main/**/target/
 # !**/src/test/**/target/

@@ -35,6 +35,16 @@ pipeline {
         '''
       }
     }
+    stage('Prep Git for use.') {
+        steps {
+            sh '''
+                git config --global user.email "jenkins@ashton.vault.com"
+                git config --global user.name "Ashton Vaule Jenkins"
+                git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
+                '''
+            }
+    }
+
     stage('Pre-Build') {
       steps {
         sh '''
@@ -64,7 +74,6 @@ pipeline {
     stage('Deploy Snapshot') {
         steps {
             sh '''
-                git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
@@ -77,7 +86,6 @@ pipeline {
             steps {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
-                    git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
                     mvn release:clean release:prepare -s jenkins-settings.xml
                     mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
                 '''

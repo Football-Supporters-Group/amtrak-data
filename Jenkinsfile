@@ -68,24 +68,24 @@ pipeline {
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
-//         when {
-//             branch comparator: 'EQUALS', pattern: 'main'
-//         }
+        when {
+            branch comparator: 'EQUALS', pattern: 'main'
+        }
     }
 
     stage('Deploy Release') {
             steps {
-                input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
+//                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     git config --add --local core.sshCommand 'ssh -i $ID_RSA_KEY'
                     mvn release:clean release:prepare -s jenkins-settings.xml
                     mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
                 '''
             }
-            when {
-                branch comparator: 'CONTAINS', pattern: 'release'
-                beforeOptions true
-            }
+//             when {
+//                 branch comparator: 'CONTAINS', pattern: 'release'
+//                 beforeOptions true
+//             }
         }
 
   }

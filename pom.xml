@@ -390,8 +390,8 @@
 							<useReleaseProfile>false</useReleaseProfile>
 							<releaseProfiles>release</releaseProfiles>
 							<goals>deploy</goals>
-							<username>${env.SCM_USER}</username>
-							<password>${env.SCM_PASSWORD}</password>
+<!--							<username>${env.SCM_USER}</username>-->
+<!--							<password>${env.SCM_PASSWORD}</password>-->
 						</configuration>
 					</plugin>
 					<plugin>

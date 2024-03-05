@@ -44,7 +44,7 @@ pipeline {
                 git checkout -B issue-99 origin/issue-99
                 git pull
                 git config --global user.email "junkwolginmark@gmail.com"
-                git config --global user.name "Ashton Vaule Jenkins"
+                git config --global user.name "${SCM_USER}"
                 git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                 '''
             }

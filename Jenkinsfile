@@ -38,9 +38,12 @@ pipeline {
     stage('Prep Git for use.') {
         steps {
             sh '''
+                git fetch
+                git checkout -B issue-99 origin/issue-99
+                git pull
                 git config --global user.email "jenkins@ashton.vault.com"
                 git config --global user.name "Ashton Vaule Jenkins"
-                git config --add --local core.sshCommand 'ssh -i ${ID_RSA_KEY}'
+                git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                 '''
             }
     }
@@ -84,11 +87,13 @@ pipeline {
 
     stage('Deploy Release') {
             steps {
+                sshagent(credentials: ['id-rsa-jenkins']) {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
-                sh '''
-                    mvn release:clean release:prepare -s jenkins-settings.xml
-                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
-                '''
+                    sh '''
+                        mvn release:clean release:prepare -s jenkins-settings.xml
+                        mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
+                    '''
+                }
             }
 //             when {
 //                 branch comparator: 'CONTAINS', pattern: 'release'

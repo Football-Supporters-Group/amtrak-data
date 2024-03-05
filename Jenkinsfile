@@ -44,7 +44,6 @@ pipeline {
                 git pull
                 git config --global user.email "jenkins@ashton.vault.com"
                 git config --global user.name "Ashton Vaule Jenkins"
-                git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                 '''
             }
     }

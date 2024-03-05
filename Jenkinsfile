@@ -63,7 +63,7 @@ pipeline {
     stage('Test') {
         steps {
             sh '''
-                mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true -Dgpg.passphrase=$GPG_PASSPHRASE
+                mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true
             '''
         }
         post {
@@ -80,14 +80,14 @@ pipeline {
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
-        when {
-            branch comparator: 'EQUALS', pattern: 'main'
-        }
+//         when {
+//             branch comparator: 'EQUALS', pattern: 'main'
+//         }
     }
 
     stage('Deploy Release') {
             steps {
-                sshagent(credentials: ['id-rsa-jenkins']) {
+                sshagent(credentials: ['jenkins-ssh-user-and-key']) {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                     sh '''
                         mvn release:clean release:prepare -s jenkins-settings.xml
@@ -95,10 +95,10 @@ pipeline {
                     '''
                 }
             }
-//             when {
-//                 branch comparator: 'CONTAINS', pattern: 'release'
-//                 beforeOptions true
-//             }
+            when {
+                branch comparator: 'CONTAINS', pattern: 'release'
+                beforeOptions true
+            }
         }
 
   }

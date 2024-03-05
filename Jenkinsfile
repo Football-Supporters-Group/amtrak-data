@@ -15,7 +15,8 @@ pipeline {
     GPG_PASSPHRASE = credentials('gpg-passphrase')
     NEXUS_USER = credentials('nexus-user')
     NEXUS_PASSWORD = credentials('nexus-password')
-    ID_RSA_KEY = credentials('id-rsa-jenkins')
+    SCM_USER = credentials('scm-user')
+    SCM_PASSWORD = credentials('scm-password')
   }
 
 
@@ -80,25 +81,23 @@ pipeline {
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
-//         when {
-//             branch comparator: 'EQUALS', pattern: 'main'
-//         }
+        when {
+            branch comparator: 'EQUALS', pattern: 'main'
+        }
     }
 
     stage('Deploy Release') {
-            steps {
-                sshagent(credentials: ['jenkins-ssh-user-and-key']) {
+        steps {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
-                    sh '''
-                        mvn release:clean release:prepare -s jenkins-settings.xml
-                        mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
-                    '''
-                }
+                sh '''
+                    mvn release:clean release:prepare -s jenkins-settings.xml
+                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
+                '''
             }
-            when {
-                branch comparator: 'CONTAINS', pattern: 'release'
-                beforeOptions true
-            }
+//             when {
+//                 branch comparator: 'CONTAINS', pattern: 'release'
+//                 beforeOptions true
+//             }
         }
 
   }

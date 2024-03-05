@@ -375,6 +375,9 @@
 	<profiles>
 		<profile>
 			<id>release</id>
+			<properties>
+				<project.scm.id>scm-server</project.scm.id>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -387,6 +390,8 @@
 							<useReleaseProfile>false</useReleaseProfile>
 							<releaseProfiles>release</releaseProfiles>
 							<goals>deploy</goals>
+							<username>${env.SCM_USER}</username>
+							<password>${env.SCM_PASSWORD}</password>
 						</configuration>
 					</plugin>
 					<plugin>

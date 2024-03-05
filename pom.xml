@@ -392,7 +392,6 @@
 							<goals>deploy</goals>
 							<username>${env.SCM_USER}</username>
 							<password>${env.SCM_PASSWORD}</password>
-							<connectionUrl>https://github.com/Football-Supporters-Group/amtrak-data.git</connectionUrl>
 						</configuration>
 					</plugin>
 					<plugin>

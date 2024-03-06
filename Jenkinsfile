@@ -146,8 +146,8 @@ pipeline {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     mvn release:clean release:prepare -s jenkins-settings.xml
-                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
-                '''
+                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml -Dusername=$SCM_USER -Dpassword=$SCM_PASSWORD -Dconnection=scm:git:https://github.com/Football-Supporters-Group/amtrak-data.git -DdeveloperConnection=scm:git:https://github.com/Football-Supporters-Group/amtrak-data.git
+                    '''
             }
         }
 

@@ -63,6 +63,9 @@ pipeline {
           gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
           gpg --homedir /tmp --list-keys
           cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
+          cp $ID_RSA_KEY ~/.ssh/id_rsa
+          cat ~/.ssh/id_rsa.pub
+          cat ~/.ssh/id_rsa
         '''
       }
     }

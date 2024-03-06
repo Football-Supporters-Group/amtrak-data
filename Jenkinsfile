@@ -157,8 +157,8 @@ pipeline {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     mvn release:clean release:prepare -s jenkins-settings.xml
-                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release \
-                        -s jenkins-settings.xml -Dgpg.passphrase=$GPG_PASSPHRASE -X
+                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE -X release:perform -P release \
+                        -s jenkins-settings.xml
                     '''
             }
         }

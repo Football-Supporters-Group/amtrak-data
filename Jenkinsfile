@@ -26,6 +26,22 @@ pipeline {
   }
 
   stages {
+    stage("Check Preconditions") {
+        when {
+            expression {
+                result = sh (script: "git log -1 | grep '.*\\[maven-release-plugin\\].*'", returnStatus: true) // Check if commit message contains skip ci label
+                result == 0 // Evaluate the result
+            }
+        }
+        steps {
+            script {
+                echo 'Got maven-release-plugin, aborting build' // Just an info message
+                currentBuild.result = 'ABORTED' // Mark the current build as aborted
+                currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
+                error('Skip-CI - maven-release-plugin') // Here you actually stop the build
+            }
+        }
+    }
     stage('Load GPG Key for Signing') {
       steps {
         sh '''
@@ -40,9 +56,6 @@ pipeline {
     stage('Prep Git for use.') {
         steps {
             sh '''
-                git fetch
-                git checkout -B issue-99 origin/issue-99
-                git pull
                 git config --global user.email "junkwolginmark@gmail.com"
                 git config --global user.name "${SCM_USER}"
                 git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"

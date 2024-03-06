@@ -28,6 +28,7 @@ pipeline {
 
   parameters {
     booleanParam(defaultValue: true, description: 'Execute pipeline?', name: 'shouldBuild')
+    booleanParam(defaultValue: false, description: 'Execute pipeline?', name: 'overrideBuild')
  }
 
   stages {
@@ -44,6 +45,7 @@ pipeline {
                     echo 'Got maven-release-plugin, aborting build' // Just an info message
                     currentBuild.result = 'SUCCESS' // Mark the current build as aborted
                     env.shouldBuild = "false"
+                    env.shouldBuild = env.overrideBuild
                     //currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
                     //error('Skip-CI - maven-release-plugin') // Here you actually stop the build
             }

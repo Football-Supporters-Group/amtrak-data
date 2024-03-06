@@ -149,14 +149,14 @@ pipeline {
 
     stage('Deploy Release') {
         when {
-//             branch comparator: 'CONTAINS', pattern: 'release'
-//             beforeOptions true
+            branch comparator: 'CONTAINS', pattern: 'release'
+            beforeOptions true
             expression {
                 return env.shouldBuild != "false"
             }
         }
         steps {
-//                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
+                input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     mvn release:clean release:prepare -s jenkins-settings.xml
                     mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \

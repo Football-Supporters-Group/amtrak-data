@@ -25,6 +25,10 @@ pipeline {
     buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')
   }
 
+  parameters {
+    booleanParam(defaultValue: true, description: 'Execute pipeline?', name: 'shouldBuild')
+ }
+
   stages {
     stage("Check Preconditions") {
         when {
@@ -35,20 +39,20 @@ pipeline {
         }
         steps {
             script {
-                try {
                     echo 'Got maven-release-plugin, aborting build' // Just an info message
                     currentBuild.result = 'SUCCESS' // Mark the current build as aborted
+                    env.shouldBuild = "false"
                     //currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
-                    sh "exit 1"
                     //error('Skip-CI - maven-release-plugin') // Here you actually stop the build
-                } catch (Exception err) {
-                    currentBuild.result = 'SUCCESS'
-                }
-
             }
         }
     }
     stage('Load GPG Key for Signing') {
+        when {
+            expression {
+                return env.shouldBuild != "false"
+            }
+        }
       steps {
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
@@ -60,6 +64,11 @@ pipeline {
       }
     }
     stage('Prep Git for use.') {
+        when {
+            expression {
+                return env.shouldBuild != "false"
+            }
+        }
         steps {
             sh '''
                 git config --global user.email "junkwolginmark@gmail.com"
@@ -70,6 +79,11 @@ pipeline {
     }
 
     stage('Pre-Build') {
+    when {
+        expression {
+            return env.shouldBuild != "false"
+        }
+    }
       steps {
         sh '''
           java -version
@@ -77,11 +91,21 @@ pipeline {
       }
     }
     stage('Build') {
+            when {
+                expression {
+                    return env.shouldBuild != "false"
+                }
+            }
         steps {
             sh 'mvn -B -DskipTests -Dmaven.javadoc.skip=true clean package'
         }
     }
     stage('Test') {
+            when {
+                expression {
+                    return env.shouldBuild != "false"
+                }
+            }
         steps {
             sh '''
                 mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true
@@ -96,17 +120,27 @@ pipeline {
     }
 
     stage('Deploy Snapshot') {
+            when {
+                branch comparator: 'EQUALS', pattern: 'main'
+                expression {
+                    return env.shouldBuild != "false"
+                }
+            }
         steps {
             sh '''
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml
             '''
         }
-        when {
-            branch comparator: 'EQUALS', pattern: 'main'
-        }
     }
 
     stage('Deploy Release') {
+        when {
+            branch comparator: 'CONTAINS', pattern: 'release'
+            beforeOptions true
+            expression {
+                return env.shouldBuild != "false"
+            }
+        }
         steps {
 //                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
@@ -114,10 +148,6 @@ pipeline {
                     mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false release:perform -P release -s jenkins-settings.xml
                 '''
             }
-//             when {
-//                 branch comparator: 'CONTAINS', pattern: 'release'
-//                 beforeOptions true
-//             }
         }
 
   }

@@ -35,10 +35,16 @@ pipeline {
         }
         steps {
             script {
-                echo 'Got maven-release-plugin, aborting build' // Just an info message
-                currentBuild.result = 'SUCCESS' // Mark the current build as aborted
-                currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
-                error('Skip-CI - maven-release-plugin') // Here you actually stop the build
+                try {
+                    echo 'Got maven-release-plugin, aborting build' // Just an info message
+                    currentBuild.result = 'SUCCESS' // Mark the current build as aborted
+                    //currentBuild.rawBuild.@result = hudson.model.Result.SUCCESS
+                    sh "exit 1"
+                    //error('Skip-CI - maven-release-plugin') // Here you actually stop the build
+                } catch (Exception err) {
+                    currentBuild.result = 'SUCCESS'
+                }
+
             }
         }
     }

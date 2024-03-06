@@ -18,6 +18,7 @@ pipeline {
     SCM_USER = credentials('scm-user')
     SCM_PASSWORD = credentials('scm-password')
     ID_RSA_KEY = credentials('ida-rsa-key')
+    SSH_PUBLIC_KEY = credentials('ssh-public-key')
   }
 
 
@@ -61,6 +62,7 @@ pipeline {
           gpg --homedir /tmp --batch --import $GPG_SECRET
           gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
           gpg --homedir /tmp --list-keys
+          cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
         '''
       }
     }

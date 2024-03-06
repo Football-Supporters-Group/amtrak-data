@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.markwolgin</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>data</name>
@@ -375,6 +375,11 @@
 	<profiles>
 		<profile>
 			<id>release</id>
+			<properties>
+				<project.scm.id>scm-server</project.scm.id>
+				<maven.local.skip>true</maven.local.skip>
+				<maven.remote.skip>false</maven.remote.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -420,6 +425,7 @@
 									<keyname>${env.GPG_SECRET_NAME}</keyname>
 									<passphraseServerId>${env.GPG_SECRET_NAME}</passphraseServerId>
 									<skip>${maven.remote.skip}</skip>
+									<passphrase>${env.GPG_PASSPHRASE}</passphrase>
 								</configuration>
 							</execution>
 						</executions>
@@ -428,7 +434,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
+						<version>1.6.13</version>
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>

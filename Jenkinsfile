@@ -91,21 +91,21 @@ pipeline {
       }
     }
     stage('Build') {
-            when {
-                expression {
-                    return env.shouldBuild != "false"
-                }
+        when {
+            expression {
+                return env.shouldBuild != "false"
             }
+        }
         steps {
             sh 'mvn -B -DskipTests -Dmaven.javadoc.skip=true clean package'
         }
     }
     stage('Test') {
-            when {
-                expression {
-                    return env.shouldBuild != "false"
-                }
+        when {
+            expression {
+                return env.shouldBuild != "false"
             }
+        }
         steps {
             sh '''
                 mvn test verify -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dmaven.main.skip=true
@@ -120,12 +120,12 @@ pipeline {
     }
 
     stage('Deploy Snapshot') {
-            when {
-                branch comparator: 'EQUALS', pattern: 'main'
-                expression {
-                    return env.shouldBuild != "false"
-                }
+        when {
+            branch comparator: 'EQUALS', pattern: 'main'
+            expression {
+                return env.shouldBuild != "false"
             }
+        }
         steps {
             sh '''
                 mvn -DskipTests -Dmaven.javadoc.skip=true -Dmaven.local.skip=true -Dmaven.remote.skip=false -Dgpg.passphrase=$GPG_PASSPHRASE deploy -P release -s jenkins-settings.xml

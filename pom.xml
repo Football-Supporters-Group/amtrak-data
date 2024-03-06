@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.markwolgin</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1.13-SNAPSHOT</version>
+	<version>0.1.13</version>
 	<packaging>jar</packaging>
 
 	<name>data</name>
@@ -58,7 +58,7 @@
 		<connection>scm:git:git@github.com:Football-Supporters-Group/amtrak-data.git</connection>
 		<developerConnection>scm:git:git@github.com:Football-Supporters-Group/amtrak-data.git</developerConnection>
 		<url>https://github.com/Football-Supporters-Group/amtrak-data</url>
-	  <tag>data-0.1.1</tag>
+	  <tag>data-0.1.13</tag>
   </scm>
 	<issueManagement>
 		<system>Github Issues</system>

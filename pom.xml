@@ -377,6 +377,8 @@
 			<id>release</id>
 			<properties>
 				<project.scm.id>scm-server</project.scm.id>
+				<maven.local.skip>true</maven.local.skip>
+				<maven.remote.skip>false</maven.remote.skip>
 			</properties>
 			<build>
 				<plugins>
@@ -390,8 +392,6 @@
 							<useReleaseProfile>false</useReleaseProfile>
 							<releaseProfiles>release</releaseProfiles>
 							<goals>deploy</goals>
-<!--							<username>${env.SCM_USER}</username>-->
-<!--							<password>${env.SCM_PASSWORD}</password>-->
 						</configuration>
 					</plugin>
 					<plugin>

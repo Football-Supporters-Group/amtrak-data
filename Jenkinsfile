@@ -33,6 +33,7 @@ pipeline {
     stage("Check Preconditions") {
         when {
             expression {
+                //https://stackoverflow.com/questions/43016942/can-a-jenkins-job-be-aborted-with-success-result
                 result = sh (script: "git log -1 | grep '.*\\[maven-release-plugin\\].*'", returnStatus: true) // Check if commit message contains skip ci label
                 result == 0 // Evaluate the result
             }

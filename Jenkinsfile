@@ -135,8 +135,8 @@ pipeline {
 
     stage('Deploy Release') {
         when {
-            branch comparator: 'CONTAINS', pattern: 'release'
-            beforeOptions true
+//             branch comparator: 'CONTAINS', pattern: 'release'
+//             beforeOptions true
             expression {
                 return env.shouldBuild != "false"
             }

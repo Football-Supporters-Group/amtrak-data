@@ -425,6 +425,7 @@
 									<keyname>${env.GPG_SECRET_NAME}</keyname>
 									<passphraseServerId>${env.GPG_SECRET_NAME}</passphraseServerId>
 									<skip>${maven.remote.skip}</skip>
+									<passphrase>${env.GPG_PASSPHRASE}</passphrase>
 								</configuration>
 							</execution>
 						</executions>

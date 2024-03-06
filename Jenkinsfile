@@ -62,8 +62,12 @@ pipeline {
           gpg --homedir /tmp --batch --import $GPG_SECRET
           gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
           gpg --homedir /tmp --list-keys
-          rm ~/.ssh/id_rsa.pub
-          rm ~/.ssh/id_rsa
+          if [ -f ~/.ssh/id_rsa.pub ]; then
+             rm ~/.ssh/id_rsa.pub
+          fi
+          if [ -f ~/.ssh/id_rsa ]; then
+             rm ~/.ssh/id_rsa
+          fi
           cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
           cp $ID_RSA_KEY ~/.ssh/id_rsa
           cat ~/.ssh/id_rsa.pub

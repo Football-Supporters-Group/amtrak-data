@@ -33,7 +33,7 @@ public class ScheduleService {
      *  and load it overnight to prepare for more calls later.
      * @return  The instant the refresh finishes.
      */
-    @Scheduled(cron = "1 * * * * *")
+    @Scheduled(cron = "0 2 * * * *")
     public Instant triggerDataRefresh() {
         log.info("AMTK-2310: Data Refresh Triggered at [{}].  Time of last refresh [{}]", Instant.now(), this.dataManagementService.getLastTimeLastRefresh());
 

@@ -54,6 +54,7 @@ public class DataManagementService {
         this.fileUtil = fileUtil;
         this.zipUtil = zipUtil;
         this.lastRefresh = Instant.MIN;
+        this.mapOfRoutes = new AtomicReference<>(Map.of());
     }
 
     public ConsolidatedResponseObject buildConsolidatedResponseObject(String... routesToLoad) {

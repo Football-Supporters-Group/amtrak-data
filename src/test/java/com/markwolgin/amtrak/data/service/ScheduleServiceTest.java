@@ -39,7 +39,7 @@ class ScheduleServiceTest {
 
     @Test
     void triggerDataRefresh_ThrowsException() throws IOException {
-        Mockito.when(dataManagementService.loadAmtrakDataIntoLocal()).thenThrow(new IOException());
+        Mockito.doThrow(new RuntimeException()).when(dataManagementService).loadAmtrakDataIntoLocal();
 
         Assertions.assertThrows(SchedulingException.class,
                 () -> scheduleService.triggerDataRefresh());

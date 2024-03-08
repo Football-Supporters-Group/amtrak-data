@@ -25,7 +25,7 @@ public class ScheduleService {
     @Autowired
     public ScheduleService(final DataManagementService dataManagementService) {
         this.dataManagementService = dataManagementService;
-        log.info("AMTK-2300: Started the ScheduleService.");
+        log.info("AMTK-2300: Started the ScheduleService");
     }
 
     /**
@@ -33,18 +33,18 @@ public class ScheduleService {
      *  and load it overnight to prepare for more calls later.
      * @return  The instant the refresh finishes.
      */
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "1 * * * * *")
     public Instant triggerDataRefresh() {
-        log.info("AMTK-2310: Data Refresh Triggered at [{}].  Time of last refresh [{}].", Instant.now(), this.dataManagementService.getLastTimeLastRefresh());
+        log.info("AMTK-2310: Data Refresh Triggered at [{}].  Time of last refresh [{}]", Instant.now(), this.dataManagementService.getLastTimeLastRefresh());
 
         try {
-            this.dataManagementService.refreshAmtrakData();
-        } catch (IOException e) {
+            this.dataManagementService.loadAmtrakDataIntoLocal();
+        } catch (RuntimeException e) {
             log.error("AMTK-2319: Data Refresh has failed due to exception [{}]", e.getMessage(), e);
             throw new SchedulingException("AMTK-2319: Data Refresh has failed due to exception %s".formatted(e.getMessage()), e);
         }
 
-        log.info("AMTK-2311: Data successfully refreshed.");
+        log.info("AMTK-2311: Data successfully refreshed");
         return Instant.now();
     }
 

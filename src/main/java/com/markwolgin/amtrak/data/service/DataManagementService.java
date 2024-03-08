@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,7 +35,7 @@ public class DataManagementService {
     private final FileUtil fileUtil;
     private final ZipUtil zipUtil;
 
-    private Map<String, ConsolidatedRoute> mapOfRoutes;
+    private AtomicReference<Map<String, ConsolidatedRoute>> mapOfRoutes;
 
     private Instant lastRefresh;
 
@@ -57,12 +58,12 @@ public class DataManagementService {
 
     public ConsolidatedResponseObject buildConsolidatedResponseObject(String... routesToLoad) {
         log.info("AMTK-2210: In buildConsolidatedResponseObject, will start processing request for routes: [{}]", List.of(routesToLoad));
-        if (mapOfRoutes == null || mapOfRoutes.isEmpty()) {
-            this.mapOfRoutes = this.loadAmtrakDataIntoLocal();
-            if (mapOfRoutes == null || mapOfRoutes.isEmpty()) {
+        if (mapOfRoutes == null || mapOfRoutes.get().isEmpty()) {
+            this.mapOfRoutes.set(this.loadAmtrakDataIntoLocal());
+            if (mapOfRoutes == null || mapOfRoutes.get().isEmpty()) {
                 String error = "AMTK-2299: Unable to load in Amtrak Data!  All further responses will be invalid until corrected.";
                 log.error(error);
-                this.mapOfRoutes = Map.of();
+                this.mapOfRoutes.set(Map.of());
             }
         }
         log.debug("*------------------------------CHECKING LIST---------------------------------*");
@@ -70,7 +71,7 @@ public class DataManagementService {
         responseObject.setLastTimeDataWasRefreshed(lastRefresh.toString());
         responseObject.setTimestamp(Instant.now().toString());
         responseObject.setRequestedRouteIds(this.generateListOfRequestedRouteIds(routesToLoad));
-        responseObject.setRequestedConsolidatedRoutes(JsonNullable.of(this.mapOfRoutes
+        responseObject.setRequestedConsolidatedRoutes(JsonNullable.of(this.mapOfRoutes.get()
                 .entrySet()
                 .stream()
                 .filter(elem -> {
@@ -107,7 +108,7 @@ public class DataManagementService {
         return difference;
     }
 
-    private <T extends AmtrakObject> Map<String, ConsolidatedRoute> loadAmtrakDataIntoLocal() {
+    protected <T extends AmtrakObject> Map<String, ConsolidatedRoute> loadAmtrakDataIntoLocal() {
         Map<String, ConsolidatedRoute> newRoutes = null;
         try {
             this.refreshAmtrakData();
@@ -150,14 +151,14 @@ public class DataManagementService {
      */
     private List<String> generateListOfRequestedRouteIds(String... routesToLoad) {
         if (routesToLoad == null || routesToLoad.length == 0) {
-            return this.mapOfRoutes
+            return this.mapOfRoutes.get()
                     .keySet()
                     .parallelStream()
                     .map(elem -> elem.toString())
                     .toList();
         } else {
             List<String> listifyForComparison = List.of(routesToLoad);
-            return this.mapOfRoutes
+            return this.mapOfRoutes.get()
                     .keySet()
                     .parallelStream()
                     .map(elem -> elem.toString())

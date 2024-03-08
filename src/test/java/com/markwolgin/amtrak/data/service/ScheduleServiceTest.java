@@ -31,7 +31,7 @@ class ScheduleServiceTest {
 
     @Test
     void triggerDataRefresh_Pass() throws IOException {
-        Mockito.when(dataManagementService.refreshAmtrakData()).thenReturn(true);
+        Mockito.when(dataManagementService.loadAmtrakDataIntoLocal()).thenReturn(null);
 
         Instant actual = scheduleService.triggerDataRefresh();
         Assertions.assertTrue(actual.isBefore(Instant.now()));
@@ -39,7 +39,7 @@ class ScheduleServiceTest {
 
     @Test
     void triggerDataRefresh_ThrowsException() throws IOException {
-        Mockito.when(dataManagementService.refreshAmtrakData()).thenThrow(new IOException());
+        Mockito.when(dataManagementService.loadAmtrakDataIntoLocal()).thenThrow(new IOException());
 
         Assertions.assertThrows(SchedulingException.class,
                 () -> scheduleService.triggerDataRefresh());

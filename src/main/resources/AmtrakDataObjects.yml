@@ -1,0 +1,624 @@
+openapi: '3.1.0'
+info:
+  title: Amtrak Data Objects
+  summary: For generation of models for Amtrak Data and Consolidated Routes
+  description: A set of Amtrak defined GTFS Models, and a set of consolidated objects.  Meant to be used by other services to produce a better Amtrak scheduling service.
+  termsOfService: markwolgin.com/data/tos
+  #  contact:
+  #    name: Mark Wolgin
+  #    url: markwolgin.com
+  #    email: wolginmark@gmail.com
+  license:
+    name: Apache 2.0
+    identifier: Apache-2.0
+  version: 1.0.0
+servers:
+  - url: "https://ashton.vault.markwolgin.com/data/{environment}/{version}"
+    description: Server to access consolidated data.
+    variables:
+      environment:
+        default: dev
+        description: The development environment.
+        enum:
+          - "dev"
+          - "prod"
+      version:
+        default: v1
+        description: The API version.
+        enum:
+          - "v1"
+  - url: "http://localhost:8080/data/dev/v1"
+    description: Server to access consolidated data (LOCAL TESTING).
+paths:
+  /routes:
+    get:
+      description: Returns all Amtrak routes a map of ConsolidatedRoutes, and other related models.
+      tags:
+        - ConsolidatedRoutes
+      operationId: amtrak-data-get-all-routes
+      responses:
+        '200':
+          description: All Amtrak routes a map of ConsolidatedRoutes, and other related models.
+          $ref: '#/components/responses/ConsolidatedResponseObject'
+        '400':
+          description: Bad request sent.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '401':
+          description: Unauthorized; API Key not found.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '403':
+          description: Forbidden; User may not request resource.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '429':
+          description: Too May Requests; User is to active, please wait and try again later.
+          $ref: '#/components/responses/NonSuccessResponse'
+    post:
+      description: Returns all Amtrak routes a map of ConsolidatedRoutes, and other related models.
+      tags:
+        - ConsolidatedRoutes
+      operationId: amtrak-data-get-select-routes
+      requestBody:
+        $ref: '#/components/requestBodies/RoutesRequest'
+      responses:
+        '202':
+          description: All Amtrak routes a map of ConsolidatedRoutes, and other related models.
+          $ref: '#/components/responses/ConsolidatedResponseObject'
+        '400':
+          description: Bad request sent.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '401':
+          description: Unauthorized; API Key not found.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '403':
+          description: Forbidden; User may not request resource.
+          $ref: '#/components/responses/NonSuccessResponse'
+        '429':
+          description: Too May Requests; User is to active, please wait and try again later.
+          $ref: '#/components/responses/NonSuccessResponse'
+components:
+  requestBodies:
+    RoutesRequest:
+      description: An object that request a specific list of routes.
+      content:
+        application/json:
+          schema:
+            type: array
+            description: Requested routes
+            items:
+              type: string
+  responses:
+    ConsolidatedResponseObject:
+      description: A response container for ConsolidatedRoute and ConsolidatedTrip Requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConsolidatedResponseObject'
+      headers:
+        X-Rate-Limit-Limit:
+          description: The number of allowed requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Remaining:
+          description: The number of remaining requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Reset:
+          description: The number of seconds left in the current period
+          schema:
+            type: integer
+    NonSuccessResponse:
+      description: A response container for a non-successful event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NonSuccessResponse'
+      headers:
+        X-Rate-Limit-Limit:
+          description: The number of allowed requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Remaining:
+          description: The number of remaining requests in the current period
+          schema:
+            type: integer
+        X-Rate-Limit-Reset:
+          description: The number of seconds left in the current period
+          schema:
+            type: integer
+  schemas:
+    ## Amtrak Data Objects
+    Agency:
+      type: object
+      description: A specific operator in the Amtrak Network.
+      required:
+        - agency_id
+        - agency_name
+        - agency_url
+        - agency_timezone
+        - agency_lang
+      properties:
+        agency_id:
+          $ref: '#/components/schemas/AgencyId'
+        agency_name:
+          type: string
+          description: The common name of the agency.
+        agency_url:
+          type: string
+          format: uri
+          description: The url of the host agency.
+        agency_timezone:
+          $ref: '#/components/schemas/Timezone'
+          description: ISO Timezone.
+        agency_lang:
+          $ref: '#/components/schemas/Language'
+    Calendar:
+      type: object
+      properties:
+        service_id:
+          $ref: '#/components/schemas/ServiceId'
+        monday:
+          type: integer
+          format: int32
+          description: If the services operates on Monday.
+        tuesday:
+          type: integer
+          format: int32
+          description: If the services operates on Tuesday.
+        wednesday:
+          type: integer
+          format: int32
+          description: If the services operates on Wednesday.
+        thursday:
+          type: integer
+          format: int32
+          description: If the services operates on Thursday.
+        friday:
+          type: integer
+          format: int32
+          description: If the services operates on Friday.
+        saturday:
+          type: integer
+          format: int32
+          description: If the services operates on Saturday.
+        sunday:
+          type: integer
+          format: int32
+          description: If the services operates on Sunday.
+        start_date:
+          $ref: '#/components/schemas/Date'
+        end_date:
+          $ref: '#/components/schemas/Date'
+      required:
+        - service_id
+        - monday
+        - tuesday
+        - wednesday
+        - thursday
+        - friday
+        - saturday
+        - sunday
+        - start_date
+        - end_date
+    FeedInfo:
+      type: object
+      description: A description of the data feed, where it gets data, how its published, when it is valid from, and who to contact with questions and concerts.
+      properties:
+        feed_publisher_name:
+          type: string
+          description: Name of the publisher of the data feed.
+        feed_publisher_url:
+          type: string
+          format: uri
+          description: The url of the agency that publishes the url.  This is not the url where the feed is actually hosted.
+        feed_lang:
+          $ref: '#/components/schemas/Language'
+        default_lang:
+          $ref: '#/components/schemas/Language'
+        feed_start_date:
+          $ref: '#/components/schemas/Date'
+        feed_end_date:
+          $ref: '#/components/schemas/Date'
+        feed_version:
+          type: string
+          description: The current version of the feed.
+        feed_contact_email:
+          type: string
+          format: email
+          description: A contact email for the feed.
+        feed_contact_url:
+          type: string
+          format: uri
+          description: A contact url for the feed.
+      required:
+        - feed_publisher_name
+        - feed_publisher_url
+        - feed_lang
+        - feed_end_date
+    Routes:
+      type: object
+      description: A specific route on the Amtrak Network.  Think, Empire Service, or Pacific Starlight.
+      properties:
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        agency_id:
+          $ref: '#/components/schemas/AgencyId'
+        route_short_name:
+          type: string
+          description: The shortname for a route.
+        route_long_name:
+          type: string
+          description: The long name for a route.
+        route_type:
+          type: integer
+          format: int32
+          description: The type of the route.
+        route_url:
+          type: string
+          format: uri
+          description: The URL to the site with information about the route.
+        route_color:
+          type: string
+          description: A hex representation of the color of the route.
+        route_text_color:
+          type: string
+          description: A hex representation of the color of the route's text.
+      required:
+        - route_id
+        - agency_id
+        - route_short_name
+        - route_long_name
+        - route_type
+        - route_url
+        - route_color
+        - route_text_color
+    Shapes:
+      type: object
+      description: Shapes that can be used to render over a geo map.
+      properties:
+        shape_id:
+          $ref: '#/components/schemas/ShapeId'
+        shape_pt_lat:
+          $ref: '#/components/schemas/GeoLocationElement'
+          description: Latitude of the shape.
+        shape_pt_lon:
+          $ref: '#/components/schemas/GeoLocationElement'
+          description: Longitude of the shape.
+        shape_pt_sequence:
+          type: integer
+          format: int32
+          description: Shapes place in a sequence.
+      required:
+        - shape_id
+        - shape_pt_lat
+        - shape_pt_lon
+        - shape_pt_sequence
+    StopTimes:
+      type: object
+      description: An entry on a timetable, indicating a specific stop.
+      properties:
+        trip_id:
+          $ref: '#/components/schemas/TripId'
+        arrival_time:
+          $ref: '#/components/schemas/Time'
+          description: The time when the service arrives.
+        departure_time:
+          $ref: '#/components/schemas/Time'
+          description: The time when the service departs.
+        stop_id:
+          $ref: '#/components/schemas/StopId'
+        stop_sequence:
+          type: integer
+          format: int32
+          description: The place in the Trip where this stop falls.
+        pickup_type:
+          type: integer
+          format: int32
+          description: Pickup type.
+        drop_off_type:
+          type: integer
+          format: int32
+          description: Drop-off type.
+      required:
+        - trip_id
+        - arrival_time
+        - departure_time
+        - stop_id
+        - stop_sequence
+        - pickup_type
+        - drop_off_type
+    Stops:
+      type: object
+      description: A place on a map.
+      properties:
+        stop_id:
+          $ref: '#/components/schemas/StopId'
+        stop_name:
+          type: string
+          description: The canonical name of the station.
+        stop_lat:
+          description: Stop latitude.
+          $ref: '#/components/schemas/GeoLocationElement'
+        stop_lon:
+          description: Stop longitude.
+          $ref: '#/components/schemas/GeoLocationElement'
+        stop_url:
+          type: string
+          format: uri
+          description: URL for a station.
+        stop_timezone:
+          description: Timezone the stop is located in.
+          $ref: '#/components/schemas/Timezone'
+      required:
+        - stop_id
+        - stop_name
+        - stop_lat
+        - stop_lon
+        - stop_url
+        - stop_timezone
+    Transfers:
+      type: object
+      description: A 'place' where a transfer takes place.
+      properties:
+        from_stop_id:
+          description: The stop from where people are transferring from.
+          $ref: '#/components/schemas/StopId'
+        to_stop_id:
+          description: The stop from where people are transferring to.
+          $ref: '#/components/schemas/StopId'
+        transfer_type:
+          type: integer
+          format: int32
+          description: What kind of transfer this action is.
+        min_transfer_time:
+          description: The minimum amount time it takes for a transfer to occur, in minutes.
+          type: integer
+          format: int32
+      required:
+        - from_stop_id
+        - to_stop_id
+        - transfer_type
+        - min_transfer_time
+    Trips:
+      type: object
+      description: A specific trip on a route.
+      properties:
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        service_id:
+          $ref: '#/components/schemas/ServiceId'
+        trip_id:
+          $ref: '#/components/schemas/TripId'
+        trip_headsign:
+          type: string
+          description: The destination of the trip, common to travelers.
+        trip_short_name:
+          type: integer
+          format: int64
+          description: Shortname for the trip.
+        direction_id:
+          type: integer
+          format: int32
+          description: Indicated the direction of travel.
+        shape_id:
+          $ref: '#/components/schemas/ShapeId'
+      required:
+        - route_id
+        - service_id
+        - trip_id
+        - trip_headsign
+        - trip_short_name
+        - direction_id
+    #      examples:
+    #        - {"route_id": 39520,
+    #           "service_id": 2851853,
+    #           "trip_id": 80332851853,
+    #           "trip_headsign": "Pittsburgh",
+    #           "trip_short_name": "8033",
+    #           "direction_id": false}
+    ## Custom Data Objects
+    ConsolidatedRoute:
+      type: object
+      description: A specific Amtrak Route, such as the Keystone, and all of its associated trips, stops, and other relevant metadata.
+      properties:
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        route_short_name:
+          type: string
+          description: The short name of the route.
+        route_long_name:
+          type: string
+          description: The long name of the route.
+        route_type:
+          type: integer
+          format: int32
+          description: The route type.
+        route_url:
+          type: string
+          format: uri
+          description: The url for getting information about the route.
+        route_color:
+          type: string
+          description: A hex representation of the color of the route.
+        route_text_color:
+          type: string
+          description: A hex representation of the text color of the route.
+        trip_list:
+          description: A (key, ConsolidatedTrip) map.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ConsolidatedTrip'
+        all_stops:
+          description: A (key, Stop) map.
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/Stops"
+        stop_order:
+          description: An ordered list of a routes, ordered descending from direction 0.
+          type: array
+          items:
+            stop_id:
+              $ref: '#/components/schemas/StopId'
+      required:
+        - route_id
+        - route_short_name
+        - route_long_name
+        - route_type
+        - route_url
+        - route_color
+        - route_text_color
+        - trip_list
+        - all_stops
+        - stop_order
+    
+    ConsolidatedTrip:
+      type: object
+      description: A consolidated trip on a route.
+      properties:
+        service_id:
+          $ref: '#/components/schemas/ServiceId'
+        trip_id:
+          $ref: '#/components/schemas/TripId'
+        route_id:
+          $ref: '#/components/schemas/RouteId'
+        trip_headsign:
+          type: string
+          description: The destination of the trip, common to travelers.
+        trip_short_name:
+          type: integer
+          format: int64
+          description: Shortname for the trip.
+        direction_id:
+          type: integer
+          format: int32
+          description: Indicated the direction of travel.
+        shape_id:
+          $ref: '#/components/schemas/ShapeId'
+        trip_stops:
+          type: array
+          description: Stop times as a list.
+          items:
+            $ref: '#/components/schemas/StopTimes'
+        trip_effective_on_date:
+          type: string
+          format: date
+          description: The date when the trip becomes active.
+        trip_no_longer_effective_on_date:
+          type: string
+          format: date
+          description: The date when the trip becomes inactive.
+
+
+    ## Common Objects
+    AgencyId:
+      type: integer
+      format: int32
+      description: The unique identifier for the agency.
+    Date:
+      type: string
+      description: A custom date format that follows YYYYMMDD as a string.
+    GeoLocationElement:
+      type: number
+      format: double
+      description: GeoLocationElement.
+    Language:
+      type: string
+      description: The language the text contained will be written in.
+    RouteId:
+      type: string
+      description: Specific Route Identifier.
+    ShapeId:
+      type: string
+      description: Specific Shape Identifier.
+    ServiceId:
+      type: string
+      description: A definition for when a service is running.  Each Service has a service_id that will link to a calendar, letting the user know when that services will run.
+    StopId:
+      type: string
+      description: Three character code for each station.
+      minLength: 3
+      maxLength: 3
+      pattern: "[A-Z]{3}"
+      examples:
+        - Philadelphia: "ABC"
+    Time:
+      type: string
+      description: A time format HH:MM:SS
+      example: 23:56:21
+      pattern: "[0-9]{2}[:][0-9]{2}:[0-9]{2}"
+    ExtendedTime:
+      type: string
+      description: A more specific time format.
+      format: time
+    Timezone:
+      type: string
+      description: ISO Timezone.
+    TripId:
+      type: string
+      description: Specific Trip Identifier.
+
+    AmtrakObject:
+      type: object
+      description: A common Amtrak interface for easy iterations.
+      oneOf:
+        - $ref: "#/components/schemas/Agency"
+        - $ref: "#/components/schemas/Calendar"
+        - $ref: "#/components/schemas/FeedInfo"
+        - $ref: "#/components/schemas/Routes"
+        - $ref: "#/components/schemas/Shapes"
+        - $ref: "#/components/schemas/StopTimes"
+        - $ref: "#/components/schemas/Stops"
+        - $ref: "#/components/schemas/Transfers"
+        - $ref: "#/components/schemas/Trips"
+
+    ConsolidatedObjects:
+      type: object
+      description: A common consolidated interface for easy iterations.
+      oneOf:
+        - $ref: "#/components/schemas/ConsolidatedRoute"
+        - $ref: "#/components/schemas/ConsolidatedTrip"
+
+    ## All api reliant objects.
+    ConsolidatedResponseObject:
+      type: object
+      description: Container for ConsolidatedRoute and ConsolidatedTrip Requests
+      properties:
+        last_time_data_was_refreshed:
+          $ref: '#/components/schemas/ExtendedTime'
+          description: The last time the source Amtrak data was downloaded, inflated, and successfully parsed into active memory.  \
+            Effectively, this indicated when the data served was sourced.
+        requested_route_ids:
+          type: array
+          description: All requested routes as a list of strings.
+          items:
+            type: string
+        requested_consolidated_routes:
+          description: All requested consolidated routes in a map of route id -> consolidated route.
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ConsolidatedRoute'
+        timestamp:
+          $ref: '#/components/schemas/ExtendedTime'
+      required:
+        - last_time_data_was_refreshed
+        - requested_route_ids
+        - requested_consolidated_routes
+        - timestamp
+    NonSuccessResponse:
+      type: object
+      description: Container for a non-successful event.
+      properties:
+        additional_context:
+          description: Any additional context for the non-success.
+          type: array
+          items:
+            type: string
+        status_code:
+          description: Http Status Code
+          type: integer
+          format: int32
+        timestamp:
+          $ref: '#/components/schemas/Time'
+      required:
+        - additional_context
+        - status_code
+        - timestamp

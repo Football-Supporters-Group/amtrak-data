@@ -60,6 +60,8 @@ pipeline {
         }
       steps {
         sh '''
+            systemctl status docker
+
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --version
           gpg --homedir /tmp --batch --import $GPG_SECRET

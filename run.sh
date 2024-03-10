@@ -1,3 +1,2 @@
 #!/bin/sh
-ls .
-exec java -jar ./data-0.1.3-SNAPSHOT-exec.jar
+exec java -jar ./$gav-exec.jar

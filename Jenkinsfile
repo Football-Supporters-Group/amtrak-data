@@ -6,6 +6,7 @@ pipeline {
   tools {
       maven 'maven-3.9'
       jdk 'jdk17'
+      docker 'docker-agent'
   }
 
   environment {
@@ -164,6 +165,20 @@ pipeline {
                     '''
             }
         }
-
+    stage('Build Docker Image') {
+//        when {
+//            branch comparator: 'GLOB', pattern: '**/release/*'
+//            beforeOptions true
+//            expression {
+//                return env.shouldBuild != "false"
+//            }
+//        }
+       steps {
+            sh '''
+                docker build -t --env gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \
+                    $(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout) .
+                '''
+       }
+    }
   }
 }

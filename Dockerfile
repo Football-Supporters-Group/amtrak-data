@@ -17,8 +17,9 @@ VOLUME /tmp
 WORKDIR /workspace/app
 
 ENV TERM=xterm-256color
-LABEL version="0.1.2"
-ENV version="0.1.2"
+ENV version="0.1.3-SNAPSHOT"
+ENV gav="data-0.1.3-SNAPSHOT"
+LABEL version=${version}
 
 RUN echo "PS1='\e[92m\u\e[0m@\e[94m\h\e[0m:\e[35m\w\e[0m# '" >> /root/.bashrc
 COPY --from=builder /workspace/app/target/*.jar .

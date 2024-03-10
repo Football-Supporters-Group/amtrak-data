@@ -175,8 +175,9 @@ pipeline {
 //        }
        steps {
             sh '''
-                docker build --build-arg request_gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \
-                    request_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) -t \
+                docker build \
+                    --build-arg request_gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \
+                    --build-arg request_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) -t \
                     $(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout) .
                 '''
        }

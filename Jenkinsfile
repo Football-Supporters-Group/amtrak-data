@@ -175,12 +175,9 @@ pipeline {
                    def artifactId=sh (script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
                    def groupId=sh (script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
                    def version=sh (script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-                   env.REQUEST_GAV=artifactId+"-"+version
-                   echo $REQUEST_GAV
+                   env.REQUEST_GAV = artifactId+"-"+version
                    env.REQUEST_VERSION=version
-                   echo $REQUEST_VERSION
                    env.JAR_NAME="markwolgin/" + artifactId + ":" + env.BUILD_NUMBER
-                   echo $JAR_NAME
                    def args=sh(script: 'echo --build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .', returnStdout: true).trim()
 
                    def image = docker.build('markwolgin/data', args)

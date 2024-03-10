@@ -63,6 +63,11 @@ pipeline {
             }
         }
       steps {
+        script {
+            REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
+            REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
+            JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)').trim()
+        }
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --version
@@ -179,9 +184,9 @@ pipeline {
 //        }
        steps {
            script {
-                REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
-                REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
-                JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)')
+                REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
+                REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
+                JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)').trim()
                 def image = docker.build '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .'
            }
 

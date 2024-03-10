@@ -101,6 +101,7 @@ pipeline {
       steps {
         sh '''
           java -version
+          echo $JAVA_HOME
           mvn --version
         '''
       }

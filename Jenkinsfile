@@ -174,9 +174,9 @@ pipeline {
 //            }
 //        }
        steps {
-            env.REQUEST_GAV=sh (script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
-            env.REQUEST_VERSION=sh (script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
-            env.JAR_NAME=sh (script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)')
+            env.REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
+            env.REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
+            env.JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)')
             def image = docker.build '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .'
             sh '''
                 docker build \

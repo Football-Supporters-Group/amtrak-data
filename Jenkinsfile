@@ -6,7 +6,7 @@ pipeline {
   tools {
       maven 'maven-3.9'
       jdk 'jdk17'
-      docker 'docker-agent'
+      docker 'dockerTool'
   }
 
   environment {

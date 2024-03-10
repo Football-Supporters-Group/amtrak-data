@@ -1,7 +1,7 @@
 #!groovy
 pipeline {
 
-  agent any
+  agent agent1
   tools {
       maven 'maven-3.9'
       jdk 'jdk17'

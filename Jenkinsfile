@@ -58,21 +58,6 @@ pipeline {
             }
         }
       steps {
-        script {
-            def artifactId=sh (script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
-            def groupId=sh (script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
-            def version=sh (script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-//             def REQUEST_GAV=sh (script:'(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)',returnStdout: true).trim()
-            def REQUEST_GAV=artifactId+"-"+version
-            echo REQUEST_GAV
-//             def REQUEST_VERSION=sh script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)',returnStdout: true).trim()
-            def REQUEST_VERSION=version
-            echo REQUEST_VERSION
-
-//             def JAR_NAME=sh (script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)',returnStdout: true).trim()
-            def JAR_NAME=groupId + "/" + artifactId + ":" + env.BUILD_NUMBER
-            echo JAR_NAME
-        }
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --version
@@ -188,19 +173,25 @@ pipeline {
 //            }
 //        }
        steps {
-           script {
-                REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
-                REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
-                JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)').trim()
-                def image = docker.build '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .'
-           }
+               script {
+                   def artifactId=sh (script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
+                   def groupId=sh (script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
+                   def version=sh (script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+                   def REQUEST_GAV=artifactId+"-"+version
+                   echo REQUEST_GAV
+                   def REQUEST_VERSION=version
+                   echo REQUEST_VERSION
+                   def JAR_NAME=groupId + "/" + artifactId + ":" + env.BUILD_NUMBER
+                   echo JAR_NAME
 
-            sh '''
-                docker build \
-                    --build-arg request_gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \
-                    --build-arg request_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) -t \
-                    $(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout) .
-                '''
+                   def image = docker.build '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .'
+               }
+//             sh '''
+//                 docker build \
+//                     --build-arg request_gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \
+//                     --build-arg request_version=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) -t \
+//                     $(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout) .
+//                 '''
        }
     }
   }

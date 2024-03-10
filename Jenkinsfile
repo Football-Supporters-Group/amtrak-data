@@ -181,7 +181,7 @@ pipeline {
                    echo REQUEST_GAV
                    def REQUEST_VERSION=version
                    echo REQUEST_VERSION
-                   def JAR_NAME=markwolgin + "/" + artifactId + ":" + env.BUILD_NUMBER
+                   def JAR_NAME="markwolgin/" + artifactId + ":" + env.BUILD_NUMBER
                    echo JAR_NAME
 
                    def image = docker.build(docker.image(), '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .')

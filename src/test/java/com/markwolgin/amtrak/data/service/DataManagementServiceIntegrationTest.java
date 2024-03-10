@@ -41,7 +41,7 @@ class DataManagementServiceIntegrationTest {
 
     private final ClassLoader classLoader = this.getClass().getClassLoader();
 
-    private final String mockMetadata = Objects.requireNonNull(this.classLoader.getResource("metadata/route_stop_order.txt")).getPath();
+    private final String mockMetadata = "metadata/route_stop_order.txt";
     private final String zipFile = "zip/gtfs_slim.zip";
     private final String unZip = "unzip/tmp";
 

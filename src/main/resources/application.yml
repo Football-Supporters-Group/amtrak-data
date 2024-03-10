@@ -1,6 +1,5 @@
 amtrak:
     retry-enabled: true
-    route-metadata: ./src/main/resources/metadata/route_stop_order.txt
     gtfs:
         schema:             https
         host:               //content.amtrak.com

@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class InflationService {
 
+    private final ClassLoader classLoader = InflationService.class.getClassLoader();
+
     private final AmtrakFileNameToObjectUtil amtrakFileNameToObjectUtil;
     private final static String EMPTY_STRING = "";
     private final ObjectsUtil objectsUtil;
@@ -87,11 +89,13 @@ public class InflationService {
                 throw new RuntimeException(err, e);
             }
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        log.info("AMTK-2111: Inflated all Amtrak objects");
         return amtrakObjects;
     }
 
     public Map<String, LinkedHashSet<String>> inflateRouteOrderMetadata() throws FileNotFoundException {
-        return this.csvToRouteOrderMap(new FileInputStream(Paths.get(this.routeMetadata).toFile()));
+        log.info("AMTK-2112: In inflateRouteOrderMetadata, attempting to get Route Order Metadata from [{}]", this.classLoader.getResource(this.routeMetadata).getPath());
+        return this.csvToRouteOrderMap(this.classLoader.getResourceAsStream(this.routeMetadata));
     }
 
     /**
@@ -176,6 +180,7 @@ public class InflationService {
             log.error(e.getMessage());
         }
 
+        log.info("AMTK-2112: Loaded in Amtrak Route Metadata");
         return objectMap;
 
     }

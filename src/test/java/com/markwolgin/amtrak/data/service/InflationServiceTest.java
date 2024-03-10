@@ -56,7 +56,7 @@ class InflationServiceTest {
     @BeforeEach
     void setUp() throws IOException {
         this.amtrakProperties = new AmtrakProperties();
-        this.amtrakProperties.setRoute_metadata(classLoader.getResource("mock_metadata/route_stop_order.txt").getPath());
+        this.amtrakProperties.setRoute_metadata("mock_metadata/route_stop_order.txt");
         this.amtrakProperties.setGtfs(this.gtfsProperties);
         this.gtfsProperties.setDataDirectory("unzip");
         MockitoAnnotations.openMocks(this);

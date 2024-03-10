@@ -60,8 +60,6 @@ pipeline {
         }
       steps {
         sh '''
-            systemctl status docker
-
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
           gpg --version
           gpg --homedir /tmp --batch --import $GPG_SECRET
@@ -176,6 +174,10 @@ pipeline {
 //            }
 //        }
        steps {
+            env.REQUEST_GAV=sh (script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
+            env.REQUEST_VERSION=sh (script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)')
+            env.JAR_NAME=sh (script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)')
+            def image = docker.build '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .'
             sh '''
                 docker build \
                     --build-arg request_gav=$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout) \

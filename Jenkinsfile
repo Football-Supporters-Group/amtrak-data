@@ -59,14 +59,19 @@ pipeline {
         }
       steps {
         script {
-            def output = sh(returnStdout: true, script: 'pwd')
-            echo output
-            def REQUEST_GAV=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
-            def REQUEST_VERSION=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)').trim()
-            def JAR_NAME=sh (returnStdout: true, script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)').trim()
-               echo REQUEST_VERSION
-               echo REQUEST_GAV
-               echo JAR_NAME
+            def artifactId=sh (script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
+            def groupId=sh (script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
+            def version=sh (script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+//             def REQUEST_GAV=sh (script:'(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)',returnStdout: true).trim()
+            def REQUEST_GAV=artifactId+"-"+version
+            echo REQUEST_GAV
+//             def REQUEST_VERSION=sh script:'$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)',returnStdout: true).trim()
+            def REQUEST_VERSION=version
+            echo REQUEST_VERSION
+
+//             def JAR_NAME=sh (script:'$(./mvnw help:evaluate -Dexpression=project.groupId -q -DforceStdout)/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)',returnStdout: true).trim()
+            def JAR_NAME=groupId + "/" + artifactId + ":" + env.BUILD_NUMBER
+            echo JAR_NAME
         }
         sh '''
           GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"

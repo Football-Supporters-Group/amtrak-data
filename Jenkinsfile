@@ -72,8 +72,6 @@ pipeline {
           fi
           cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
           cp $ID_RSA_KEY ~/.ssh/id_rsa
-          cat ~/.ssh/id_rsa.pub
-          cat ~/.ssh/id_rsa
         '''
       }
     }
@@ -184,7 +182,7 @@ pipeline {
                    def JAR_NAME="markwolgin/" + artifactId + ":" + env.BUILD_NUMBER
                    echo JAR_NAME
 
-                   def image = docker.build(docker.image(), '--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .')
+                   def image = docker.build('--build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .')
                }
 //             sh '''
 //                 docker build \

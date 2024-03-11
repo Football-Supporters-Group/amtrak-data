@@ -100,6 +100,7 @@ pipeline {
     }
       steps {
         sh '''
+          whoami
           java -version
           echo $JAVA_HOME
           mvn --version

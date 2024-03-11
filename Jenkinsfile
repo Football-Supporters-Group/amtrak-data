@@ -182,17 +182,15 @@ pipeline {
                    def version=sh (script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
                    env.REQUEST_GAV = artifactId+"-"+version
                    env.REQUEST_VERSION=version
-                   env.JAR_NAME="markwolgin/" + artifactId + ":" + env.BUILD_NUMBER
-//                    def args=sh(script: 'echo --build-arg request_gav=$REQUEST_GAV --build-arg request_version=$REQUEST_VERSION -t $JAR_NAME .', returnStdout: true).trim()
-
-//                    def image = docker.build('markwolgin/data', args)
+                   env.JAR_NAME="wolginm/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
                }
             sh '''
+            docker builder inspect
                 docker build \
                     --build-arg request_gav=$REQUEST_GAV \
                     --build-arg request_version=$REQUEST_VERSION \
                     -t wolginm/amtrak-data:latest \
-                    -t wolginm/amtrak-data:${BUILD_NUMBER}.
+                    -t wolginm/${JAR_NAME} .
                 '''
        }
     }

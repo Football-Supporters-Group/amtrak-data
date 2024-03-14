@@ -169,6 +169,7 @@ pipeline {
                     '''
             }
         }
+
     stage('Build Docker Image') {
 //        when {
 //            branch comparator: 'GLOB', pattern: '**/release/*'
@@ -212,5 +213,6 @@ pipeline {
                 docker logout
                     '''
            }
+       }
   }
 }

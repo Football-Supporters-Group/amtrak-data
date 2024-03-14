@@ -66,7 +66,7 @@ public class DataManagementService {
                 log.error(error);
                 this.mapOfRoutes.set(Map.of());
             }
-        }
+        } else log.info("AMTK-2212: Data is loaded");
         log.debug("*------------------------------CHECKING LIST---------------------------------*");
         ConsolidatedResponseObject responseObject = new ConsolidatedResponseObject();
         responseObject.setLastTimeDataWasRefreshed(lastRefresh.toString());

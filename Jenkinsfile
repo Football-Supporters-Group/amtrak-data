@@ -79,6 +79,8 @@ pipeline {
                         fi
                         cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
                         cp $ID_RSA_KEY ~/.ssh/id_rsa
+                        cat ~/.ssh/id_rsa.pub
+                        cat ~/.ssh/id_rsa
                         '''
                     }
                 }
@@ -87,8 +89,8 @@ pipeline {
                         sh '''
                         git config --global user.email "junkwolginmark@gmail.com"
                         git config --global user.name "${SCM_USER}"
+                        git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                         '''
-//                         git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                     }
                 }
                 stage("Check Toolchain Versions") {
@@ -189,8 +191,8 @@ pipeline {
                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     mvn release:clean release:prepare -s jenkins-settings.xml
-                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
-                        -s jenkins-settings.xml -X
+                    mvn --batch-mode -X -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
+                        -s jenkins-settings.xml
                     '''
             }
         }

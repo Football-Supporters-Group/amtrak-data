@@ -601,6 +601,13 @@ components:
         - $ref: "#/components/schemas/ConsolidatedRoute"
         - $ref: "#/components/schemas/ConsolidatedTrip"
 
+    ResponseObjects:
+      type: object
+      description: A common consolidated interface for easy iterations.
+      oneOf:
+        - $ref: "#/components/schemas/ConsolidatedResponseObject"
+        - $ref: "#/components/schemas/NonSuccessResponse"
+
     ## All api reliant objects.
     ConsolidatedResponseObject:
       type: object

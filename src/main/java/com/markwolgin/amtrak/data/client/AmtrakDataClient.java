@@ -38,8 +38,6 @@ public class AmtrakDataClient extends ClientBase {
     }
 
     @Retryable(label = "retrieveGtfsPayload.retry",
-            retryFor = {RetryableException.class},
-            noRetryFor = {NonRetryableException.class},
             maxAttemptsExpression = "${amtrak.gtfs.retry.maxRetryCount}",
                 backoff = @Backoff(
                         delayExpression = "${amtrak.gtfs.retry.delay}",

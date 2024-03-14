@@ -122,13 +122,13 @@ pipeline {
                 }
             }
             stage('Build Docker Image') {
-                when {
-                    branch comparator: 'GLOB', pattern: '**/release/*'
-                    beforeOptions true
-                    expression {
-                        return env.shouldBuild != "false"
-                    }
-                }
+//                 when {
+//                     branch comparator: 'GLOB', pattern: '**/release/*'
+//                     beforeOptions true
+//                     expression {
+//                         return env.shouldBuild != "false"
+//                     }
+//                 }
                 steps {
                    script {
                        def artifactId=sh (script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()

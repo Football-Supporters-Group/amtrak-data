@@ -85,6 +85,7 @@ pipeline {
                 stage("Prep Git") {
                     steps {
                         sh '''
+                        cat ~/.ssh/known_hosts
                         git config --global user.email "junkwolginmark@gmail.com"
                         git config --global user.name "${SCM_USER}"
                         git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
@@ -185,20 +186,20 @@ pipeline {
                     return env.shouldBuild != "false"
                 }
             }
-            parallel {
+            steps {
                 stage('Deploy Release to Nexus') {
                     steps {
                         input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                         sh '''
                         mvn release:clean release:prepare -s jenkins-settings.xml
                         mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
-                            -s jenkins-settings.xml
+                            -s jenkins-settings.xml -X
                         '''
                     }
                 }
                 stage('Deploy Docker Image to Dockerhub') {
                     steps {
-                        input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
+                        input message: 'Proceed with Release Deployment to Docker?', submitter: 'wolginm'
                         sh '''
                     cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                     docker push $DOCKER_USER/amtrak-data:latest

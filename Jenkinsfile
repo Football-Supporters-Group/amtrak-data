@@ -207,7 +207,7 @@ pipeline {
     //        }
            steps {
                 sh '''
-                cat $DOCKER_ACCESS_TOKEN | docker login --username foo --password-stdin
+                cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                 docker image push $DOCKER_USER/amtrak-data:latest
                 docker image push $DOCKER_USER/amtrak-data:$BUILD_NUMBER
                 docker logout

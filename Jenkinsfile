@@ -56,38 +56,13 @@ pipeline {
                 }
             }
         }
-        stage('Load GPG Key for Signing') {
-            when {
-                expression {
-                    return env.shouldBuild != "false"
-                }
-            }
-            steps {
-                sh '''
-          GIT_COMMIT="$(git log -1 --oneline | cut -d' ' -f1)"
-          gpg --version
-          gpg --homedir /tmp --batch --import $GPG_SECRET
-          gpg --homedir /tmp --import-ownertrust $GPG_OWNERTRUST
-          gpg --homedir /tmp --list-keys
-          if [ -f ~/.ssh/id_rsa.pub ]; then
-             rm ~/.ssh/id_rsa.pub
-          fi
-          if [ -f ~/.ssh/id_rsa ]; then
-             rm ~/.ssh/id_rsa
-          fi
-          cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
-          cp $ID_RSA_KEY ~/.ssh/id_rsa
-        '''
-            }
-        }
-
         stage('Pre-Build') {
             when {
                 expression {
                     return env.shouldBuild != "false"
                 }
             }
-            parallel {
+            stages {
                 stage("Prep Git") {
                     steps {
                         sh '''

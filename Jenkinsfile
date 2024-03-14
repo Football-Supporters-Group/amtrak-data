@@ -19,6 +19,8 @@ pipeline {
     NEXUS_PASSWORD = credentials('nexus-password')
     SCM_USER = credentials('scm-user')
     SCM_PASSWORD = credentials('scm-password')
+    DOCKER_USER = credentials('docker-user')
+    DOCKER_ACCESS_TOKEN = credentials('docker-access-token')
     ID_RSA_KEY = credentials('ida-rsa-key')
     SSH_PUBLIC_KEY = credentials('ssh-public-key')
   }
@@ -189,10 +191,26 @@ pipeline {
                 docker build \
                     --build-arg request_gav=$REQUEST_GAV \
                     --build-arg request_version=$REQUEST_VERSION \
-                    -t wolginm/amtrak-data:latest \
-                    -t wolginm/${JAR_NAME} .
+                    -t $DOCKER_USER/amtrak-data:latest \
+                    -t $DOCKER_USER/${JAR_NAME} .
                 '''
        }
     }
+    stage('Deploy Docker Image') {
+    //        when {
+    //            branch comparator: 'GLOB', pattern: '**/release/*'
+    //            beforeOptions true
+    //            expression {
+    //                return env.shouldBuild != "false"
+    //            }
+    //        }
+           steps {
+                sh '''
+                docker login -u $DOCKER_USER -p $DOCKER_ACCESS_TOKEN
+                docker image push $DOCKER_USER/amtrak-data:latest
+                docker image push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
+                docker logout
+                    '''
+           }
   }
 }

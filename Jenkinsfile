@@ -85,11 +85,10 @@ pipeline {
                 stage("Prep Git") {
                     steps {
                         sh '''
-                        cat ~/.ssh/known_hosts
                         git config --global user.email "junkwolginmark@gmail.com"
                         git config --global user.name "${SCM_USER}"
-                        git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                         '''
+//                         git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                     }
                 }
                 stage("Check Toolchain Versions") {

@@ -118,13 +118,13 @@ pipeline {
                     }
                 }
                 stage('Build Docker Image') {
-                when {
-                    branch comparator: 'GLOB', pattern: '**/release/*'
-                    beforeOptions true
-                    expression {
-                        return env.shouldBuild != "false"
+                    when {
+                        branch comparator: 'GLOB', pattern: '**/release/*'
+                        beforeOptions true
+                        expression {
+                            return env.shouldBuild != "false"
+                        }
                     }
-                }
                     steps {
                         script {
                             def artifactId = sh(script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
@@ -178,38 +178,44 @@ pipeline {
             }
         }
 
-        stage('Deploy Release') {
-            when {
-                branch comparator: 'GLOB', pattern: '**/release/*'
-                beforeOptions true
-                expression {
-                    return env.shouldBuild != "false"
+        steps {
+            stage('Deploy Release to Nexus') {
+                when {
+                    branch comparator: 'GLOB', pattern: '**/release/*'
+                    beforeOptions true
+                    expression {
+                        return env.shouldBuild != "false"
+                    }
                 }
-            }
-            steps {
-                stage('Deploy Release to Nexus') {
-                    steps {
-                        input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
-                        sh '''
+                steps {
+                    input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
+                    sh '''
                         mvn release:clean release:prepare -s jenkins-settings.xml
                         mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
                             -s jenkins-settings.xml -X
                         '''
+                }
+            }
+            stage('Deploy Docker Image to Dockerhub') {
+                when {
+                    branch comparator: 'GLOB', pattern: '**/release/*'
+                    beforeOptions true
+                    expression {
+                        return env.shouldBuild != "false"
                     }
                 }
-                stage('Deploy Docker Image to Dockerhub') {
-                    steps {
-                        input message: 'Proceed with Release Deployment to Docker?', submitter: 'wolginm'
-                        sh '''
+                steps {
+                    input message: 'Proceed with Release Deployment to Docker?', submitter: 'wolginm'
+                    sh '''
                     cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                     docker push $DOCKER_USER/amtrak-data:latest
                     docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
                     docker push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
                     docker logout
                         '''
-                    }
                 }
             }
+
         }
     }
 }

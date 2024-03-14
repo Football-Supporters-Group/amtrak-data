@@ -63,15 +63,6 @@ pipeline {
                 }
             }
             stages {
-                stage("Prep Git") {
-                    steps {
-                        sh '''
-                        git config --global user.email "junkwolginmark@gmail.com"
-                        git config --global user.name "${SCM_USER}"
-                        git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
-                        '''
-                    }
-                }
                 stage("Prep GPG") {
                     steps {
                         sh '''
@@ -88,6 +79,15 @@ pipeline {
                         fi
                         cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
                         cp $ID_RSA_KEY ~/.ssh/id_rsa
+                        '''
+                    }
+                }
+                stage("Prep Git") {
+                    steps {
+                        sh '''
+                        git config --global user.email "junkwolginmark@gmail.com"
+                        git config --global user.name "${SCM_USER}"
+                        git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                         '''
                     }
                 }

@@ -228,7 +228,7 @@ pipeline {
                     cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                     docker push $DOCKER_USER/amtrak-data:latest
                     docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
-                    docker push $DOCKER_USER/amtrak-data:$BUILD_NUMBER
+                    docker push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
                     docker logout
                         '''
                     }

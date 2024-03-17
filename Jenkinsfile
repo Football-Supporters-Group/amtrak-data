@@ -63,15 +63,6 @@ pipeline {
                 }
             }
             stages {
-                stage("Prep Git") {
-                    steps {
-                        sh '''
-                        git config --global user.email "junkwolginmark@gmail.com"
-                        git config --global user.name "${SCM_USER}"
-                        git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
-                        '''
-                    }
-                }
                 stage("Prep GPG") {
                     steps {
                         sh '''
@@ -88,7 +79,21 @@ pipeline {
                         fi
                         cp $SSH_PUBLIC_KEY ~/.ssh/id_rsa.pub
                         cp $ID_RSA_KEY ~/.ssh/id_rsa
+                        cat ~/.ssh/id_rsa.pub
+                        cat ~/.ssh/id_rsa
                         '''
+                    }
+                }
+                stage("Prep Git") {
+                    steps {
+                        sh '''
+                        git config --global user.email "junkwolginmark@gmail.com"
+                        git config --global user.name "${SCM_USER}"
+                        git config --list
+                        git config --add --local core.sshCommand 'ssh -i ~/.ssh/id_rsa  -o "StrictHostKeyChecking no"'
+                        git config --list
+                        '''
+//                         git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                     }
                 }
                 stage("Check Toolchain Versions") {
@@ -116,32 +121,32 @@ pipeline {
                         sh 'mvn -B -DskipTests -Dmaven.javadoc.skip=true clean package'
                     }
                 }
-                stage('Build Docker Image') {
-                when {
-                    branch comparator: 'GLOB', pattern: '**/release/*'
-                    beforeOptions true
-                    expression {
-                        return env.shouldBuild != "false"
-                    }
-                }
-                    steps {
-                        script {
-                            def artifactId = sh(script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
-                            def groupId = sh(script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
-                            def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-                            env.REQUEST_GAV = artifactId + "-" + version
-                            env.REQUEST_VERSION = version
-                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
-                        }
-                        sh '''
-                        docker builder inspect
-                        docker build \
-                            --build-arg request_gav=$REQUEST_GAV \
-                            --build-arg request_version=$REQUEST_VERSION \
-                            -t $DOCKER_USER/amtrak-data:latest .
-                        '''
-                    }
-                }
+//                 stage('Build Docker Image') {
+//                     when {
+//                         branch comparator: 'GLOB', pattern: '**/release/*'
+//                         beforeOptions true
+//                         expression {
+//                             return env.shouldBuild != "false"
+//                         }
+//                     }
+//                     steps {
+//                         script {
+//                             def artifactId = sh(script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
+//                             def groupId = sh(script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
+//                             def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+//                             env.REQUEST_GAV = artifactId + "-" + version
+//                             env.REQUEST_VERSION = version
+//                             env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
+//                         }
+//                         sh '''
+//                         docker builder inspect
+//                         docker build \
+//                             --build-arg request_gav=$REQUEST_GAV \
+//                             --build-arg request_version=$REQUEST_VERSION \
+//                             -t $DOCKER_USER/amtrak-data:latest .
+//                         '''
+//                     }
+//                 }
             }
         }
         stage('Test') {
@@ -177,7 +182,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Release') {
+        stage('Deploy Release to Nexus') {
             when {
                 branch comparator: 'GLOB', pattern: '**/release/*'
                 beforeOptions true
@@ -185,30 +190,34 @@ pipeline {
                     return env.shouldBuild != "false"
                 }
             }
-            parallel {
-                stage('Deploy Release to Nexus') {
-                    steps {
-                        input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
-                        sh '''
-                        mvn release:clean release:prepare -s jenkins-settings.xml
-                        mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
-                            -s jenkins-settings.xml
-                        '''
-                    }
-                }
-                stage('Deploy Docker Image to Dockerhub') {
-                    steps {
-                        input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
-                        sh '''
-                    cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
-                    docker push $DOCKER_USER/amtrak-data:latest
-                    docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
-                    docker push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
-                    docker logout
-                        '''
-                    }
-                }
+            steps {
+                input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
+                sh '''
+                    mvn release:clean release:prepare -s jenkins-settings.xml
+                    mvn --batch-mode -X -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
+                        -s jenkins-settings.xml
+                    '''
             }
         }
+        stage('Deploy Docker Image to Dockerhub') {
+            when {
+                branch comparator: 'GLOB', pattern: '**/release/*'
+                beforeOptions true
+                expression {
+                    return env.shouldBuild != "false"
+                }
+            }
+            steps {
+                input message: 'Proceed with Release Deployment to Docker?', submitter: 'wolginm'
+                sh '''
+                cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
+                docker push $DOCKER_USER/amtrak-data:latest
+                docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
+                docker push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
+                docker logout
+                    '''
+            }
+        }
+
     }
 }

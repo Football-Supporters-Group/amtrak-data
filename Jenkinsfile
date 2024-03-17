@@ -135,7 +135,7 @@ pipeline {
                             def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
                             env.REQUEST_GAV = artifactId + "-" + version
                             env.REQUEST_VERSION = version
-                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.REQUEST_VERSION.replace("SNAPSHOT", "")
+                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.REQUEST_VERSION.replace("-SNAPSHOT", "")
                         }
                         sh '''
                         docker build \

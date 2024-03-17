@@ -210,7 +210,7 @@ pipeline {
                 sh '''
                 cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                 docker push $DOCKER_USER/amtrak-data:latest
-                docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
+                docker image tag $DOCKER_USER/amtrak-data:latest $JAR_NAME
                 docker push $JAR_NAME
                 docker logout
                     '''

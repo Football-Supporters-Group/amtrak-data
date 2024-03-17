@@ -16,6 +16,9 @@ import java.util.stream.Collectors;
 @Component
 public class DataMappingUtil {
 
+
+    protected final static Calendar DEFAULT_MISSING_CALENDAR = new Calendar("REPLACE_ME", 0, 0, 0, 0, 0, 0, 0, "19700101", "29991231");
+
     /**
      * Will build a map of TripId -> {@link ConsolidatedTrip}.
      * @param stopTimes List of {@link StopTimes}.
@@ -31,6 +34,7 @@ public class DataMappingUtil {
         log.info("AMTK-6600: Attempting to construct map of [{}] Consolidated Trips", trips.size());
         Trips trip;
         ConsolidatedTrip consolidatedTrip;
+        Calendar calendar;
         String startDate, endDate;
         Map<String, ConsolidatedTrip> consolidatedTripMap = new HashMap<>(trips.size());
         Map<String, Calendar> calendarServiceMap = calendars.parallelStream().collect(Collectors.toMap(elem -> elem.getServiceId(), elem -> elem));
@@ -40,13 +44,23 @@ public class DataMappingUtil {
             if (consolidatedTrip == null) {
                 log.debug("AMTK-6611: Trip not in map, creating and setting trip [{}]", stoptime.getTripId());
                 trip = tripsMap.get(stoptime.getTripId());
-                startDate = calendarServiceMap.getOrDefault(trip.getServiceId(), new Calendar(trip.getServiceId(), 0, 0, 0, 0, 0, 0, 0, "19700101", "29991231")).getStartDate();
-                endDate = calendarServiceMap.getOrDefault(trip.getServiceId(), new Calendar(trip.getServiceId(), 0, 0, 0, 0, 0, 0, 0, "19700101", "29991231")).getEndDate();
+                calendar = calendarServiceMap.getOrDefault(trip.getServiceId(), DEFAULT_MISSING_CALENDAR.serviceId(trip.getServiceId()));
+                startDate = calendar.getStartDate();
+                endDate = calendar.getEndDate();
                 consolidatedTrip = new ConsolidatedTrip()
                         .tripId(trip.getTripId())
                         .tripHeadsign(trip.getTripHeadsign())
                         .tripShortName(trip.getTripShortName())
                         .directionId(trip.getDirectionId())
+                        .operatingPattern(new OperatingPattern()
+                                .monday(calendar.getMonday() != 0)
+                                .tuesday(calendar.getTuesday() != 0)
+                                .wednesday(calendar.getWednesday() != 0)
+                                .thursday(calendar.getThursday() != 0)
+                                .friday(calendar.getFriday() != 0)
+                                .saturday(calendar.getSaturday() != 0)
+                                .sunday(calendar.getSunday() != 0)
+                        )
                         .routeId(trip.getRouteId())
                         .serviceId(trip.getServiceId())
                         .shapeId(trip.getShapeId())

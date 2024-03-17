@@ -107,5 +107,34 @@ class DataMappingUtilTest {
         Assertions.assertEquals(2, actual.size());
         Assertions.assertEquals(consolidatedTripMap.get("1000"), actual.get("999").getTripList().get().get("1000"));
         Assertions.assertEquals(4, actual.get("999").getTripList().get().get("1001").getTripStops().size());
+
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getMonday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getTuesday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getWednesday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getThursday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getFriday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getSaturday());
+        Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getSunday());
+    }
+
+    @Test
+    @Order(3)
+    void buildConsolidatedRouteMap_MissingCalendar() {
+        this.calendars.get(0).setServiceId("1234");
+        Map<String, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
+        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
+
+        Assertions.assertNotNull(actual);
+        Assertions.assertEquals(2, actual.size());
+        Assertions.assertEquals(consolidatedTripMap.get("1000"), actual.get("999").getTripList().get().get("1000"));
+        Assertions.assertEquals(4, actual.get("999").getTripList().get().get("1001").getTripStops().size());
+
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getMonday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getTuesday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getWednesday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getThursday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getFriday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getSaturday());
+        Assertions.assertFalse(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getSunday());
     }
 }

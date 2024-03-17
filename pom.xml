@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.markwolgin</groupId>
 	<artifactId>data</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>data</name>
@@ -99,6 +99,7 @@
 		<java.version>17</java.version>
 		<maven.local.skip>false</maven.local.skip>
 		<maven.remote.skip>true</maven.remote.skip>
+		<mainClass>${project.groupId}.amtrak.${project.artifactId}.DataApplication</mainClass>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -226,6 +227,12 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 				<executions>
 					<execution>
@@ -236,6 +243,18 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>${mainClass}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

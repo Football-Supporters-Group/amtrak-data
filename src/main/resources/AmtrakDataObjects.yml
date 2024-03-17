@@ -491,6 +491,9 @@ components:
           type: integer
           format: int32
           description: Indicated the direction of travel.
+        operating_pattern:
+          description: The operating patten on the trip.
+          $ref: '#/components/schemas/OperatingPattern'
         shape_id:
           $ref: '#/components/schemas/ShapeId'
         trip_stops:
@@ -513,6 +516,27 @@ components:
       type: integer
       format: int32
       description: The unique identifier for the agency.
+    OperatingPattern:
+      type: object
+      description: The pattern the service operates on.
+      properties:
+        monday:
+          $ref: '#/components/schemas/DayOfWeek'
+        tuesday:
+          $ref: '#/components/schemas/DayOfWeek'
+        wednesday:
+          $ref: '#/components/schemas/DayOfWeek'
+        thursday:
+          $ref: '#/components/schemas/DayOfWeek'
+        friday:
+          $ref: '#/components/schemas/DayOfWeek'
+        saturday:
+          $ref: '#/components/schemas/DayOfWeek'
+        sunday:
+          $ref: '#/components/schemas/DayOfWeek'
+    DayOfWeek:
+      type: boolean
+      description: True if operates on the day, false otherwise.
     Date:
       type: string
       description: A custom date format that follows YYYYMMDD as a string.
@@ -576,6 +600,13 @@ components:
       oneOf:
         - $ref: "#/components/schemas/ConsolidatedRoute"
         - $ref: "#/components/schemas/ConsolidatedTrip"
+
+    ResponseObjects:
+      type: object
+      description: A common consolidated interface for easy iterations.
+      oneOf:
+        - $ref: "#/components/schemas/ConsolidatedResponseObject"
+        - $ref: "#/components/schemas/NonSuccessResponse"
 
     ## All api reliant objects.
     ConsolidatedResponseObject:

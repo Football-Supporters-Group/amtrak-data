@@ -135,7 +135,7 @@ pipeline {
                             def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
                             env.REQUEST_GAV = artifactId + "-" + version
                             env.REQUEST_VERSION = version
-                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
+                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.REQUEST_VERSION.replace("SNAPSHOT", "")
                         }
                         sh '''
                         docker build \
@@ -211,7 +211,7 @@ pipeline {
                 cat $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER --password-stdin
                 docker push $DOCKER_USER/amtrak-data:latest
                 docker image tag $DOCKER_USER/amtrak-data:latest $DOCKER_USER/amtrak-data:$BUILD_NUMBER
-                docker push $DOCKER_USER/amtrak-data:$REQUEST_VERSION
+                docker push $JAR_NAME
                 docker logout
                     '''
             }

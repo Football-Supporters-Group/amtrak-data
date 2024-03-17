@@ -118,32 +118,32 @@ pipeline {
                         sh 'mvn -B -DskipTests -Dmaven.javadoc.skip=true clean package'
                     }
                 }
-                stage('Build Docker Image') {
-                    when {
-                        branch comparator: 'GLOB', pattern: '**/release/*'
-                        beforeOptions true
-                        expression {
-                            return env.shouldBuild != "false"
-                        }
-                    }
-                    steps {
-                        script {
-                            def artifactId = sh(script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
-                            def groupId = sh(script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
-                            def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-                            env.REQUEST_GAV = artifactId + "-" + version
-                            env.REQUEST_VERSION = version
-                            env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
-                        }
-                        sh '''
-                        docker builder inspect
-                        docker build \
-                            --build-arg request_gav=$REQUEST_GAV \
-                            --build-arg request_version=$REQUEST_VERSION \
-                            -t $DOCKER_USER/amtrak-data:latest .
-                        '''
-                    }
-                }
+//                 stage('Build Docker Image') {
+//                     when {
+//                         branch comparator: 'GLOB', pattern: '**/release/*'
+//                         beforeOptions true
+//                         expression {
+//                             return env.shouldBuild != "false"
+//                         }
+//                     }
+//                     steps {
+//                         script {
+//                             def artifactId = sh(script: 'mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout', returnStdout: true).trim()
+//                             def groupId = sh(script: 'mvn help:evaluate -Dexpression=project.groupId -q -DforceStdout', returnStdout: true).trim()
+//                             def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+//                             env.REQUEST_GAV = artifactId + "-" + version
+//                             env.REQUEST_VERSION = version
+//                             env.JAR_NAME = env.DOCKER_USER + "/amtrak-" + artifactId + ":" + env.BUILD_NUMBER
+//                         }
+//                         sh '''
+//                         docker builder inspect
+//                         docker build \
+//                             --build-arg request_gav=$REQUEST_GAV \
+//                             --build-arg request_version=$REQUEST_VERSION \
+//                             -t $DOCKER_USER/amtrak-data:latest .
+//                         '''
+//                     }
+//                 }
             }
         }
         stage('Test') {

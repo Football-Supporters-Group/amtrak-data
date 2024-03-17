@@ -192,7 +192,7 @@ pipeline {
                 input message: 'Proceed with Release Deployment to Maven?', submitter: 'wolginm'
                 sh '''
                     mvn release:clean release:prepare -s jenkins-settings.xml
-                    mvn --batch-mode -X -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
+                    mvn --batch-mode -DskipTests -Dmaven.javadoc.skip=true release:perform -P release \
                         -s jenkins-settings.xml
                     '''
             }

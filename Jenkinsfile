@@ -89,6 +89,10 @@ pipeline {
                         sh '''
                         git config --global user.email "junkwolginmark@gmail.com"
                         git config --global user.name "${SCM_USER}"
+                        git config --list
+                        git config --add --local core.sshCommand 'ssh -i ~/.ssh/id_rsa  -o "StrictHostKeyChecking no"'
+                        git config --list
+                        ssh git@github.com -i  ~/.ssh/id_rsa -o "StrictHostKeyChecking no"
                         '''
 //                         git config --add --local core.sshCommand "ssh -i ${ID_RSA_KEY}"
                     }

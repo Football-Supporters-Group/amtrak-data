@@ -41,6 +41,18 @@
 			</roles>
 			<timezone>America/New_York</timezone>
 		</developer>
+		<developer>
+			<id>Ashton-Vault-Jenkins-Bot</id>
+			<name>bot</name>
+			<email>junkwolginmark@gmail.com</email>
+			<organization>Football Supporters Group</organization>
+			<organizationUrl>https://markwolgin.com</organizationUrl>
+			<roles>
+				<role>contributor</role>
+				<role>bot</role>
+			</roles>
+			<timezone>America/New_York</timezone>
+		</developer>
 	</developers>
 	<mailingLists>
 		<mailingList>
@@ -105,6 +117,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

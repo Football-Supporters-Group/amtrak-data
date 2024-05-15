@@ -116,6 +116,7 @@ public class DataManagementService {
 
             Map<Class<T>, List<T>> allAmtrakObjects = this.inflationService.inflateAllAmtrakObjects();
             Map<String, LinkedHashSet<String>> routeMetaData = this.inflationService.inflateRouteOrderMetadata();
+            Map<String, Map<Boolean, String>> defaultStationOrder = this.inflationService.inflateDefaultStationOrder();
 
             //StopTimes, Calendars(Nullable), Trips, Shapes(Nullable)
             Map<String, ConsolidatedTrip> consolidatedTripIntermediate
@@ -130,7 +131,8 @@ public class DataManagementService {
                     (List<Routes>) allAmtrakObjects.get(Routes.class),
                     (List<Calendar>) allAmtrakObjects.get(Shapes.class),
                     this.dataMappingUtil.stopsMap((List<Stops>) allAmtrakObjects.get(Stops.class)),
-                    routeMetaData);
+                    routeMetaData,
+                    defaultStationOrder);
 
             this.lastRefresh = Instant.now();
         } catch (NotDirectoryException | FileNotFoundException e) {

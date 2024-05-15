@@ -456,8 +456,13 @@ components:
           description: An ordered list of a routes, ordered descending from direction 0.
           type: array
           items:
-            stop_id:
-              $ref: '#/components/schemas/StopId'
+            $ref: '#/components/schemas/StopId'
+        index_dir_zero:
+          description: A specific 'fixed' station that allows for sorting and building.
+          $ref: '#/components/schemas/StopId'
+        index_dir_one:
+          description: A specific 'fixed' station that allows for sorting and building.
+          $ref: '#/components/schemas/StopId'
       required:
         - route_id
         - route_short_name
@@ -469,6 +474,8 @@ components:
         - trip_list
         - all_stops
         - stop_order
+        - index_dir_zero
+        - index_dir_one
     
     ConsolidatedTrip:
       type: object

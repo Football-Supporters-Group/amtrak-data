@@ -97,7 +97,8 @@ public class DataMappingUtil {
                                                                      final List<Routes> routes,
                                                                      final List<Calendar> calendars,
                                                                      final Map<String, Stops> stops,
-                                                                     final Map<String, LinkedHashSet<String>> routeOrderMetaData) {
+                                                                     final Map<String, LinkedHashSet<String>> routeOrderMetaData,
+                                                                     final Map<String, Map<Boolean, String>> routeDefaultStationMap) {
         log.info("AMTK-6600: Attempting to construct map of [{}] Consolidated Routes", routes.size());
 
         Map<String, ConsolidatedRoute> consolidatedRouteMap = new HashMap<>(routes.size());
@@ -150,6 +151,8 @@ public class DataMappingUtil {
                             .distinct()
                             .collect(Collectors.toMap(t->t, stops::get)))
                     .stopOrder(routeOrderMetaData.getOrDefault(route.getRouteId(), new LinkedHashSet<String>()).stream().collect(Collectors.toUnmodifiableList()))
+                    .indexDirZero(routeDefaultStationMap.get(route.getRouteId()).get(false))
+                    .indexDirOne(routeDefaultStationMap.get(route.getRouteId()).get(true))
             );
         });
         log.info("AMTK-6610: Constructed map of [{}] Consolidated Routes", routes.size());

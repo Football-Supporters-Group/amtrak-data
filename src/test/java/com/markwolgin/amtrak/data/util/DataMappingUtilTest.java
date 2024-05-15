@@ -22,6 +22,7 @@ class DataMappingUtilTest {
     private List<Calendar> calendars;
     private List<StopTimes> stopTimes;
     private Map<String, LinkedHashSet<String>> routeMetaData;
+    private Map<String, Map<Boolean, String>> defaultStaionOrder;
     private DataMappingUtil dataMappingUtil;
 
     @BeforeEach
@@ -82,6 +83,17 @@ class DataMappingUtilTest {
 
         }};
 
+        defaultStaionOrder = new HashMap<>() {{
+           put("999", new HashMap<>() {{
+               put(false, "NYP");
+               put(true, "PAO");
+           }});
+            put("888", new HashMap<>() {{
+                put(false, "PHL");
+                put(true, "SEA");
+            }});
+        }};
+
         dataMappingUtil = new DataMappingUtil();
     }
 
@@ -101,12 +113,17 @@ class DataMappingUtilTest {
     @Order(2)
     void buildConsolidatedRouteMap() {
         Map<String, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
-        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
+        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars,
+                stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData, defaultStaionOrder);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());
         Assertions.assertEquals(consolidatedTripMap.get("1000"), actual.get("999").getTripList().get().get("1000"));
         Assertions.assertEquals(4, actual.get("999").getTripList().get().get("1001").getTripStops().size());
+        Assertions.assertEquals("NYP", actual.get("999").getIndexDirZero());
+        Assertions.assertEquals("PAO", actual.get("999").getIndexDirOne());
+        Assertions.assertEquals("PHL", actual.get("888").getIndexDirZero());
+        Assertions.assertEquals("SEA", actual.get("888").getIndexDirOne());
 
         Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getMonday());
         Assertions.assertTrue(actual.get("999").getTripList().get().get("1000").getOperatingPattern().getTuesday());
@@ -122,7 +139,8 @@ class DataMappingUtilTest {
     void buildConsolidatedRouteMap_MissingCalendar() {
         this.calendars.get(0).setServiceId("1234");
         Map<String, ConsolidatedTrip> consolidatedTripMap = this.dataMappingUtil.buildConsolidatedTripMap(stopTimes, calendars, trips, null);
-        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars, stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData);
+        Map<String, ConsolidatedRoute> actual = this.dataMappingUtil.buildConsolidatedRouteMap(trips, consolidatedTripMap, routes, calendars,
+                stops.stream().collect(Collectors.toMap(Stops::getStopId, t->t)), routeMetaData, defaultStaionOrder);
 
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(2, actual.size());

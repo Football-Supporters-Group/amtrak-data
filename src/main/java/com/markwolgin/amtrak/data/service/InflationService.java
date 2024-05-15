@@ -29,6 +29,7 @@ public class InflationService {
     private final static String EMPTY_STRING = "";
     private final ObjectsUtil objectsUtil;
     private final String routeMetadata;
+    private final String defaultRouteOrder;
     private final Path tmpDir;
     private final Path tmpDataDir;
 
@@ -41,6 +42,7 @@ public class InflationService {
         log.info("AMTK-2100: Starting the Inflation Service");
         this.objectsUtil = objectsUtil;
         this.routeMetadata = amtrakProperties.getRoute_metadata();
+        this.defaultRouteOrder = amtrakProperties.getDefault_station_order();
         this.tmpDir = tempDir;
         this.tmpDataDir = Path.of(tmpDir.toString(), amtrakProperties.getGtfs().getDataDirectory());
         this.amtrakFileNameToObjectUtil = amtrakFileNameToObjectUtil;
@@ -185,8 +187,69 @@ public class InflationService {
 
     }
 
+    /**
+     * Creates a map of RouteId -> Map of Bool -> StationId.  This allows us to
+     *  encode a default start station in each direction by the StationId.
+     * @return  An encoding of each route to there default start stations.
+     */
+    public Map<String, Map<Boolean, String>> inflateDefaultStationOrder() {
+        log.info("AMTK-2113: In inflateDefaultStationOrder, attempting to get Default Station Order from [{}]", this.classLoader.getResource(this.routeMetadata).getPath());
+        return this.csvToDefaultRouteOrderMap(this.classLoader.getResourceAsStream(this.defaultRouteOrder));
+    }
+
+    /**
+     * Inner method to handle the actuall steps of inflating the input stream.  Not 100%
+     *  sure why I chose to break it up this way.
+     * @param resourceAsStream  Inbound csv.
+     * @return                  An encoding of each route to there default start stations.
+     */
+    private Map<String, Map<Boolean, String>> csvToDefaultRouteOrderMap(InputStream resourceAsStream) {
+        List<String> objects = null;
+        Map<String, Map<Boolean, String>> objectMap = null;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(resourceAsStream, "UTF-8"));
+
+            CSVParser csvParser = new CSVParser(bufferedReader,
+                    CSVFormat.DEFAULT
+                            .builder()
+                            .setHeader()
+                            .setSkipHeaderRecord(true)
+                            .setIgnoreHeaderCase(true)
+                            .setTrim(true)
+                            .build());
+
+            objects = new ArrayList<String>();
+            objectMap = new HashMap<>();
+            Iterable<CSVRecord> cIterable = csvParser.getRecords();
+            for (CSVRecord csvRecord : cIterable) {
+                objects = csvRecord.toList();
+                if (objects.size() == 3) {
+
+                    List<String> finalObjects = objects;
+                    objectMap.put(objects.get(0), new HashMap<>() {{
+                        put(false, finalObjects.get(1));
+                        put(true, finalObjects.get(2));
+                    }});
+                } else {
+                    log.error("CSV Parsing error for Default Station Order Map on row: {}, \"{}\"", csvRecord.getRecordNumber(), csvRecord.toString());
+                }
+            }
+            csvParser.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+        log.info("AMTK-2113: Loaded in Amtrak Default Station Order Metadata");
+        return objectMap;
+    }
+
+    /**
+     * Empty String Function.
+     * @return  An empty string.
+     */
     private Function<String, String> emptyString() {
         return t->InflationService.EMPTY_STRING;
     }
-
 }

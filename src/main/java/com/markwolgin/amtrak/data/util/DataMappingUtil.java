@@ -107,6 +107,13 @@ public class DataMappingUtil {
         routes
                 .stream()
                 .forEach(route -> {
+                    if (routeDefaultStationMap.get(route.getRouteId()) == null) {
+                        log.error("AMTK-6007: Route {}:{} has no default station information!", route.getRouteShortName(), route.getRouteId());
+                        routeDefaultStationMap.put(route.getRouteId(), new HashMap<>() {{
+                            put(false, null);
+                            put(true, null);
+                        }});
+                    }
             consolidatedRouteMap.put(route.getRouteId(), new ConsolidatedRoute()
                     .routeId(route.getRouteId())
                     .routeColor(route.getRouteColor())

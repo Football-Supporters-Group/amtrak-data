@@ -28,13 +28,13 @@ public class DataController {
 
     @GetMapping("/routes")
     public ResponseEntity<ConsolidatedResponseObject> getRoutes() {
-        log.info("AMTK-1010: In getRoutes - /getRoutes");
+        log.info("AMTK-1010: In getRoutes - /routes");
         return ResponseEntity.status(200).body(this.dataManagementService.buildConsolidatedResponseObject());
     }
 
     @GetMapping("/route")
     public ResponseEntity<ConsolidatedResponseObject> getRoutes(@RequestParam(name = "ids") final String routeIds) {
-        log.info("AMTK-1010: In getRoutes - /getRoute?id={}", routeIds);
+        log.info("AMTK-1010: In getRoutes - /routes?id={}", routeIds);
         ResponseEntity<ConsolidatedResponseObject> responseObjectResponseEntity;
         if (routeIds != null && !routeIds.isEmpty() && !routeIds.isBlank()) {
             String[] elements = routeIds.split(",");
@@ -59,6 +59,7 @@ public class DataController {
 
     @ExceptionHandler(NumberFormatException.class)
     public ResponseEntity<NonSuccessResponse> handleException(NumberFormatException exception) {
+        log.error("AMTK-1099: Number format exception triggered non 2xx response.", exception);
         return ResponseEntity.status(400)
                 .body(new NonSuccessResponse(
                         List.of(exception.getMessage()),
@@ -66,8 +67,9 @@ public class DataController {
                             Instant.now().toString()));
     }
 
-    @ExceptionHandler(NumberFormatException.class)
+    @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<NonSuccessResponse> handleException(NullPointerException exception) {
+        log.error("AMTK-1099: Null pointer exception triggered non 2xx response.", exception);
         return ResponseEntity.status(400)
                 .body(new NonSuccessResponse(
                         List.of(exception.getMessage()),
